@@ -8,7 +8,7 @@ This is an OpenWrt package feed containing **Samba 4.7.x (stable)** server and *
 Samba VFS modules are supported and can be added via luci.
 
 For now the samba server is a basic fileserver, without AC-DC, ADS, Cluster and printer support!
-The size of the Samba4.ipk is around 5-6 MB, so you probably need >8MB NVRAM device.
+The size of the Samba4.ipk is around 6.6 MB, so you probably need >8MB NVRAM device.
 
 ### Usage
 
