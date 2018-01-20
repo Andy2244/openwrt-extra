@@ -8,7 +8,7 @@ This is an OpenWrt package feed containing **Samba 4.7.x (stable)** server and *
 Samba VFS modules are supported and can be added via luci.
 
 For now the samba server is a basic fileserver, without AC-DC, ADS, Cluster and printer support!
-The size of the Samba4.ipk is around 6.6 MB, so you need a >8MB NVRAM device.
+The size of the Samba4.ipk is around 6.6 MB, so you need a >8MB NVRAM device to fit the final image.
 
 ### Usage
 
@@ -22,7 +22,7 @@ Than include and install all packages from your ```feeds.conf``` via:
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 ```
-To manually install this package run:
+To manually install just this feed run:
 ```
 ./scripts/feeds update extra
 ./scripts/feeds install -a -p -f extra
