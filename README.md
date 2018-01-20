@@ -27,5 +27,5 @@ To manually install this package definitions, run:
 ```
 
 Afterwards run: 
-```make menuconfig```
+```make defconfig``` and ```make menuconfig```
 The packages should appear under **Network->Samba4** and **Network->VPN->softethervpn-server**. There is also a updated **Samba4 luci app** package, you should select.
