@@ -1,0 +1,24 @@
+#!/bin/sh /etc/rc.common
+START=60
+
+start(){
+	logger -t 'softethervpn' "Starting softether vpnserver service."
+	
+	[ -d /var/softether ] || {
+		mkdir -p /var/softether
+		chmod 0775 /var/softether
+	}
+
+	[ -f /var/softether/vpnserver ] || ln -sf /usr/libexec/softethervpn/vpnserver /var/softether/
+	[ -f /var/softether/hamcore.se2 ] || ln -sf /usr/libexec/softethervpn/hamcore.se2 /var/softether/
+	[ -f /var/softether/vpn_server.config ] || ln -sf /usr/libexec/softethervpn/vpn_server.config /var/softether/
+	[ -f /var/softether/lang.config  ] || ln -sf /usr/libexec/softethervpn/lang.config /var/softether/
+
+	/usr/bin/env LANG=en_US.UTF-8 /var/softether/vpnserver start
+}
+
+stop(){
+	logger -t 'softethervpn' "Stopping softether vpnserver service."
+	
+	/usr/bin/env LANG=en_US.UTF-8 /var/softether/vpnserver stop
+}

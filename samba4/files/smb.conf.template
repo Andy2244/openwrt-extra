@@ -1,0 +1,69 @@
+[global]
+	netbios name = |NAME| 
+	display charset = |CHARSET|
+	interfaces = |INTERFACES|
+	server string = |DESCRIPTION|
+	unix charset = |CHARSET|
+	workgroup = |WORKGROUP|
+
+	## This global parameter allows the Samba admin to limit what interfaces on a machine will serve SMB requests.
+	bind interfaces only = yes
+	
+	## time for inactive connections to-be closed in minutes
+	deadtime = 30
+	
+	## disable core dumps
+	enable core files = no
+	
+	## set security (auto, user, domain, ads)
+	security = user
+	
+	## set invalid users
+	#invalid users = root
+	
+	## map unknow users to guest
+	#map to guest = Bad User
+	
+	## LAN/WAN options (IPTOS_LOWDELAY TCP_NODELAY) WAN (IPTOS_THROUGHPUT)
+	socket options = IPTOS_LOWDELAY TCP_NODELAY
+	
+	## lower CPU useage if supported
+	use sendfile = yes
+	
+	## allow client access to accounts that have null passwords. 
+	#null passwords = yes
+	
+	## Use the old plaintext passdb backend.
+	#passdb backend = smbpasswd
+	
+	## disable loading of all printcap printers by default
+	#load printers = No
+	#printcap name = cups
+	#printcap name = /dev/null
+	
+	## Disable that nmbd is acting as a WINS server for unknow netbios names
+	#dns proxy = No
+	
+	## win/unix user mapping backend
+	#idmap config * : backend = tdb
+	
+	## samba will behave as previous versions of Samba would and will fail the lock request immediately if the lock range cannot be obtained.
+	#blocking locks = No
+	
+	## Clients that only support netbios won't be able to see your samba server when netbios support is disabled.
+	#disable netbios = Yes
+	
+################ Filesystem and creation rules ################
+	## reported filesystem type (NTFS,Samba,FAT)
+	#fstype = FAT
+	
+	## Allows a user who has write access to the file (by whatever means, including an ACL permission) to modify the permissions (including ACL) on it.
+	#dos filemode = Yes
+	
+	## file/dir creating rules
+	#create mask = 0666
+	#directory mask = 0777
+	#force group = root
+	#force user = root
+	#inherit owner = windows and unix
+################################################################
