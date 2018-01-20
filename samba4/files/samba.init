@@ -37,7 +37,7 @@ smb_header() {
 	    -e "s#|CHARSET|#$charset#g" \
 	    /etc/samba/smb.conf.template > /var/etc/smb.conf
 
-	echo -e "\t######### Dynamic Luci written options #########" >> /var/etc/smb.conf
+	echo -e "\n######### Dynamic written config options #########\n" >> /var/etc/smb.conf
 	[ "$disablenb" == "1" ] && echo -e "\tdisable netbios = yes" >> /var/etc/smb.conf
 		
 	local homes
