@@ -35,9 +35,8 @@
 	## Use the old plaintext passdb backend.
 	#passdb backend = smbpasswd
 	
-	## disable loading of all printcap printers by default
+	## disable loading of all printcap printers by default (iprint, cups, lpstat)
 	load printers = No
-	#printcap name = cups
 	printcap name = /dev/null
 	
 	## Disable that nmbd is acting as a WINS server for unknow netbios names
