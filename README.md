@@ -14,9 +14,18 @@ To use these packages, add the following line to your ```feeds.conf``` or ```fee
 
 ```src-git extra https://github.com/Andy2244/openwrt-extra.git```
 
-This feed should be included and enabled by default in the OpenWrt buildroot. To install all its package definitions, run:
+This feed should be included and enabled by default in the OpenWrt buildroot via:
+```
+./scripts/feeds clean
+./scripts/feeds update -a
+./scripts/feeds install -a
+```
+To manually install this package definitions, run:
 ```
 ./scripts/feeds update extra
 ./scripts/feeds install -a -p -f extra
 ```
+
+Afterwards run: 
+```make menuconfig```
 The packages should appear under **Network->Samba4** and **Network->VPN->softethervpn-server**. There is also a updated **Samba4 luci app** package, you should select.
