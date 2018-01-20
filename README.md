@@ -14,13 +14,13 @@ To use these packages, add the following line to your ```feeds.conf``` or ```fee
 
 ```src-git extra https://github.com/Andy2244/openwrt-extra.git```
 
-This feed should be included and enabled by default in the OpenWrt buildroot via:
+Than include and install all packages from your ```feeds.conf``` via:
 ```
 ./scripts/feeds clean
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 ```
-To manually install this package definitions, run:
+To manually install this package run:
 ```
 ./scripts/feeds update extra
 ./scripts/feeds install -a -p -f extra
