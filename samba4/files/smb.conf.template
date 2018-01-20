@@ -1,6 +1,5 @@
 [global]
 	netbios name = |NAME| 
-	display charset = |CHARSET|
 	interfaces = |INTERFACES|
 	server string = |DESCRIPTION|
 	unix charset = |CHARSET|
