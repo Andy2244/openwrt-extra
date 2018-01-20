@@ -76,4 +76,3 @@
 	guest ok = yes
 	guest only = yes
 	inherit owner = yes
-	vfs objects = btrfs
