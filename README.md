@@ -5,6 +5,8 @@
 This is an OpenWrt package feed containing **Samba 4.7.x (stable)** server and **SoftetherVPN** server from the latest Dev git/master.
 
 #### Note
+Samba VFS modules are supported and can be added via luci.
+
 For now the samba server is a basic fileserver, without AC-DC, ADS, Cluster and printer support!
 The size of the Samba4.ipk is around 5-6 MB, so you probably need >8MB NVRAM device.
 
