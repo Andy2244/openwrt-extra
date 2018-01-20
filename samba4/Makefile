@@ -145,6 +145,7 @@ endef
 define Package/samba4/conffiles
   /etc/config/samba4
   /etc/samba/smb.conf.template
+  /etc/samba/smb.conf
   /etc/samba/smbpasswd
   /etc/samba/secrets.tdb
   /etc/samba/passdb.tdb
