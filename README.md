@@ -2,7 +2,7 @@
 
 ## Description
 
-This is an OpenWrt package feed containing **Samba 4.7.x** server and **SoftetherVPN** server from latest Dev git/master.
+This is an OpenWrt package feed containing **Samba 4.7.x (stable)** server and **SoftetherVPN** server from the latest Dev git/master.
 
 ## Usage
 
