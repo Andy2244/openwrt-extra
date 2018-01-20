@@ -25,7 +25,7 @@ Than include and install all packages from your ```feeds.conf``` via:
 To manually install just this feed run:
 ```
 ./scripts/feeds update extra
-./scripts/feeds install -a -p -f extra
+./scripts/feeds install -a -f -p extra
 ```
 
 Afterwards run: 
