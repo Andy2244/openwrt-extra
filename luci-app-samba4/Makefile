@@ -9,6 +9,6 @@ include $(TOPDIR)/rules.mk
 LUCI_TITLE:=Network Shares - Samba 4.x SMB/CIFS module
 LUCI_DEPENDS:=+samba4
 
-include ../../feeds/luci/luci.mk
+include ../../luci/luci.mk
 
 # call BuildPackage - OpenWrt buildroot signature
