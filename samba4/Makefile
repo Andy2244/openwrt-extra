@@ -118,6 +118,9 @@ CONFIGURE_ARGS += \
 		
 CONFIGURE_CMD = ./buildtools/bin/waf
 
+# disable printcap error spam
+EXTRA_CFLAGS += -DPRINTCAP_NAME='/dev/null'
+
 define Package/samba4/install
 	# remove test
 	rm -f $(PKG_INSTALL_DIR)/usr/bin/smbtorture
