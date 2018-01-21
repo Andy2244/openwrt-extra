@@ -119,7 +119,7 @@ CONFIGURE_ARGS += \
 CONFIGURE_CMD = ./buildtools/bin/waf
 
 # fix spam (Unable to open printcap file /etc/printcap for read!)
-EXTRA_CFLAGS += -UPRINTCAP_NAME -DPRINTCAP_NAME="/dev/null"
+EXTRA_CFLAGS += -UPRINTCAP_NAME -DPRINTCAP_NAME=\"/dev/null\"
 
 define Package/samba4/install
 	# remove test
