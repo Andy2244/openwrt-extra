@@ -2,7 +2,7 @@
 
 ### Description
 
-This is an OpenWrt package feed containing **Samba 4.7.x (stable)** server and **SoftetherVPN** server from the latest Dev git/master.
+This is an OpenWrt package feed containing **Samba 4.7.x (stable)** and **SoftetherVPN (dev/git)** servers.
 
 #### Note
 Samba VFS modules are supported and can be added via luci.
