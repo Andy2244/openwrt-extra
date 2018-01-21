@@ -23,7 +23,7 @@
 	## map unknow users to guest
 	map to guest = Bad User
 	
-	## LAN/WAN options (IPTOS_LOWDELAY TCP_NODELAY) WAN (IPTOS_THROUGHPUT)
+	## LAN options (IPTOS_LOWDELAY TCP_NODELAY), WAN (IPTOS_THROUGHPUT)
 	socket options = IPTOS_LOWDELAY TCP_NODELAY
 	
 	## lower CPU useage if supported
