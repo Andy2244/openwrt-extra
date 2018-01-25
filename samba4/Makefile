@@ -53,24 +53,19 @@ CONFIGURE_VARS += \
 	python_LDFLAGS="" \
 	python_LIBDIR=""
 
-CONFIGURE_ARGS = \
-		--target=$(GNU_TARGET_NAME) \
-		--program-prefix="" \
-		--prefix=$(CONFIGURE_PREFIX) \
-		--exec-prefix=$(CONFIGURE_PREFIX) \
-		--bindir=$(CONFIGURE_PREFIX)/bin \
-		--sbindir=$(CONFIGURE_PREFIX)/sbin \
-		--libexecdir=$(CONFIGURE_PREFIX)/lib \
-		--sysconfdir=/etc \
-		--datadir=$(CONFIGURE_PREFIX)/share \
-		--localstatedir=/var \
-		--mandir=$(CONFIGURE_PREFIX)/man \
-		--infodir=$(CONFIGURE_PREFIX)/info
+# WAF configure script does not recognize these options
+CONFIGURE_ARGS:=$(filter-out	\
+	--host=%		\
+	--build=%		\
+	--program-suffix=%	\
+	--disable-nls		\
+	--disable-ipv6		\
+	, $(CONFIGURE_ARGS))
 
 CONFIGURE_ARGS += \
 		--hostcc="$(HOSTCC)" \
 		--cross-compile \
-		--cross-execute='qemu-$(ARCH) -L $(STAGING_DIR_ROOT)' \
+		--cross-execute="qemu-$(ARCH) -L $(STAGING_DIR_ROOT)" \
 		--disable-avahi \
 		--disable-cephfs \
 		--disable-cups \
@@ -105,38 +100,27 @@ CONFIGURE_ARGS += \
 		--with-privatedir=/etc/samba \
 		--without-dmapi \
 		--disable-gnutls \
-		--with-relro \
-		--with-sendfile-support \
-		--without-cluster-support \
 		--without-fam \
 		--without-gettext \
-		--without-pie \
 		--without-regedit \
-		--with-syslog \
-		--bundled-libraries='!asn1_compile,!compile_et' \
+		--without-gpgme \
+		--bundled-libraries=!asn1_compile,!compile_et \
 		--enable-auto-reconfigure
 		
-CONFIGURE_CMD = ./buildtools/bin/waf
-
+##FIXME: will be redefined by header (how to override here?)
 # fix spam (Unable to open printcap file /etc/printcap for read!)
-EXTRA_CFLAGS += -UPRINTCAP_NAME -DPRINTCAP_NAME=\"/dev/null\"
+#TARGET_CFLAGS += -UPRINTCAP_NAME -DPRINTCAP_NAME=\"/dev/null\"
+
+TARGET_CFLAGS += -ffunction-sections -fdata-sections
+TARGET_LDFLAGS += -Wl,--gc-sections
 
 define Package/samba4/install
-	# remove test
-	rm -f $(PKG_INSTALL_DIR)/usr/bin/smbtorture
-	rm -f $(PKG_INSTALL_DIR)/usr/bin/gentest
-	rm -f $(PKG_INSTALL_DIR)/usr/bin/locktest
-	rm -f $(PKG_INSTALL_DIR)/usr/bin/masktest
-	# remove client
-	rm -f $(PKG_INSTALL_DIR)/usr/bin/rpcclient
-	rm -f $(PKG_INSTALL_DIR)/usr/bin/smbclient
-	# remove net
-	rm -f $(PKG_INSTALL_DIR)/usr/bin/net
-	# config files
 	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/samba $(1)/etc/init.d
 	$(INSTALL_DATA) ./files/samba.config $(1)/etc/config/samba4
 	$(INSTALL_DATA) ./files/smb.conf.template $(1)/etc/samba
 	$(INSTALL_BIN) ./files/samba.init $(1)/etc/init.d/samba4
+
+ 	##FIXME: 'waf install targets=' is not working correctly, so hand picking files is hard and we would need to manually resolve lib deps..
 	# full install
 	$(INSTALL_DIR) $(1)/usr
 	$(CP) $(PKG_INSTALL_DIR)/usr/{lib,bin,sbin} $(1)/usr/
