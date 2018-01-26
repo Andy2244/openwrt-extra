@@ -76,7 +76,6 @@ CONFIGURE_ARGS += \
 		--disable-python \
 		--disable-rpath \
 		--disable-rpath-install \
-		--disable-rpath-private-install \
 		--enable-fhs \
 		--without-acl-support \
 		--without-ads \
@@ -94,6 +93,8 @@ CONFIGURE_ARGS += \
 		--without-winbind \
 		--nopyc \
 		--nopyo
+
+#--disable-rpath-private-install
 
 CONFIGURE_ARGS += \
 		--with-lockdir=/var/lock \
@@ -126,8 +127,8 @@ define Build/Compile
 endef
 
 # configure what targets to build/install (is used via makefile waf wrapper)
-MAKE_VARS += \
-	WAF_TARGETS="--targets=smbd/smbd,nmbd,smbpasswd,pdbedit,nmblookup,testparm"
+#MAKE_VARS += \
+#	WAF_TARGETS="--targets=smbd/smbd,nmbd,smbpasswd,pdbedit,nmblookup,testparm"
 
 define Package/samba4/install
 	# remove some unused dirs/files
