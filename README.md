@@ -30,7 +30,7 @@ To manually install just this feed run:
 
 Afterwards run: 
 ```make defconfig``` and ```make menuconfig```
-The packages should appear under **Network->Samba4-server** and **Network->VPN->softethervpn-server**. There is also a updated **Samba4 luci app** package, you should select.
+The packages should appear under **Network->Samba4** and **Network->VPN->softethervpn-server**. There is also a updated **Samba4 luci app** package, you should select.
 
 
 ### smb.conf.example
