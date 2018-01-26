@@ -8,7 +8,7 @@ This is an OpenWrt package feed containing **Samba 4.8 (rc2)** and **SoftetherVP
 Samba VFS modules are supported and can be added via luci.
 
 For now the samba server is a basic fileserver, without AC-DC, ADS, Cluster and printer support!
-The size of the Samba4.ipk is around 5.6 MB, so you need a >8MB NVRAM device to fit the final image or setup a ext-root.
+The size of the Samba4.ipk is around 5.6 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://lede-project.org/docs/user-guide/extroot_configuration).
 
 ### Usage
 
