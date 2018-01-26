@@ -4,22 +4,22 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
-# makefile is based on https://github.com/hbl0307106015/packages/tree/samba and https://github.com/wongsyrone/lede-1
+# based on https://github.com/hbl0307106015/packages/tree/samba and https://github.com/wongsyrone/lede-1
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
-PKG_VERSION:=4.7.4
+PKG_VERSION:=4.8.0rc2
 PKG_RELEASE:=1
 
-PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
+#PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
+PKG_SOURCE_URL:=https://download.samba.org/pub/samba/rc/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=fb12d0c4452f85b67b78bbeabd4c762d8feb8ff83e39d044d285120c2c488247
+PKG_HASH:=6c2f6fa8ca819af544c23083c74bda60928317a595af41af35ea4ef2e0691018
 PKG_LICENSE:=GPL-3.0
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
-#PKG_FIXUP:=autoreconf
 PKG_BUILD_DEPENDS:=heimdal/host qemu-userspace/host
 
 include $(INCLUDE_DIR)/package.mk
@@ -27,9 +27,10 @@ include $(INCLUDE_DIR)/package.mk
 define Package/samba4
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=Samba $(PKG_VERSION) SMB/CIFS server/client/tools
+  TITLE:=Samba $(PKG_VERSION) SMB/CIFS server
   URL:=http://www.samba.org/
-  DEPENDS:=+zlib +libpthread +libpopt +e2fsprogs +libcap +libdbus
+  DEPENDS:=+zlib +libpthread +libpopt +libcap +libdbus +libtirpc +libnettle
+  #+e2fsprogs = +libgnutls +krb5-libs +krb5-server 
 endef
 
 # used by the startup script to lower smbd priority (we assume embedded device workload)
@@ -75,6 +76,7 @@ CONFIGURE_ARGS += \
 		--disable-python \
 		--disable-rpath \
 		--disable-rpath-install \
+		--disable-rpath-private-install \
 		--enable-fhs \
 		--without-acl-support \
 		--without-ads \
@@ -99,14 +101,19 @@ CONFIGURE_ARGS += \
 		--with-piddir=/var/run \
 		--with-privatedir=/etc/samba \
 		--without-dmapi \
-		--disable-gnutls \
 		--without-fam \
 		--without-gettext \
 		--without-regedit \
 		--without-gpgme \
-		--bundled-libraries=!asn1_compile,!compile_et \
-		--enable-auto-reconfigure
+		--disable-gnutls \
+		--enable-auto-reconfigure \
+		--with-static-modules=ALL \
+		--bundled-libraries=talloc,tevent,tdb,ldb,!asn1_compile,!compile_et \
+		--builtin-libraries=talloc,tevent,tdb,ldb
 		
+		#--with-system-mitkrb5 "$(STAGING_DIR_ROOT)/usr"
+		#--with-system-mitkdc=/usr/sbin/krb5kdc
+
 ##FIXME: will be redefined by header (how to override here?)
 # fix spam (Unable to open printcap file /etc/printcap for read!)
 #TARGET_CFLAGS += -UPRINTCAP_NAME -DPRINTCAP_NAME=\"/dev/null\"
@@ -114,14 +121,24 @@ CONFIGURE_ARGS += \
 TARGET_CFLAGS += -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
 
+define Build/Compile
+	# no need, since 'make(waf) install' via (PKG_INSTALL:=1) triggers a full build + install
+endef
+
+# configure what targets to build/install (is used via makefile waf wrapper)
+MAKE_VARS += \
+	WAF_TARGETS="--targets=smbd/smbd,nmbd,smbpasswd,pdbedit,nmblookup,testparm"
+
 define Package/samba4/install
+	# remove some unused dirs/files
+	rm -f -R $(PKG_INSTALL_DIR)/usr/lib/python2.7
+	rm -f -R $(PKG_INSTALL_DIR)/usr/lib/pkgconfig
+	# install init, config
 	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/samba $(1)/etc/init.d
 	$(INSTALL_DATA) ./files/samba.config $(1)/etc/config/samba4
 	$(INSTALL_DATA) ./files/smb.conf.template $(1)/etc/samba
 	$(INSTALL_BIN) ./files/samba.init $(1)/etc/init.d/samba4
-
- 	##FIXME: 'waf install targets=' is not working correctly, so hand picking files is hard and we would need to manually resolve lib deps..
-	# full install
+	# install build targets
 	$(INSTALL_DIR) $(1)/usr
 	$(CP) $(PKG_INSTALL_DIR)/usr/{lib,bin,sbin} $(1)/usr/
 endef
