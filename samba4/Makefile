@@ -76,6 +76,7 @@ CONFIGURE_ARGS += \
 		--disable-python \
 		--disable-rpath \
 		--disable-rpath-install \
+		--disable-rpath-private-install \
 		--enable-fhs \
 		--without-acl-support \
 		--without-ads \
@@ -93,8 +94,6 @@ CONFIGURE_ARGS += \
 		--without-winbind \
 		--nopyc \
 		--nopyo
-
-#--disable-rpath-private-install
 
 CONFIGURE_ARGS += \
 		--with-lockdir=/var/lock \
@@ -127,8 +126,8 @@ define Build/Compile
 endef
 
 # configure what targets to build/install (is used via makefile waf wrapper)
-#MAKE_VARS += \
-#	WAF_TARGETS="--targets=smbd/smbd,nmbd,smbpasswd,pdbedit,nmblookup,testparm"
+MAKE_VARS += \
+	WAF_TARGETS="--targets=smbd/smbd,nmbd,smbpasswd,pdbedit,nmblookup,testparm"
 
 define Package/samba4/install
 	# remove some unused dirs/files
@@ -139,9 +138,13 @@ define Package/samba4/install
 	$(INSTALL_DATA) ./files/samba.config $(1)/etc/config/samba4
 	$(INSTALL_DATA) ./files/smb.conf.template $(1)/etc/samba
 	$(INSTALL_BIN) ./files/samba.init $(1)/etc/init.d/samba4
+	# install libs
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/*.so* $(1)/usr/lib
 	# install build targets
 	$(INSTALL_DIR) $(1)/usr
-	$(CP) $(PKG_INSTALL_DIR)/usr/{lib,bin,sbin} $(1)/usr/
+	$(CP) $(PKG_INSTALL_DIR)/usr/{bin,sbin} $(1)/usr/
 endef
 
 define Package/samba4/conffiles
