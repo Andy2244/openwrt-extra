@@ -38,4 +38,4 @@ The packages should appear under **Network->Samba4** and **Network->VPN->softeth
 
 The ```smb.conf.example``` file shows what options to uncomment in the ```smb.conf.template``` to get a easy share working, without any extra user setup, all new files/folders will be maped to "root".
 
-* NOTE: If you disable Netbios or have problems finding your share always try a full network path. So assuming the smb.conf.example names, in Win10 explorer type: ```\\router\share``` *
+* If you disable Netbios or have problems finding your share always try a full network path. So assuming the smb.conf.example names, in Win10 explorer type: ```\\router\share``` *
