@@ -1,3 +1,5 @@
+https://lists.samba.org/archive/samba-technical/2017-December/124629.html
+
 --- a/source3/libads/kerberos_keytab.c
 +++ b/source3/libads/kerberos_keytab.c
 @@ -32,8 +32,6 @@
