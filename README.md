@@ -11,6 +11,7 @@ For now the samba server is a basic fileserver, without AC-DC, ADS, Cluster and 
 The size of the Samba4.ipk is around 5.6 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://lede-project.org/docs/user-guide/extroot_configuration).
 
 ### Usage
+**IMPORTANT: master branch can only be build via latest package/master**
 
 To use these packages, add the following line to your ```feeds.conf``` or ```feeds.conf.default``` in the OpenWrt buildroot:
 
