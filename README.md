@@ -41,5 +41,5 @@ The ```smb.conf.example``` file shows what options to uncomment in the ```smb.co
 ### Problems
 
 If you cant see your device/router/share in the Windows Explorer try using a full network path.
-So assuming the smb.conf.example names, in Win10 explorer type: ```\\router\share```
+So assuming the smb.conf.example names, in Windows explorer type: ```\\router\share```
 * You can than permanently mount the share via exploer "map network drive" and could than also disable Netbios via luci options.
