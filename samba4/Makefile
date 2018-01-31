@@ -23,9 +23,6 @@ PKG_BUILD_DEPENDS:=python/host qemu-userspace/host
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_SAMBA4 \
-	CONFIG_SAMBA4_SERVER \
-	CONFIG_SAMBA4_CLIENT \
-	CONFIG_SAMBA4_NET \
 	CONFIG_SAMBA4_SERVER_VFS
 
 include $(INCLUDE_DIR)/package.mk
@@ -38,42 +35,10 @@ define Package/samba4
   MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
   DEPENDS:=+zlib +libpthread +libpopt +libcap +libdbus +libtirpc +libnettle +krb5-libs
   # +libgnutls +krb5-server
-  MENU:=1
 endef
 
 define Package/samba4/config
-	config SAMBA4_SERVER
-		depends on PACKAGE_samba4
-		bool "Server"
-		default y
-		help
-			Installs: smbd nmbd nmblookup smbpasswd pdbedit testparm smbstatus
-		select BUSYBOX_CONFIG_RENICE
-		select BUSYBOX_DEFAULT_RENICE
-		
-			config SAMBA4_SERVER_VFS
-				depends on SAMBA4_SERVER
-				bool "build with common VFS Modules"
-				default y
-				help
-					supported modules are:
-						vfs_btrfs vfs_fruit vfs_shadow_copy vfs_shadow_copy2 vfs_shell_snap vfs_snapper vfs_recycle vfs_fake_perms vfs_default_quota 
-						vfs_readonly vfs_cap vfs_xattr_tdb vfs_streams_xattr vfs_aio_fork vfs_aio_pthread vfs_offline vfs_linux_xfs_sgid vfs_crossrename
-		
-	config SAMBA4_CLIENT
-		depends on PACKAGE_samba4
-		bool "Client tool"
-		default n
-		help
-			Installs: smbclient smbstatus
-		
-	config SAMBA4_NET
-		depends on PACKAGE_samba4
-		bool "Admin tools (net)"
-		default n
-		help
-			Installs: net smbtree smbcontrol smbget profiles rpcclient smbstatus
-		
+	source "$(SOURCE)/Config.in" 
 endef
 
 define Package/samba4/description
@@ -190,7 +155,11 @@ TARGET_LDFLAGS += -Wl,--gc-sections
 BUILD_TARGETS :=smbstatus
 
 ifeq ($(CONFIG_SAMBA4_SERVER),y)
-	BUILD_TARGETS :=$(BUILD_TARGETS),smbd/smbd,nmbd,nmblookup,smbpasswd,pdbedit,testparm
+	BUILD_TARGETS :=$(BUILD_TARGETS),smbd/smbd,smbpasswd,pdbedit,testparm
+endif
+
+ifeq ($(CONFIG_SAMBA4_SERVER_NETBIOS),y)
+	BUILD_TARGETS :=$(BUILD_TARGETS),nmbd,nmblookup
 endif
 
 ifeq ($(CONFIG_SAMBA4_CLIENT),y)

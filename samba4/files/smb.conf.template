@@ -25,16 +25,19 @@
 	#smb encrypt = default
 	
 	## set invalid users
-	#invalid users = root
+	invalid users = root
 	
 	## map unknow users to guest
-	#map to guest = Bad User
+	map to guest = Bad User
 
 	## allow client access to accounts that have null passwords. 
-	#null passwords = yes
+	null passwords = yes
 	
 	## Use the old plaintext passdb backend.
 	#passdb backend = smbpasswd
+	
+	## Set location of smbpasswd ('smbd -b' will show default compiled location)
+	#smb passwd file = /etc/samba/smbpasswd 
 	
 	## LAN/WAN options (IPTOS_LOWDELAY TCP_NODELAY) WAN (IPTOS_THROUGHPUT)
 	socket options = IPTOS_LOWDELAY TCP_NODELAY
