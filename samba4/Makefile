@@ -17,6 +17,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=6c2f6fa8ca819af544c23083c74bda60928317a595af41af35ea4ef2e0691018
 PKG_LICENSE:=GPL-3.0
 
+PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
+
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 PKG_BUILD_DEPENDS:=python/host qemu-userspace/host 
@@ -32,7 +34,6 @@ define Package/samba4
   CATEGORY:=Network
   TITLE:=Samba $(PKG_VERSION) SMB/CIFS (server/client/tools)
   URL:=https://www.samba.org/
-  MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
   DEPENDS:=+zlib +libpthread +libpopt +libcap +libdbus +libtirpc +libnettle +krb5-libs
   # +libgnutls +krb5-server
 endef

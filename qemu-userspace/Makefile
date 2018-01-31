@@ -1,6 +1,5 @@
 #
-# Copyright (C) 2016 OpenWrt.org
-# Copyright (C) 2016 Yousong Zhou <yszhou4tech@gmail.com>
+# Copyright (C) 2018 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -15,6 +14,9 @@ PKG_RELEASE:=1
 PKG_SOURCE_URL:=https://download.qemu.org/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_HASH:=c9d34a79024eae080ce3853aa9afe503824520eefb440190383003081ce7f437
+PKG_LICENSE:=GPL-2.0
+
+PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 
 HOST_BUILD_PARALLEL:=1
 PKG_BUILD_PARALLEL:=1
