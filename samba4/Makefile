@@ -17,15 +17,18 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=6c2f6fa8ca819af544c23083c74bda60928317a595af41af35ea4ef2e0691018
 PKG_LICENSE:=GPL-3.0
 
-PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
-
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 PKG_BUILD_DEPENDS:=python/host qemu-userspace/host 
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_SAMBA4 \
-	CONFIG_SAMBA4_SERVER_VFS
+	CONFIG_SAMBA4_SERVER \
+	CONFIG_SAMBA4_SERVER_NETBIOS \
+	CONFIG_SAMBA4_SERVER_AVAHI \
+	CONFIG_SAMBA4_SERVER_VFS \
+	CONFIG_SAMBA4_CLIENT \
+	CONFIG_SAMBA4_NET
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -34,8 +37,9 @@ define Package/samba4
   CATEGORY:=Network
   TITLE:=Samba $(PKG_VERSION) SMB/CIFS (server/client/tools)
   URL:=https://www.samba.org/
-  DEPENDS:=+zlib +libpthread +libpopt +libcap +libdbus +libtirpc +libnettle +krb5-libs
-  # +libgnutls +krb5-server
+  MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
+  DEPENDS:=+zlib +libpthread +libpopt +libcap +libtirpc +libnettle +krb5-libs +SAMBA4_SERVER_AVAHI:libavahi
+  # +libgnutls +krb5-server +libdbus
 endef
 
 define Package/samba4/config
@@ -43,13 +47,12 @@ define Package/samba4/config
 endef
 
 define Package/samba4/description
-	Since 1992, Samba has provided secure, stable and fast file and print services for all clients using the SMB/CIFS protocol,
-	such as all versions of DOS and Windows, OS/2, Linux and many others.
-
-	Samba is an important component to seamlessly integrate Linux/Unix Servers and Desktops into Active Directory environments.
-	It can function both as a domain controller or as a regular domain member. 
+	The Samba software suite is a collection of programs that implements the
+	SMB/CIFS protocol for UNIX systems, allowing you to serve files and printers.
 	
-	(Basic Samba 4 fileserver, without AC-DC, ADS, Cluster and printer support.)
+	Samba4 implements to the latest SMB v3.1.1 version and supports mDNS via AVAHI.
+	
+	NOTE: Currently without AC-DC, ADS, Cluster and printer support.
 endef
 
 CONFIGURE_VARS += \
@@ -70,7 +73,6 @@ CONFIGURE_ARGS += \
 		--hostcc="$(HOSTCC)" \
 		--cross-compile \
 		--cross-execute="qemu-$(ARCH) -L $(STAGING_DIR_ROOT)" \
-		--disable-avahi \
 		--disable-cephfs \
 		--disable-cups \
 		--disable-fault-handling \
@@ -97,6 +99,12 @@ CONFIGURE_ARGS += \
 		--without-winbind \
 		--nopyc \
 		--nopyo
+
+ifeq ($(CONFIG_SAMBA4_SERVER_AVAHI),y)
+	CONFIGURE_ARGS += --enable-avahi
+else
+	CONFIGURE_ARGS += --disable-avahi
+endif
 
 CONFIGURE_ARGS += \
 		--with-lockdir=/var/lock \
@@ -132,9 +140,10 @@ SAMBA4_AUTH_MODULES :=auth_builtin,auth_sam,auth_unix,auth_script
 # vfs_default (vfs_recycle,vfs_audit,vfs_extd_audit,vfs_full_audit,vfs_netatalk,vfs_fake_perms,vfs_default_quota,vfs_readonly,vfs_cap,vfs_expand_msdfs
 # vfs_shadow_copy,vfs_shadow_copy2,vfs_readahead,vfs_xattr_tdb,vfs_streams_xattr,vfs_streams_depot,vfs_acl_xattr,vfs_acl_tdb,vfs_preopen,vfs_catia,vfs_media_harmony
 # vfs_unityed_media,vfs_fruit,vfs_shell_snap,vfs_commit,vfs_worm,vfs_crossrename,vfs_linux_xfs_sgid,vfs_time_audit,vfs_offline,vfs_syncops,vfs_dirsort,vfs_fileid,vfs_aio_fork,vfs_aio_pthread,vfs_btrfs
+# vfs_snapper (needs libdbus)
 SAMBA4_VFS_MODULES :=vfs_default
 ifeq ($(CONFIG_SAMBA4_SERVER_VFS),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES),vfs_btrfs,vfs_fruit,vfs_shadow_copy,vfs_shadow_copy2,vfs_shell_snap,vfs_snapper,vfs_recycle,vfs_fake_perms,vfs_default_quota,vfs_readonly,vfs_cap,vfs_xattr_tdb,vfs_streams_xattr,vfs_aio_fork,vfs_aio_pthread,vfs_offline,vfs_linux_xfs_sgid,vfs_crossrename
+	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES),vfs_btrfs,vfs_fruit,vfs_shadow_copy,vfs_shadow_copy2,vfs_shell_snap,vfs_recycle,vfs_fake_perms,vfs_default_quota,vfs_readonly,vfs_cap,vfs_xattr_tdb,vfs_streams_xattr,vfs_aio_fork,vfs_aio_pthread,vfs_offline,vfs_linux_xfs_sgid,vfs_crossrename
 endif
 # nss_info_template
 SAMBA4_EXTRA_MODULES :=nss_info_template
@@ -209,7 +218,6 @@ ifeq ($(CONFIG_SAMBA4_SERVER),y)
 endif
 endef
 
-ifeq ($(CONFIG_SAMBA4_SERVER),y)
 define Package/samba4/conffiles
 /etc/config/samba4
 /etc/samba/smb.conf.template
@@ -218,6 +226,5 @@ define Package/samba4/conffiles
 /etc/samba/secrets.tdb
 /etc/samba/passdb.tdb
 endef
-endif
 
 $(eval $(call BuildPackage,samba4))
