@@ -40,7 +40,7 @@ The ```smb.conf.example``` file shows what options to uncomment in the ```smb.co
 
 ### Problems
 
-If you cant see your device/router, share in the Windows 10 (1703+) explorer/network as a workstation/workgroup user, thats because the default state in Windows 10 is now to uninstall the old smb1 protocol, along with the computer browser service, which was not updated to support smb2/3 to find, display netbios resources. Its also not recommend to reinstall the old smb1 package, but following this [article](https://support.microsoft.com/en-nz/help/4034314/smbv1-is-not-installed-windows-10-and-windows-server-version-1709) you should instead:
+If you cant see your device/router, share in the Windows 10 (1709+) explorer/network as a workstation/workgroup user, thats because the default state in Windows 10 is now to uninstall the old smb1 protocol, along with the computer browser service, which was not updated to support smb2/3 to find, display netbios resources. Its also not recommend to reinstall the old smb1 package, but following this [article](https://support.microsoft.com/en-nz/help/4034314/smbv1-is-not-installed-windows-10-and-windows-server-version-1709) you should instead:
 
 * Start the ```Function Discovery Provider Host``` and ```Function Discovery Resource Publication``` services, and then set them to Automatic (Delayed Start).
 * When you open Explorer Network, enable network discovery when you are prompted.
