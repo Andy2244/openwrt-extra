@@ -2,7 +2,7 @@
 
 ### Description
 
-This is an OpenWrt package feed containing **Samba 4.8 (rc2)** and **SoftetherVPN (dev/git)** servers.
+This is an OpenWrt package feed containing **Samba 4.8 (rc3)** and **SoftetherVPN (dev/git)** servers.
 
 #### Note
 Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.
@@ -11,7 +11,7 @@ For now the samba server is a basic fileserver, without AC-DC, ADS, Cluster and 
 The size of the Samba4.ipk and deps are around 5.6 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://lede-project.org/docs/user-guide/extroot_configuration).
 
 ### Usage
-**IMPORTANT: master branch can only be build via latest package/master**
+**IMPORTANT: master branch can only be build via latest package/master and manually replaceing e2fsprogs**
 
 To use these packages, add the following line to your ```feeds.conf``` or ```feeds.conf.default``` in the OpenWrt buildroot:
 
@@ -23,14 +23,14 @@ Than include and install all packages from your ```feeds.conf``` via:
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 ```
-To manually install just this feed run:
+**Now manually replace incompatible lib versions:**
 ```
-./scripts/feeds update extra
+./scripts/feeds uninstall krb5
 ./scripts/feeds install -a -f -p extra
 ```
 
 Afterwards run: 
-```make defconfig``` and ```make menuconfig```
+```make menuconfig``` or ```make defconfig```
 The packages should appear under **Network->Samba4** and **Network->VPN->softethervpn-server**. There is also a updated **Samba4 luci app** package, you should select.
 
 
