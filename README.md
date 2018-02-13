@@ -7,7 +7,7 @@ This is an OpenWrt package feed containing **Samba 4.8 (rc3)** and **SoftetherVP
 #### Note
 Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.
 
-The package includes experimental support for: ad-dc, avahi, winbind (no cluster, printer,cups/iprint support)
+**The package includes experimental support for: ad-dc, avahi, winbind (no cluster, printer,cups/iprint support)**
 The size of the Samba4.ipk and deps are around 5.6 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://lede-project.org/docs/user-guide/extroot_configuration).
 
 ### Usage
