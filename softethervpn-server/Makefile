@@ -13,9 +13,9 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/SoftEtherVPN/SoftEtherVPN.git
-PKG_SOURCE_DATE:=2018-24-01
-PKG_SOURCE_VERSION:=3de0890a02f3eb6784f1a8ef288ed0599c597194
-PKG_MIRROR_HASH:=f89407984b4f004fb439372598c48107686fc0a535463fedc710ddaa80545826
+PKG_SOURCE_DATE:=2018-12-02
+PKG_SOURCE_VERSION:=8c0c4396b7779665c328d1d53827b9901df39dec
+PKG_MIRROR_HASH:=070072e914401e855ba866c993b0f954d2a0f76016abe28efa351e87d5265ece
 
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING
@@ -63,6 +63,11 @@ define Host/Install
 	$(INSTALL_DATA) $(HOST_BUILD_DIR)/src/bin/BuiltHamcoreFiles/unix/hamcore.se2 $(HAMCORE_SE2)
 endef
 
+define Build/Prepare
+	$(Build/Prepare/Default)
+	# remove EUCJP defaults
+	$(SED) 's/"eucJP"/"utf-8"/gI' $(PKG_BUILD_DIR)/src/Mayaqua/Internat.c
+endef	
 
 # Tune CFLAGS for target
 TARGET_CFLAGS += \
@@ -97,6 +102,11 @@ define Package/softethervpn-server
   TITLE:=Free Cross-platform Multi-protocol VPN server
   URL:=http://www.softether.org/
   MAINTAINER:=Federico Di Marco <fededim@gmail.com>
+endef
+
+# needs SSLv3_method for < 1.1
+define Package/softethervpn-server/config
+  select OPENSSL_WITH_SSL3
 endef
 
 define Package/softethervpn-server/description

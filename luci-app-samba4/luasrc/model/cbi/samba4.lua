@@ -17,7 +17,9 @@ h = s:taboption("general", Flag, "homes", translate("Share home-directories"),
         translate("Allow system users to reach their home directories via " ..
                 "network shares"))
 h.rmempty = false
-s:taboption("general", Flag, "disablenb", translate("Disable netbios"))
+s:taboption("general", Flag, "disable_netbios", translate("Disable netbios"))
+s:taboption("general", Flag, "disable_ad_dc", translate("Disable AD-DC"))
+s:taboption("general", Flag, "disable_winbind", translate("Disable Winbind"))
 
 tmpl = s:taboption("template", Value, "_tmpl",
 	translate("Edit the template that is used for generating the samba configuration."), 

@@ -23,12 +23,15 @@ smb_header() {
 	local name workgroup description charset
 	local hostname="$(uci_get system.@system[0].hostname)"
 
-	config_get name        		$1 name        "${hostname:-OpenWrt}"
-	config_get workgroup   		$1 workgroup   "${hostname:-WORKGROUP}"
-	config_get description 		$1 description "Samba on ${hostname:-OpenWrt}"
-	config_get charset  		$1 charset     "UTF-8"
-	config_get_bool DISABLENB	$1 disablenb   0
-
+	config_get name        		$1 name        	"${hostname:-OpenWrt}"
+	config_get workgroup   		$1 workgroup   	"${hostname:-WORKGROUP}"
+	config_get description 		$1 description 	"Samba on ${hostname:-OpenWrt}"
+	config_get charset  		$1 charset     	"UTF-8"
+	
+	config_get_bool DISABLE_NETBIOS	$1 disable_netbios	0
+	config_get_bool DISABLE_AD_DC	$1 disable_ad_dc	0
+	config_get_bool DISABLE_WINBIND	$1 disable_winbind	0
+	
 	mkdir -p /var/etc
 	sed -e "s#|NAME|#$name#g" \
 	    -e "s#|WORKGROUP|#$workgroup#g" \
@@ -38,7 +41,7 @@ smb_header() {
 	    /etc/samba/smb.conf.template > /var/etc/smb.conf
 
 	echo -e "\n######### Dynamic written config options #########\n" >> /var/etc/smb.conf
-	if [ "$DISABLENB" -eq 1 ] || [ ! -x /usr/sbin/nmbd ]; then
+	if [ "$DISABLE_NETBIOS" -eq 1 ] || [ ! -x /usr/sbin/nmbd ]; then
 		echo -e "\tdisable netbios = yes" >> /var/etc/smb.conf
 	fi
 		
@@ -116,6 +119,7 @@ init_config() {
 	[ -d /var/lib/samba ] || mkdir -p /var/lib/samba
 	[ -d /var/cache/samba ] || mkdir -p /var/cache/samba
 	[ -d /var/run/samba ] || mkdir -p /var/run/samba
+	[ -d /var/log/samba ] || mkdir -p /var/log/samba
 	[ -d /var/lock ] && chmod 0755 /var/lock || {
 		mkdir -p /var/lock
 		chmod 0755 /var/lock
@@ -129,8 +133,10 @@ init_config() {
 reload_service() {
 	init_config
 
+	killall -HUP samba
 	killall -HUP smbd
 	killall -HUP nmbd
+	killall -HUP winbindd
 }
 
 service_triggers() {
@@ -145,21 +151,41 @@ service_triggers() {
 start_service() {
 	init_config
 
-	procd_open_instance
-	procd_set_param command /usr/sbin/smbd -F
-	procd_set_param respawn
-	procd_set_param file /var/etc/smb.conf
-	procd_close_instance
-	# lower priority using renice in busybox
-	renice -n 2 $(pidof smbd)
-
-	if [ "$DISABLENB" -ne 1 ] && [ -x /usr/sbin/nmbd ]; then
+	# start main AC-DC daemon, will spawn (smbd,nmbd,winbindd) as needed/configured.
+	if [ "$DISABLE_AD_DC" -ne 1 ] && [ -x /usr/sbin/samba ]; then
 		procd_open_instance
-		procd_set_param command /usr/sbin/nmbd -F
+		procd_set_param command /usr/sbin/samba -F
 		procd_set_param respawn
 		procd_set_param file /var/etc/smb.conf
 		procd_close_instance
-		# lower priority using renice in busybox
-		renice -n 2 $(pidof nmbd)
+	else
+		# start fileserver daemon
+		procd_open_instance
+		procd_set_param command /usr/sbin/smbd -F
+		procd_set_param respawn
+		procd_set_param file /var/etc/smb.conf
+		procd_close_instance
+
+		# start netbios daemon
+		if [ "$DISABLE_NETBIOS" -ne 1 ] && [ -x /usr/sbin/nmbd ]; then
+			procd_open_instance
+			procd_set_param command /usr/sbin/nmbd -F
+			procd_set_param respawn
+			procd_set_param file /var/etc/smb.conf
+			procd_close_instance
+		fi
+		# start winbind daemon
+		if [ "$DISABLE_WINBIND" -ne 1 ] && [ -x /usr/sbin/winbindd ]; then
+			procd_open_instance
+			procd_set_param command /usr/sbin/winbindd -F
+			procd_set_param respawn
+			procd_set_param file /var/etc/smb.conf
+			procd_close_instance
+		fi
 	fi
+	# lower priority using renice in busybox
+	[ -x /usr/sbin/samba ] && renice -n 2 $(pidof samba)
+	[ -x /usr/sbin/smbd ] && renice -n 2 $(pidof smbd)
+	[ -x /usr/sbin/nmbd ] && renice -n 2 $(pidof nmbd)
+	[ -x /usr/sbin/winbindd ] && renice -n 2 $(pidof winbindd)
 }
