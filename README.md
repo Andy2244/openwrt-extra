@@ -47,4 +47,4 @@ If you cant see your device/router, share in the Windows 10 (1709+) explorer/net
 * When you open Explorer Network, enable network discovery when you are prompted.
 
 This only works to find other Windows PC's without using netbios, so you still wont see the samba shares. Keep in mind using network paths work, this is only a explorer display problem. So assuming the smb.conf.example names, in Windows explorer type: ```\\router\share```
-* You can than permanently mount the share via exploer "map network drive" and could than also disable Netbios via luci options.
+* You can than permanently mount the share via explorer "map network drive" and could than also disable Netbios via luci options or build the package without netbios entirely.
