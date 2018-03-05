@@ -7,9 +7,9 @@ This is an OpenWrt package feed containing **Samba 4.8 (rc3)** and **SoftetherVP
 #### Note
 Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.
 
-The package includes experimental support for: **ad-dc, avahi, winbind** *(no cluster, printer,cups/iprint support)*
+The package includes experimental support for: **[ad-dc](https://wiki.samba.org/index.php/Setting_up_Samba_as_an_Active_Directory_Domain_Controller), [winbind](https://wiki.samba.org/index.php/Configuring_Winbindd_on_a_Samba_AD_DC), avahi, quota, acl** *(no cluster, printer,cups/iprint support)*
 
-The size of the Samba4.ipk and deps are around 5.6 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://lede-project.org/docs/user-guide/extroot_configuration).
+The size of the Samba4.ipk and deps are around 5.6 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://lede-project.org/docs/user-guide/extroot_configuration) also recommend for ad-dc operation.
 
 ### Usage
 **IMPORTANT: master branch can only be build via latest package/master and manually replaceing krb5/e2fsprogs**
@@ -41,10 +41,10 @@ The ```smb.conf.example``` file shows what options to uncomment in the ```smb.co
 
 ### Problems
 
-If you cant see your device/router, share in the Windows 10 (1709+) explorer/network as a workstation/workgroup user, thats because the default state in Windows 10 is now to uninstall the old smb1 protocol, along with the computer browser service, which was not updated to support smb2/3 to find, display netbios resources. Its also not recommend to reinstall the old smb1 package, but following this [article](https://support.microsoft.com/en-nz/help/4034314/smbv1-is-not-installed-windows-10-and-windows-server-version-1709) you should instead:
+If you cant see your share in the Windows 10 (1709+) explorer as a workgroup user, thats because the default state in Windows 10 is now to uninstall the old smb1 protocol, along with the computer browser service, which was needed to display netbios shares in the explorer. Its not recommend to reinstall the old smb1 package, but following this [article](https://support.microsoft.com/en-nz/help/4034314/smbv1-is-not-installed-windows-10-and-windows-server-version-1709) you should instead:
 
 * Start the ```Function Discovery Provider Host``` and ```Function Discovery Resource Publication``` services, and then set them to Automatic (Delayed Start).
 * When you open Explorer Network, enable network discovery when you are prompted.
 
-This only works to find other Windows PC's without using netbios, so you still wont see the samba shares. Keep in mind using network paths work, this is only a explorer display problem. So assuming the smb.conf.example names, in Windows explorer type: ```\\router\share```
-* You can than permanently mount the share via explorer "map network drive" and could than also disable Netbios via luci options or build the package without netbios entirely.
+This only works to find other Windows 8/10 shares without using netbios, so you still wont see the samba shares. So the only option is to use full network paths, since this is only a explorer display problem. So assuming the smb.conf.example names, in Windows explorer type: ```\\router\share```
+* You can than permanently mount the share via explorer "map network drive".
