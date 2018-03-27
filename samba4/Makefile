@@ -8,13 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
-PKG_VERSION:=4.8.0rc4
+PKG_VERSION:=4.8.0
 PKG_RELEASE:=1
 
-#PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
-PKG_SOURCE_URL:=https://download.samba.org/pub/samba/rc/
+PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=97fb7115e40f3e18e2e7bdddb51c69f3e03781faeab4f4ac96aa56b3c831c8aa
+PKG_HASH:=87d9b585dbd8628e79aabb6e621a94bd20a072a00762e78e0899fad22fc18fb7
 PKG_LICENSE:=GPL-3.0
 
 PKG_BUILD_PARALLEL:=1
