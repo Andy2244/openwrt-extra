@@ -25,8 +25,6 @@ PKG_INSTALL:=1
 PKG_CHECK_FORMAT_SECURITY:=0
 PKG_USE_MIPS16:=0
 
-PKG_BUILD_DEPENDS:=e2fsprogs/host
-
 include $(INCLUDE_DIR)/package.mk
 
 MAKE_PATH:=src
@@ -60,7 +58,8 @@ define Package/krb5-client
 endef
 
 define Package/krb5/description
-		Kerberos is a network authentication protocol. It is designed to provide strong authentication for client/server applications by using secret-key cryptography.
+  Kerberos is a network authentication protocol. 
+  It is designed to provide strong authentication for client/server applications by using secret-key cryptography.
 endef
 
 CONFIGURE_PATH = ./src
@@ -86,7 +85,6 @@ CONFIGURE_ARGS += \
 	--disable-pkinit \
 	--with-size-optimizations \
 	--with-crypto-impl=builtin
-#	--without-krb5-config
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include

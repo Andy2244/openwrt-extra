@@ -53,12 +53,11 @@ define Package/samba4/config
 endef
 
 define Package/samba4/description
-	The Samba software suite is a collection of programs that implements the
-	SMB/CIFS protocol for UNIX systems, allowing you to serve files and printers.
+  The Samba software suite is a collection of programs that implements the
+  SMB/CIFS protocol for UNIX systems, allowing you to serve files and printers.
 
-	Samba4 implements to the latest SMB v3.1.1 version, supports mDNS via AVAHI and a AD-DC setup via krb5.
-
-	NOTE: Without Cluster and printer support.
+  Samba4 implements to the latest SMB v3.1.1 version, supports mDNS via AVAHI and a AD-DC setup via krb5.
+  NOTE: Without Cluster and printer support.
 endef
 
 CONFIGURE_VARS += \
@@ -149,8 +148,6 @@ endif
 CONFIGURE_ARGS += \
 		--with-system-mitkrb5 "$(STAGING_DIR)/usr" \
 		--with-system-mitkdc=/usr/sbin/krb5kdc
-
-		#--private-libraries=talloc,tevent,tdb,ldb,cmocka
 
 		## embedded-heimdal
 		# --bundled-libraries=talloc,tevent,tdb,ldb,com_err,cmocka,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
@@ -294,7 +291,6 @@ define Package/samba4/conffiles
 /etc/samba/idmap.ldb
 /etc/samba/lmhosts
 /etc/nsswitch.conf
-#/var/lock/winbindd_idmap.tdb
 endef
 
 $(eval $(call BuildPackage,samba4))
