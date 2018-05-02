@@ -30,7 +30,6 @@ config SAMBA4_SERVER
 	config SAMBA4_SERVER_VFSX
 		bool "enable extended VFS modules"
 		depends on SAMBA4_SERVER
-		select PACKAGE_libdbus
 		help
 			provides extra vfs modules
 			installs: 
