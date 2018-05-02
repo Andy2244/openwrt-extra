@@ -2,8 +2,6 @@ if PACKAGE_samba4
 
 config SAMBA4_SERVER
 	bool "Server (fileserver)"
-	select BUSYBOX_CONFIG_RENICE
-	select BUSYBOX_DEFAULT_RENICE
 	help
 		installs: smbd (daemon) smbpasswd pdbedit testparm smbstatus smbtree
 		This provides the basic fileserver service and is the minimum needed to serve file-shares.
@@ -26,17 +24,17 @@ config SAMBA4_SERVER
 		help
 			provides commonly used vfs modules
 			installs: 
-				modules: vfs_btrfs vfs_fruit vfs_shadow_copy vfs_shadow_copy2 vfs_recycle vfs_fake_perms vfs_readonly vfs_cap vfs_offline vfs_crossrename
+				modules: (vfs_btrfs) vfs_fruit vfs_shadow_copy2 vfs_recycle vfs_fake_perms vfs_readonly vfs_cap vfs_offline vfs_crossrename
 		default y
 	
 	config SAMBA4_SERVER_VFSX
-		bool "enable extendet VFS modules"
+		bool "enable extended VFS modules"
 		depends on SAMBA4_SERVER
 		select PACKAGE_libdbus
 		help
 			provides extra vfs modules
 			installs: 
-				modules: vfs_virusfilter vfs_shell_snap vfs_snapper vfs_commit vfs_worm vfs_xattr_tdb vfs_streams_xattr vfs_aio_fork vfs_aio_pthread vfs_linux_xfs_sgid vfs_netatalk vfs_dirsort vfs_fileid
+				modules: vfs_virusfilter vfs_shell_snap vfs_commit vfs_worm vfs_xattr_tdb vfs_streams_xattr vfs_aio_fork vfs_aio_pthread (vfs_linux_xfs_sgid) vfs_netatalk vfs_dirsort vfs_fileid
 		default n
 	
 	config SAMBA4_SERVER_AVAHI
@@ -64,7 +62,7 @@ config SAMBA4_SERVER
 		help
 			installs: mvxattr sharesec smbcacls
 				modules: vfs_acl_xattr vfs_acl_tdb vfs_posixacl
-			Supports Extended access control lists for windows, linux shares.
+			Supports extended access control lists for windows, linux shares.
 		default n
 
 	config SAMBA4_SERVER_AD_DC

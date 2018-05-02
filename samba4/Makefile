@@ -1,19 +1,12 @@
-#
-# Copyright (C) 2007-2017 OpenWrt
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
-PKG_VERSION:=4.8.0
+PKG_VERSION:=4.8.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=87d9b585dbd8628e79aabb6e621a94bd20a072a00762e78e0899fad22fc18fb7
+PKG_HASH:=8ef7367507f16b7a5e2f6aed5bcdbd1143feca79aa2a07c9b21292b17d7f789d
 PKG_LICENSE:=GPL-3.0
 
 PKG_BUILD_PARALLEL:=1
@@ -31,7 +24,9 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_SAMBA4_SERVER_QUOTAS \
 	CONFIG_SAMBA4_SERVER_ACL \
 	CONFIG_SAMBA4_SERVER_AD_DC \
-	CONFIG_SAMBA4_SERVER_WINBIND
+	CONFIG_SAMBA4_SERVER_WINBIND \
+	CONFIG_PACKAGE_kmod-fs-btrfs \
+	CONFIG_PACKAGE_kmod-fs-xfs
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -42,7 +37,7 @@ define Package/samba4
   URL:=https://www.samba.org/
   MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
   DEPENDS:=+zlib +libpthread +libpopt +libcap +libtirpc +libnettle +krb5-libs \
-	+SAMBA4_SERVER_VFSX:libdbus +SAMBA4_SERVER_ACL:acl \
+	+SAMBA4_SERVER_ACL:acl \
 	+SAMBA4_SERVER_AVAHI:libavahi-client +SAMBA4_SERVER_AVAHI:avahi-dbus-daemon \
 	+SAMBA4_SERVER_AD_DC:python-base +SAMBA4_SERVER_AD_DC:krb5-server +SAMBA4_SERVER_AD_DC:libopenssl +SAMBA4_SERVER_AD_DC:libgnutls +SAMBA4_SERVER_AD_DC:libopenldap
   # buildroot bug? Cant add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
@@ -166,10 +161,16 @@ SAMBA4_AUTH_MODULES :=auth_builtin,auth_sam,auth_unix,auth_script,
 # vfs_virusfilter
 SAMBA4_VFS_MODULES :=vfs_default,
 ifeq ($(CONFIG_SAMBA4_SERVER_VFS),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_btrfs,vfs_fruit,vfs_shadow_copy,vfs_shadow_copy2,vfs_recycle,vfs_fake_perms,vfs_readonly,vfs_cap,vfs_offline,vfs_crossrename,
+	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_fruit,vfs_shadow_copy2,vfs_recycle,vfs_fake_perms,vfs_readonly,vfs_cap,vfs_offline,vfs_crossrename,
+ifeq ($(CONFIG_PACKAGE_kmod-fs-btrfs),y)
+	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_btrfs,
+endif
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_VFSX),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_virusfilter,vfs_shell_snap,vfs_snapper,vfs_commit,vfs_worm,vfs_xattr_tdb,vfs_streams_xattr,vfs_aio_fork,vfs_aio_pthread,vfs_linux_xfs_sgid,vfs_netatalk,vfs_dirsort,vfs_fileid,
+	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_virusfilter,vfs_shell_snap,vfs_commit,vfs_worm,vfs_xattr_tdb,vfs_streams_xattr,vfs_aio_fork,vfs_aio_pthread,vfs_netatalk,vfs_dirsort,vfs_fileid,
+ifeq ($(CONFIG_PACKAGE_kmod-fs-xfs),y)
+	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_linux_xfs_sgid,
+endif
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_QUOTAS),y)
 	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_default_quota,
