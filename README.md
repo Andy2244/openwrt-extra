@@ -12,7 +12,7 @@ The package includes experimental support for: **[ad-dc](https://wiki.samba.org/
 The size of the Samba4.ipk and deps are around 5.4 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
 
 ### Usage
-**IMPORTANT: master branch can only be build via latest package/master and manually replaceing krb5**
+**IMPORTANT: master branch can only be build via openwrt/master, package/master and manually replaceing krb5**
 
 To use these packages, add the following line to your ```feeds.conf``` or ```feeds.conf.default``` in the OpenWrt buildroot:
 
