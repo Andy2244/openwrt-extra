@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qemu
 PKG_VERSION:=2.11.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_URL:=https://download.qemu.org/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -18,7 +18,7 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 
-HOST_BUILD_DEPENDS:=glib2/host zlib/host
+HOST_BUILD_DEPENDS:=glib2/host
 
 define Package/qemu-userspace
   SECTION:=utils
