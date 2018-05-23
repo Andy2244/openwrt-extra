@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qemu
-PKG_VERSION:=2.11.1
-PKG_RELEASE:=2
+PKG_VERSION:=2.12.0
+PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://download.qemu.org/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=8a5145d1f8bd2eadc6776f3e13c68cd28d01349e30639bdbcb26ac588d668686
+PKG_HASH:=e69301f361ff65bf5dabd8a19196aeaa5613c1b5ae1678f0823bdf50e7d5c6fc
 PKG_LICENSE:=GPL-2.0
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
