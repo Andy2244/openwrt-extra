@@ -43,3 +43,6 @@ If you cant see your share in the Windows 10 (1709+) explorer as a workgroup use
 This only works to find other Windows 8/10 shares without using netbios, so you still wont see the samba shares. So the only option is to use full network paths, since this is only a explorer display problem. So assuming the smb.conf.example names, in Windows explorer type: ```\\router\share```
 * You can than permanently mount the share via explorer "map network drive".
 * This also means for Windows 10 workgroup clients you don't need the netbios daemon and can either remove it from the package via ```make menuconfig``` options or disable it via luci.
+
+## CPU problems
+If you firmware has support for ```renice``` (busybox process tools option) than the init script will lower all samba related processes, which can help to avoid samba stalling other processes.
