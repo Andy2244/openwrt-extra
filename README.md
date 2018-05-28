@@ -12,7 +12,7 @@ The package includes experimental support for: **[ad-dc](https://wiki.samba.org/
 The size of the Samba4.ipk and deps are around 5.4 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
 
 ### Usage
-**IMPORTANT: master branch was only tested/build against openwrt/master, package/master**
+**IMPORTANT: master branch was only tested/build against openwrt/master, package/master (May 2018)**
 
 To use these packages, add the following line to your ```feeds.conf``` or ```feeds.conf.default``` in the OpenWrt buildroot:
 
@@ -42,3 +42,4 @@ If you cant see your share in the Windows 10 (1709+) explorer as a workgroup use
 
 This only works to find other Windows 8/10 shares without using netbios, so you still wont see the samba shares. So the only option is to use full network paths, since this is only a explorer display problem. So assuming the smb.conf.example names, in Windows explorer type: ```\\router\share```
 * You can than permanently mount the share via explorer "map network drive".
+* This also means for Windows 10 workgroup clients you don't need the netbios daemon and can deselect it from the ```make menuconfig``` options.
