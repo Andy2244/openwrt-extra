@@ -45,4 +45,4 @@ This only works to find other Windows 8/10 shares without using netbios, so you 
 * This also means for Windows 10 workgroup clients you don't need the netbios daemon and can either remove it from the package via ```make menuconfig``` options or disable it via luci.
 
 #### CPU problems
-If you firmware has support for ```renice``` (busybox process tools option) than the init script will lower all samba related processes, which can help to avoid samba stalling other processes.
+If your firmware support's ```renice``` (busybox process tools option) than the init script will lower all samba related processes, which can help to avoid samba stalling other processes.
