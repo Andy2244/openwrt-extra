@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.8.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -12,6 +12,7 @@ PKG_LICENSE:=GPL-3.0
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 PKG_BUILD_DEPENDS:=perl/host python/host qemu-userspace/host SAMBA4_SERVER_AD_DC:python-crypto
+# buildroot bug? Cant add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_SAMBA4_SERVER \
@@ -36,11 +37,11 @@ define Package/samba4
   TITLE:=Samba $(PKG_VERSION) SMB/CIFS (server/client/tools)
   URL:=https://www.samba.org/
   MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
-  DEPENDS:=+zlib +libpthread +libpopt +libcap +libtirpc +libnettle +krb5-libs \
+  DEPENDS:=+zlib +libpthread +libpopt +libcap +libtirpc +libnettle +krb5-libs +jansson \
+	+SAMBA4_CLIENT:libarchive \
 	+SAMBA4_SERVER_ACL:acl \
-	+SAMBA4_SERVER_AVAHI:libavahi-client +SAMBA4_SERVER_AVAHI:avahi-dbus-daemon \
-	+SAMBA4_SERVER_AD_DC:python-base +SAMBA4_SERVER_AD_DC:krb5-server +SAMBA4_SERVER_AD_DC:libopenssl +SAMBA4_SERVER_AD_DC:libgnutls +SAMBA4_SERVER_AD_DC:libopenldap
-  # buildroot bug? Cant add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
+	+SAMBA4_SERVER_AVAHI:libavahi-client \
+	+SAMBA4_SERVER_AD_DC:python-base +SAMBA4_SERVER_AD_DC:libopenssl +SAMBA4_SERVER_AD_DC:libgnutls +SAMBA4_SERVER_AD_DC:libopenldap
 endef
 
 define Package/samba4/config
@@ -51,7 +52,7 @@ define Package/samba4/description
   The Samba software suite is a collection of programs that implements the
   SMB/CIFS protocol for UNIX systems, allowing you to serve files and printers.
 
-  Samba4 implements to the latest SMB v3.1.1 version, supports mDNS via AVAHI and a AD-DC setup via krb5.
+  Samba4 implements up-to protocol version SMB v3.1.1 (Win10), supports mDNS via AVAHI and a AD-DC setup via krb5.
   NOTE: Without Cluster and printer support.
 endef
 
@@ -100,6 +101,11 @@ CONFIGURE_ARGS += \
 		--with-piddir=/var/run \
 		--with-privatedir=/etc/samba
 
+ifeq ($(CONFIG_SAMBA4_CLIENT),y)		
+	CONFIGURE_ARGS += --with-libarchive
+else
+	CONFIGURE_ARGS += --without-libarchive
+endif
 ifeq ($(CONFIG_SAMBA4_SERVER_AVAHI),y)
 	CONFIGURE_ARGS += --enable-avahi
 else
@@ -167,7 +173,7 @@ ifeq ($(CONFIG_PACKAGE_kmod-fs-btrfs),y)
 endif
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_VFSX),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_virusfilter,vfs_shell_snap,vfs_commit,vfs_worm,vfs_xattr_tdb,vfs_streams_xattr,vfs_aio_fork,vfs_aio_pthread,vfs_netatalk,vfs_dirsort,vfs_fileid,
+	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_virusfilter,vfs_shell_snap,vfs_commit,vfs_worm,vfs_xattr_tdb,vfs_streams_xattr,vfs_aio_fork,vfs_aio_pthread,vfs_netatalk,vfs_dirsort,vfs_fileid,vfs_catia,
 ifeq ($(CONFIG_PACKAGE_kmod-fs-xfs),y)
 	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_linux_xfs_sgid,
 endif

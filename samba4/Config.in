@@ -33,14 +33,13 @@ config SAMBA4_SERVER
 		help
 			provides extra vfs modules
 			installs: 
-				modules: vfs_virusfilter vfs_shell_snap vfs_commit vfs_worm vfs_xattr_tdb vfs_streams_xattr vfs_aio_fork vfs_aio_pthread (vfs_linux_xfs_sgid) vfs_netatalk vfs_dirsort vfs_fileid
+				modules: vfs_virusfilter vfs_shell_snap vfs_commit vfs_worm vfs_xattr_tdb vfs_streams_xattr vfs_aio_fork vfs_aio_pthread (vfs_linux_xfs_sgid) vfs_netatalk vfs_dirsort vfs_fileid vfs_catia
 		default n
 	
 	config SAMBA4_SERVER_AVAHI
-		bool "enable AVAHI support"
+		bool "enable AVAHI support (needs a AVAHI-daemon)"
 		depends on SAMBA4_SERVER
 		select PACKAGE_libavahi-client
-		select PACKAGE_avahi-dbus-daemon
 		help
 			Supports AVAHI daemon to announce samba resources, via mDNS/SD.
 		default n
@@ -65,11 +64,10 @@ config SAMBA4_SERVER
 		default n
 
 	config SAMBA4_SERVER_AD_DC
-		bool "enable AD-DC support, useing krb5-server (EXPERIMENTAL)"
+		bool "enable AD-DC support (needs krb5-server) (EXPERIMENTAL)"
 		depends on SAMBA4_SERVER
 		select PACKAGE_python-base
 		select PACKAGE_python-crypto
-		select PACKAGE_krb5-server
 		select PACKAGE_libopenssl
 		select PACKAGE_libgnutls
 		select PACKAGE_libopenldap
