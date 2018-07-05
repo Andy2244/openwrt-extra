@@ -9,10 +9,10 @@ Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules
 
 The package includes experimental support for: **[ad-dc](https://wiki.samba.org/index.php/Setting_up_Samba_as_an_Active_Directory_Domain_Controller), [winbind](https://wiki.samba.org/index.php/Configuring_Winbindd_on_a_Samba_AD_DC), avahi, quota, acl** *(no cluster, printer,cups/iprint support)*
 
-The size of the Samba4.ipk and deps are around 5.4 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
+The size of the Samba4.ipk and deps are around 5.8 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
 
 ### Usage
-**IMPORTANT: master branch was only tested/build against openwrt/master, package/master (May 2018)**
+**IMPORTANT: master branch was only tested/build against openwrt/master, package/master (Jun 2018+)**
 
 To use these packages, add the following line to your ```feeds.conf``` or ```feeds.conf.default``` in the OpenWrt buildroot:
 
