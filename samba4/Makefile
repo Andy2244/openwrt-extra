@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.8.3
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -39,14 +39,15 @@ define Package/samba4/Default/description
   SMB/CIFS protocol for UNIX systems, allowing you to serve files and printers.
 
   Samba4 implements up-to protocol version SMB v3.1.1 (Win10), supports mDNS via AVAHI and a AD-DC setup via krb5.
-  NOTE: Without Cluster and printer support.
+  NOTE: without Cluster and printer support.
 endef
 
 define Package/samba4-libs
   $(call Package/samba4/Default)
   TITLE+= libs
-  DEPENDS+= +zlib +libpopt +libcap +krb5-libs +jansson +libpthread +libtirpc +libnettle +libarchive \
-	+SAMBA4_SERVER_ACL:acl \
+  DEPENDS:= +zlib +libtirpc +krb5-libs \
+	+PACKAGE_libcap:libcap +PACKAGE_jansson:jansson +PACKAGE_libpthread:libpthread +PACKAGE_libnettle:libnettle +PACKAGE_libarchive:libarchive \
+	+SAMBA4_SERVER_ACL:acl +SAMBA4_SERVER_ACL:attr \
 	+SAMBA4_SERVER_AVAHI:libavahi-client \
 	+SAMBA4_SERVER_AD_DC:python-base +SAMBA4_SERVER_AD_DC:libopenssl +SAMBA4_SERVER_AD_DC:libgnutls +SAMBA4_SERVER_AD_DC:libopenldap
 endef
@@ -54,8 +55,7 @@ endef
 define Package/samba4-server
   $(call Package/samba4/Default)
   TITLE+= server
-  # BUG: libreadline depends on libncurses ?
-  DEPENDS+= +samba4-libs
+  DEPENDS:= +samba4-libs
 endef
 
 define Package/samba4-server/description
@@ -72,7 +72,7 @@ endef
 define Package/samba4-client
   $(call Package/samba4/Default)
   TITLE+= client
-  DEPENDS+= +samba4-libs
+  DEPENDS:= +samba4-libs
 endef
 
 define Package/samba4-client/description
@@ -83,7 +83,7 @@ endef
 define Package/samba4-admin
   $(call Package/samba4/Default)
   TITLE+= admin tools
-  DEPENDS+= +samba4-libs
+  DEPENDS:= +samba4-libs
 endef
 
 define Package/samba4-admin/description
@@ -94,7 +94,7 @@ endef
 define Package/samba4-utils
   $(call Package/samba4/Default)
   TITLE+= utils
-  DEPENDS+= +samba4-libs
+  DEPENDS:= +samba4-libs
 endef
 
 define Package/samba4-utils/description
@@ -140,8 +140,10 @@ CONFIGURE_ARGS += \
 		--without-fam \
 		--without-gettext \
 		--without-regedit \
-		--without-gpgme \
-		--with-libarchive
+		--without-gpgme
+
+# use "intelaesni" on TARGET_x86_64 ? see: https://lists.samba.org/archive/samba-technical/2017-September/122738.html
+CONFIGURE_ARGS += --accel-aes=none
 
 CONFIGURE_ARGS += \
 		--with-lockdir=/var/lock \
@@ -264,20 +266,19 @@ BUILD_TARGETS_UTILS :=smbstatus,smbtree,smbget,mvxattr,nmblookup
 # extra flags
 TARGET_CFLAGS += -ffunction-sections -fdata-sections
 TARGET_LDFLAGS += -Wl,--gc-sections
-#,--as-needed
-#,--no-undefined,--no-allow-shlib-undefined
+#,--as-needed,--no-undefined,--no-allow-shlib-undefined
 
 # lib bundling
 # NOTE: compile some unique libs into related bins, so we end-up with a unified samba4-libs base, mainly to allow package separation (server, client, admin, utils)
-CONFIGURE_ARGS += --builtin-libraries=smbclient,netapi,samba-passdb,ads,auth,cli-spoolss,libcli-lsa3,gpext,talloc,tevent,tdb,ldb,cmocka,replace,popt
+CONFIGURE_ARGS += --builtin-libraries=smbclient,netapi,samba-passdb,ads,auth,cli-spoolss,libcli-lsa3,gpext,talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,popt
 #CONFIGURE_ARGS += --nonshared-binary=$(BUILD_TARGETS_SERVER)
-# NOTE: build private, we don't trust those external packages
-CONFIGURE_ARGS += --private-libraries=talloc,tevent,tdb,ldb,cmocka
+# NOTE: bundle + make private, we want to avoid version configuration (build, link) conflicts
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-	CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,tdb,ldb,cmocka,pytalloc-util,pyldb-util,NONE
+CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,popt,pytalloc-util,pyldb-util,NONE
 else
-	CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,tdb,ldb,cmocka,NONE
+CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,popt,NONE
 endif
+CONFIGURE_ARGS += --private-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,popt
 
 define Build/Prepare
 	$(Build/Prepare/Default)
