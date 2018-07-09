@@ -3,7 +3,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=softethervpn
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/SoftEtherVPN/SoftEtherVPN.git
@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/host-build.mk
 
 
 # Override CC to add fake libreadline to linker search path
-HOSTCC += -L./src/readline
+HOSTCC += -L./src/readline -I$(STAGING_DIR_HOST)/include -L$(STAGING_DIR_HOST)/lib 
 
 # Add defines to turn add_history() and readline() calls into no-ops
 HOSTCC += -D'add_history(x)' -D'readline(x)=\"\"'
