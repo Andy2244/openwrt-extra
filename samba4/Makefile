@@ -1,8 +1,9 @@
+# based partially on (wongsyrone/hbl0307106015) versions
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.8.3
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -297,7 +298,7 @@ endef
 #BUG: We need to use "waf install --targets=" otherwise a "make install" or "waf install" will retrigger a full recompile of all possible targets!
 define Build/Compile
 	(cd $(PKG_BUILD_DIR); \
-		./buildtools/bin/waf install -j$(shell nproc) \
+		./buildtools/bin/waf install $(PKG_JOBS) \
 		--targets=$(SAMBA4_MODULES)$(SAMBA4_MODULES_SHARDED)$(BUILD_TARGETS_SERVER),$(BUILD_TARGETS_UTILS),$(BUILD_TARGETS_ADMIN),$(BUILD_TARGETS_CLIENT) \
 		--destdir="$(PKG_INSTALL_DIR)" \
 	)
