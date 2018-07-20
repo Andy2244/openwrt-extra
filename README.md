@@ -2,7 +2,7 @@
 
 ### Description
 
-This is an OpenWrt package feed containing **Samba 4.8.x** and **SoftetherVPN (dev/git)** servers.
+This is an OpenWrt package feed containing **Samba 4.8.x** and **SoftetherVPN 5.x (dev/git)** servers.
 
 #### Note
 Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.
@@ -40,9 +40,7 @@ If you cant see your share in the Windows 10 (1709+) explorer as a workgroup use
 * Start the ```Function Discovery Provider Host``` and ```Function Discovery Resource Publication``` services, and then set them to Automatic (Delayed Start).
 * When you open Explorer Network, enable network discovery when you are prompted.
 
-This only works to find other Windows 8/10 shares without using netbios, so you still wont see the samba shares. So the only option is to use full network paths, since this is only a explorer display problem. So assuming the smb.conf.example names, in Windows explorer type: ```\\router\share```
-* You can than permanently mount the share via explorer "map network drive".
-* This also means for Windows 10 workgroup clients you don't need the netbios daemon and can either remove it from the package via ```make menuconfig``` options or disable it via luci.
+This feed also includes a WSD Name Service Daemon (wsdd2) by default, which replaces netbios so you can also see all samba shares in the explorer on Windows 8+ clients.
 
 #### CPU problems
 If your firmware support's ```renice``` (busybox process tools option) than the init script will lower all samba related processes, which can help to avoid samba stalling other processes.
