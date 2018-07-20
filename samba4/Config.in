@@ -6,7 +6,7 @@ config SAMBA4_SERVER_NETBIOS
 		Builds the nmbd to announce samba resources via netbios.
 		NOTE: Windows 10 (1709+) will not display workgroup netbios resources anymore, unless the old SMB1 feature is reinstalled (not recommend).
 		Therefor this feature can be safely disabled, network shares can still be directly accessed via network paths '\\hostname\sharename' and mounted via 'map network drive'.
-	default y	
+	default n
 
 config SAMBA4_SERVER_VFS
 	bool "enable common VFS modules"

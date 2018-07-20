@@ -67,7 +67,8 @@ define Package/samba4-server/description
 endef
 
 define Package/samba4-server/config
-  source "$(SOURCE)/Config.in" 
+  select PACKAGE_wsdd2
+  source "$(SOURCE)/Config.in"
 endef
 
 define Package/samba4-client
