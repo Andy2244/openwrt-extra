@@ -33,7 +33,8 @@
 	## allow client access to accounts that have null passwords. 
 	null passwords = yes
 	
-	## Use the old plaintext passdb backend. (NOTE: enabled for size reasons)
+	## The old plaintext passdb backend. Some Samba features will not work if this passdb backend is used. (NOTE: enabled for size reasons)
+	## (tdbsam,smbpasswd,ldapsam)
 	passdb backend = smbpasswd
 	
 	## Set location of smbpasswd ('smbd -b' will show default compiled location)
