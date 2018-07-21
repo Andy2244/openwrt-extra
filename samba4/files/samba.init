@@ -1,6 +1,6 @@
 #!/bin/sh /etc/rc.common
 
-START=60
+START=99
 USE_PROCD=1
 
 smb_header() {
@@ -26,11 +26,11 @@ smb_header() {
 	config_get workgroup   		$1 workgroup   	"${hostname:-WORKGROUP}"
 	config_get description 		$1 description 	"Samba on ${hostname:-OpenWrt}"
 	config_get charset  		$1 charset     	"UTF-8"
-	
+
 	config_get_bool DISABLE_NETBIOS	$1 disable_netbios	0
 	config_get_bool DISABLE_AD_DC	$1 disable_ad_dc	0
 	config_get_bool DISABLE_WINBIND	$1 disable_winbind	0
-	
+
 	mkdir -p /var/etc
 	sed -e "s#|NAME|#$name#g" \
 	    -e "s#|WORKGROUP|#$workgroup#g" \
@@ -43,7 +43,7 @@ smb_header() {
 	if [ "$DISABLE_NETBIOS" -eq 1 ] || [ ! -x /usr/sbin/nmbd ]; then
 		echo -e "\tdisable netbios = yes" >> /var/etc/smb.conf
 	fi
-		
+
 	local homes
 	config_get_bool homes $1 homes 0
 	[ $homes -gt 0 ] && {
@@ -69,7 +69,7 @@ smb_add_share() {
 	local writable
 	local printable
 	local create_mask
-	
+
 	local browseable
 	local read_only
 	local guest_ok
@@ -104,7 +104,7 @@ smb_add_share() {
 	[ -n "$printable" ] && echo -e "\tprintable = $printable" >> /var/etc/smb.conf
 	[ -n "$create_mask" ] && echo -e "\tcreate mask = $create_mask" >> /var/etc/smb.conf
 	[ -n "$dir_mask" ] && echo -e "\tdirectory mask = $dir_mask" >> /var/etc/smb.conf
-	
+
 	[ -n "$browseable" ] && echo -e "\tbrowseable = $browseable" >> /var/etc/smb.conf
 	[ -n "$read_only" ] && echo -e "\tread only = $read_only" >> /var/etc/smb.conf
 	[ -n "$guest_ok" ] && echo -e "\tguest ok = $guest_ok" >> /var/etc/smb.conf

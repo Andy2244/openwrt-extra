@@ -1,18 +1,20 @@
-# based partially on (wongsyrone/hbl0307106015) versions
+# Based partially on (wongsyrone/hbl0307106015) versions
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.8.3
-PKG_RELEASE:=5
+PKG_RELEASE:=6
+
+PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
+PKG_LICENSE:=GPL-3.0-only
+PKG_LICENSE_FILES:=COPYING
 
 PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=e0569a8a605d5dfb49f1fdd11db796f4d36fe0351c4a7f21387ef253010b82ed
-PKG_LICENSE:=GPL-3.0
-PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 
+# Buildroot bug? Can't add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
 PKG_BUILD_DEPENDS:=perl/host python/host qemu-userspace/host SAMBA4_SERVER_AD_DC:python-crypto
-# buildroot bug? Cant add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_SAMBA4_SERVER_NETBIOS \
@@ -39,14 +41,14 @@ define Package/samba4/Default/description
   The Samba software suite is a collection of programs that implements the
   SMB/CIFS protocol for UNIX systems, allowing you to serve files and printers.
 
-  Samba4 implements up-to protocol version SMB v3.1.1 (Win10), supports mDNS via AVAHI and a AD-DC setup via krb5.
-  NOTE: without Cluster and printer support.
+  Samba 4 implements up-to protocol version SMB v3.1.1 (Win10), supports mDNS via AVAHI and a AD-DC setup via krb5.
+  NOTE: No cluster and printer support.
 endef
 
 define Package/samba4-libs
   $(call Package/samba4/Default)
   TITLE+= libs
-  DEPENDS:= +zlib +libtirpc +krb5-libs \
+  DEPENDS:= +zlib +libtirpc +krb5-libs +libpopt \
 	+PACKAGE_libcap:libcap +PACKAGE_jansson:jansson +PACKAGE_libpthread:libpthread +PACKAGE_libnettle:libnettle +PACKAGE_libarchive:libarchive \
 	+SAMBA4_SERVER_ACL:acl +SAMBA4_SERVER_ACL:attr \
 	+SAMBA4_SERVER_AVAHI:libavahi-client \
@@ -60,10 +62,10 @@ define Package/samba4-server
 endef
 
 define Package/samba4-server/description
-  The main fileserver server.
-  installs: smbd (nmbd) (samba) daemon's, smbpasswd pdbedit testparm
-    This provides the basic fileserver service and is the minimum needed to serve file-shares.
-    good guide: https://fitzcarraldoblog.wordpress.com/2016/10/17/a-correct-method-of-configuring-samba-for-browsing-smb-shares-in-a-home-network/
+  installs: smbd (daemon) smbpasswd pdbedit testparm
+
+    This provides the basic fileserver service and is the minimum needed to serve file shares.
+    HINT: https://fitzcarraldoblog.wordpress.com/2016/10/17/a-correct-method-of-configuring-samba-for-browsing-smb-shares-in-a-home-network/
 endef
 
 define Package/samba4-server/config
@@ -78,8 +80,9 @@ define Package/samba4-client
 endef
 
 define Package/samba4-client/description
-  The smbclient program implements a simple ftp-like client. This is useful for accessing SMB shares on other compatible SMB servers.
   installs: smbclient cifsdd
+
+  The smbclient program implements a simple ftp-like client for accessing SMB shares
 endef
 
 define Package/samba4-admin
@@ -89,8 +92,9 @@ define Package/samba4-admin
 endef
 
 define Package/samba4-admin/description
-  Admin tools collection.
   installs: net smbcontrol profiles rpcclient smbcacls smbcquotas
+
+  Administration tools collection
 endef
 
 define Package/samba4-utils
@@ -100,16 +104,20 @@ define Package/samba4-utils
 endef
 
 define Package/samba4-utils/description
-  Utils collection.
-  installs: smbstatus smbtree smbget nmblookup mvxattr 
+  installs: smbstatus smbtree smbget nmblookup mvxattr
+
+  Utilities collection
 endef
+
+TARGET_CFLAGS += -ffunction-sections -fdata-sections
+TARGET_LDFLAGS += -Wl,--gc-sections
 
 CONFIGURE_VARS += \
 	CPP="$(TARGET_CROSS)cpp"
-	
-CONFIGURE_CMD = ./buildtools/bin/waf	
-	
-# WAF configure script does not recognize these options
+
+CONFIGURE_CMD = ./buildtools/bin/waf
+
+# Strip options that WAF configure script does not recognize
 CONFIGURE_ARGS:=$(filter-out	\
 	--host=%		\
 	--build=%		\
@@ -144,7 +152,8 @@ CONFIGURE_ARGS += \
 		--without-regedit \
 		--without-gpgme
 
-# use "intelaesni" on TARGET_x86_64 ? see: https://lists.samba.org/archive/samba-technical/2017-September/122738.html
+# Optional AES-NI support - https://lists.samba.org/archive/samba-technical/2017-September/122738.html
+# Support for Nettle wasn't comitted
 CONFIGURE_ARGS += --accel-aes=none
 
 CONFIGURE_ARGS += \
@@ -158,7 +167,7 @@ CONFIGURE_ARGS += \
 		--with-system-mitkdc=/usr/sbin/krb5kdc
 
 		## embedded-heimdal
-		# --bundled-libraries=talloc,tevent,tdb,ldb,com_err,cmocka,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE		
+		# --bundled-libraries=talloc,tevent,tdb,ldb,com_err,cmocka,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
 
 ifeq ($(CONFIG_SAMBA4_SERVER_AVAHI),y)
 	CONFIGURE_ARGS += --enable-avahi
@@ -190,18 +199,10 @@ else
 	CONFIGURE_ARGS += --without-winbind
 endif
 
-# idmap_tdb,idmap_passdb,idmap_nss (idmap_tdb2,idmap_script) # shared_only (idmap_ad idmap_rfc2307 idmap_autorid idmap_rid idmap_hash)
 SAMBA4_IDMAP_MODULES :=
 SAMBA4_IDMAP_MODULES_SHARED :=
-# pdb_smbpasswd,pdb_tdbsam (pdb_samba_dsdb) #(pdb_ads,pdb_sam,pdb_samba4,pdb_wbc_sam)
 SAMBA4_PDB_MODULES :=pdb_smbpasswd,pdb_tdbsam,
-# auth_builtin,auth_sam,auth_winbind,auth_unix (auth_script) #(auth_samba4)
 SAMBA4_AUTH_MODULES :=auth_builtin,auth_sam,auth_unix,auth_script,
-# vfs_default (vfs_recycle,vfs_audit,vfs_extd_audit,vfs_full_audit,vfs_netatalk,vfs_fake_perms,vfs_default_quota,vfs_readonly,vfs_cap,vfs_expand_msdfs,vfs_posix_eadb,vfs_dfs_samba4
-# vfs_shadow_copy,vfs_shadow_copy2,vfs_readahead,vfs_xattr_tdb,vfs_streams_xattr,vfs_streams_depot,vfs_acl_xattr,vfs_acl_tdb,vfs_posixacl,vfs_preopen,vfs_catia,vfs_media_harmony
-# vfs_unityed_media,vfs_fruit,vfs_shell_snap,vfs_commit,vfs_worm,vfs_crossrename,vfs_linux_xfs_sgid,vfs_time_audit,vfs_offline,vfs_syncops,vfs_dirsort,vfs_fileid,vfs_aio_fork,vfs_aio_pthread,vfs_btrfs
-# vfs_snapper (needs libdbus)
-# vfs_virusfilter
 SAMBA4_VFS_MODULES :=vfs_default,
 ifeq ($(CONFIG_SAMBA4_SERVER_VFS),y)
 	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_fruit,vfs_shadow_copy2,vfs_recycle,vfs_fake_perms,vfs_readonly,vfs_cap,vfs_offline,vfs_crossrename,
@@ -220,7 +221,7 @@ ifeq ($(CONFIG_SAMBA4_SERVER_QUOTAS),y)
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_ACL),y)
 	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_posixacl,vfs_acl_xattr,vfs_acl_tdb,
-	# vfs_zfsacl 		needs https://github.com/zfsonlinux/zfs/tree/master/include/sys/zfs_acl.h
+	# vfs_zfsacl needs https://github.com/zfsonlinux/zfs/tree/master/include/sys/zfs_acl.h
 	# vfs_nfs4acl_xattr needs https://github.com/notriddle/libdrpc/blob/master/rpc/xdr.h
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
@@ -242,10 +243,10 @@ CONFIGURE_ARGS += \
 		--with-static-modules=$(SAMBA4_MODULES)!DEFAULT,!FORCED \
 		--with-shared-modules=$(SAMBA4_MODULES_SHARDED)!DEFAULT,!FORCED
 
-# setup build/install targets
+# Setup build/install targets
 # CONFIG_PACKAGE_samba4-server
 BUILD_TARGETS_SERVER :=smbd/smbd,smbpasswd,pdbedit,testparm
-# optional server targets
+# Optional server targets
 ifeq ($(CONFIG_SAMBA4_SERVER_ACL),y)
 	BUILD_TARGETS_SERVER :=$(BUILD_TARGETS_SERVER),sharesec
 endif
@@ -265,22 +266,17 @@ BUILD_TARGETS_ADMIN :=net,smbcontrol,profiles,rpcclient,smbcacls,smbcquotas
 # CONFIG_PACKAGE_samba4-utils
 BUILD_TARGETS_UTILS :=smbstatus,smbtree,smbget,mvxattr,nmblookup
 
-# extra flags
-TARGET_CFLAGS += -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += -Wl,--gc-sections
-#,--as-needed,--no-undefined,--no-allow-shlib-undefined
-
 # lib bundling
-# NOTE: compile some unique libs into related bins, so we end-up with a unified samba4-libs base, mainly to allow package separation (server, client, admin, utils)
-CONFIGURE_ARGS += --builtin-libraries=smbclient,netapi,samba-passdb,ads,auth,cli-spoolss,libcli-lsa3,gpext,talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,popt
+# NOTE: Compile some unique libs into related bins, so we end-up with a unified samba4-libs base, mainly to allow package separation (server, client, admin, utils)
+CONFIGURE_ARGS += --builtin-libraries=smbclient,netapi,samba-passdb,ads,auth,cli-spoolss,libcli-lsa3,gpext,talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace
 #CONFIGURE_ARGS += --nonshared-binary=$(BUILD_TARGETS_SERVER)
 # NOTE: bundle + make private, we want to avoid version configuration (build, link) conflicts
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,popt,pytalloc-util,pyldb-util,NONE
+CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,pytalloc-util,pyldb-util,NONE
 else
-CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,popt,NONE
+CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,NONE
 endif
-CONFIGURE_ARGS += --private-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,popt
+CONFIGURE_ARGS += --private-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace
 
 define Build/Prepare
 	$(Build/Prepare/Default)
@@ -296,7 +292,7 @@ define Build/Configure
 	$(call Build/Configure/Default,configure)
 endef
 
-#BUG: We need to use "waf install --targets=" otherwise a "make install" or "waf install" will retrigger a full recompile of all possible targets!
+# BUG: We need to use "waf install --targets=" otherwise a "make install" or "waf install" will retrigger a full recompile of all possible targets!
 define Build/Compile
 	(cd $(PKG_BUILD_DIR); \
 		./buildtools/bin/waf install -j$(shell nproc) \
@@ -305,7 +301,7 @@ define Build/Compile
 	)
 endef
 
-#no default install see above
+# No default install see above
 define Build/Install
 endef
 
@@ -331,7 +327,6 @@ define Package/samba4-utils/install
 endef
 
 define Package/samba4-server/install
-	# install extra shared modules
 	$(INSTALL_DIR) $(1)/usr/lib/samba
 	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/idmap ]; then \
 		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/idmap $(1)/usr/lib/samba/; \
@@ -345,7 +340,6 @@ define Package/samba4-server/install
 	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/pdb ]; then \
 		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/pdb $(1)/usr/lib/samba/; \
 	fi
-	# install build targets
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/{smbpasswd,pdbedit,testparm} $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/usr/sbin
@@ -365,7 +359,6 @@ endif
 ifeq ($(CONFIG_SAMBA4_SERVER_ACL),y)
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/sharesec $(1)/usr/bin
 endif
-	# install init, config
 	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/samba $(1)/etc/init.d
 	$(INSTALL_DATA) ./files/samba.config $(1)/etc/config/samba4
 	$(INSTALL_DATA) ./files/smb.conf.template $(1)/etc/samba
