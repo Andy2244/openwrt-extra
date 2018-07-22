@@ -37,6 +37,15 @@ msgstr "描述"
 msgid "Directory mask"
 msgstr "目錄權限掩碼"
 
+msgid "Disable Active Directory Domain Controller"
+msgstr ""
+
+msgid "Disable Netbios"
+msgstr ""
+
+msgid "Disable Winbind"
+msgstr ""
+
 msgid "Edit Template"
 msgstr "編輯模板"
 
@@ -46,14 +55,14 @@ msgstr "編輯用來生成 samba 設定的模板"
 msgid "General Settings"
 msgstr "基本設定"
 
+msgid "Guests only"
+msgstr ""
+
 msgid "Hostname"
 msgstr "主機名"
 
-msgid "Mask for new directories"
-msgstr "新目錄權限掩碼"
-
-msgid "Mask for new files"
-msgstr "新檔案權限掩碼"
+msgid "Inherit owner"
+msgstr ""
 
 msgid "Name"
 msgstr "共享名"
@@ -87,8 +96,17 @@ msgstr ""
 "這是將從其上生成 samba 配置的檔案“/etc/samba/smb.conf.template”的內容。由管道"
 "符（“|”）包圍的值不應更改。它們將從“常規設定”標籤中獲取其值。"
 
+msgid "Vfs objects"
+msgstr ""
+
 msgid "Workgroup"
 msgstr "工作組"
+
+#~ msgid "Mask for new directories"
+#~ msgstr "新目錄權限掩碼"
+
+#~ msgid "Mask for new files"
+#~ msgstr "新檔案權限掩碼"
 
 #~ msgid "Physical Path"
 #~ msgstr "物理路徑"

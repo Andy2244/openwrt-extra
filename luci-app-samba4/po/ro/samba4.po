@@ -35,6 +35,15 @@ msgstr "Descriere"
 msgid "Directory mask"
 msgstr "Masca director"
 
+msgid "Disable Active Directory Domain Controller"
+msgstr ""
+
+msgid "Disable Netbios"
+msgstr ""
+
+msgid "Disable Winbind"
+msgstr ""
+
 msgid "Edit Template"
 msgstr "Editeaza sablon"
 
@@ -44,14 +53,14 @@ msgstr "Editeaza sablonul care e folosit pentru generarea configuratiei samba."
 msgid "General Settings"
 msgstr "Setari generale"
 
+msgid "Guests only"
+msgstr ""
+
 msgid "Hostname"
 msgstr "Numele de host"
 
-msgid "Mask for new directories"
-msgstr "Masca pentru directoarele noi"
-
-msgid "Mask for new files"
-msgstr "Masca pentru fisierele noi"
+msgid "Inherit owner"
+msgstr ""
 
 msgid "Name"
 msgstr "Nume"
@@ -86,5 +95,14 @@ msgstr ""
 "genereaza configuratia samba. Valorile dintre liniuta verticala ('|') n-ar "
 "trebui schimbate, ele iau valorile direct din tab-ul de \"Setari generale\"."
 
+msgid "Vfs objects"
+msgstr ""
+
 msgid "Workgroup"
 msgstr "Workgroup"
+
+#~ msgid "Mask for new directories"
+#~ msgstr "Masca pentru directoarele noi"
+
+#~ msgid "Mask for new files"
+#~ msgstr "Masca pentru fisierele noi"

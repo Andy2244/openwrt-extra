@@ -42,6 +42,15 @@ msgstr "Mô tả"
 msgid "Directory mask"
 msgstr "Thư mục Mask"
 
+msgid "Disable Active Directory Domain Controller"
+msgstr ""
+
+msgid "Disable Netbios"
+msgstr ""
+
+msgid "Disable Winbind"
+msgstr ""
+
 msgid "Edit Template"
 msgstr ""
 
@@ -51,14 +60,14 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
+msgid "Guests only"
+msgstr ""
+
 msgid "Hostname"
 msgstr "tên máy chủ"
 
-msgid "Mask for new directories"
-msgstr "Mask cho thư mục mới"
-
-msgid "Mask for new files"
-msgstr "Mask cho tập tin mới"
+msgid "Inherit owner"
+msgstr ""
 
 msgid "Name"
 msgstr ""
@@ -91,8 +100,17 @@ msgid ""
 "Settings' tab."
 msgstr ""
 
+msgid "Vfs objects"
+msgstr ""
+
 msgid "Workgroup"
 msgstr "Nhóm làm việc "
+
+#~ msgid "Mask for new directories"
+#~ msgstr "Mask cho thư mục mới"
+
+#~ msgid "Mask for new files"
+#~ msgstr "Mask cho tập tin mới"
 
 #~ msgid "Shared Directory"
 #~ msgstr "Đã chia sẻ thư mục"

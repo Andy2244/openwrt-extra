@@ -25,7 +25,7 @@ msgid "Allowed users"
 msgstr "Legitimierte Benutzer"
 
 msgid "Browseable"
-msgstr ""
+msgstr "Suchbar"
 
 msgid "Create mask"
 msgstr "Berechtigungsmaske für neue Dateien"
@@ -35,6 +35,15 @@ msgstr "Beschreibung"
 
 msgid "Directory mask"
 msgstr "Verzeichnismaske"
+
+msgid "Disable Active Directory Domain Controller"
+msgstr "Deaktiviere Active Directory Domain Controller"
+
+msgid "Disable Netbios"
+msgstr "Deaktiviere Netbios"
+
+msgid "Disable Winbind"
+msgstr "Deaktiviere Winbind"
 
 msgid "Edit Template"
 msgstr "Template bearbeiten"
@@ -47,14 +56,14 @@ msgstr ""
 msgid "General Settings"
 msgstr "Allgemeine Einstellungen"
 
+msgid "Guests only"
+msgstr "Nur Gaeste"
+
 msgid "Hostname"
 msgstr "Hostname"
 
-msgid "Mask for new directories"
-msgstr "Maske für neue Verzeichnisse"
-
-msgid "Mask for new files"
-msgstr "Maske für neue Dateien"
+msgid "Inherit owner"
+msgstr "Besitzer Erben"
 
 msgid "Name"
 msgstr "Name"
@@ -91,5 +100,14 @@ msgstr ""
 "werden, da diese beim Erstellen der Konfiguration mit den Werten aus dem Tab "
 "'Allgemeine Einstellungen' ersetzt werden."
 
+msgid "Vfs objects"
+msgstr "Virtuelle Filesystem Module"
+
 msgid "Workgroup"
 msgstr "Arbeitsgruppe"
+
+#~ msgid "Mask for new directories"
+#~ msgstr "Maske für neue Verzeichnisse"
+
+#~ msgid "Mask for new files"
+#~ msgstr "Maske für neue Dateien"

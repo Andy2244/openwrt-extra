@@ -38,6 +38,15 @@ msgstr "Описание"
 msgid "Directory mask"
 msgstr "Маска папок"
 
+msgid "Disable Active Directory Domain Controller"
+msgstr ""
+
+msgid "Disable Netbios"
+msgstr ""
+
+msgid "Disable Winbind"
+msgstr ""
+
 msgid "Edit Template"
 msgstr "Настройка config файла"
 
@@ -47,14 +56,14 @@ msgstr "Настройка config<br />файла samba."
 msgid "General Settings"
 msgstr "Основные настройки"
 
+msgid "Guests only"
+msgstr ""
+
 msgid "Hostname"
 msgstr "Имя хоста"
 
-msgid "Mask for new directories"
-msgstr "Маска для новых папок"
-
-msgid "Mask for new files"
-msgstr "Маска для новых файлов"
+msgid "Inherit owner"
+msgstr ""
 
 msgid "Name"
 msgstr "Имя"
@@ -92,5 +101,14 @@ msgstr ""
 "('|'), не должны быть изменены.<br />Они будут автоматически заменены на "
 "значения со страницы 'Основные настройки'."
 
+msgid "Vfs objects"
+msgstr ""
+
 msgid "Workgroup"
 msgstr "Рабочая группа"
+
+#~ msgid "Mask for new directories"
+#~ msgstr "Маска для новых папок"
+
+#~ msgid "Mask for new files"
+#~ msgstr "Маска для новых файлов"

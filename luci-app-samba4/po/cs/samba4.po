@@ -34,6 +34,15 @@ msgstr "Popis"
 msgid "Directory mask"
 msgstr "Maska adresáře"
 
+msgid "Disable Active Directory Domain Controller"
+msgstr ""
+
+msgid "Disable Netbios"
+msgstr ""
+
+msgid "Disable Winbind"
+msgstr ""
+
 msgid "Edit Template"
 msgstr "Editovat šablonu"
 
@@ -45,14 +54,14 @@ msgstr ""
 msgid "General Settings"
 msgstr "Obecné nastavení"
 
+msgid "Guests only"
+msgstr ""
+
 msgid "Hostname"
 msgstr "Název počítače."
 
-msgid "Mask for new directories"
-msgstr "Maska pro nové adresáře"
-
-msgid "Mask for new files"
-msgstr "Maska pro nové soubory"
+msgid "Inherit owner"
+msgstr ""
 
 msgid "Name"
 msgstr "Jméno"
@@ -87,5 +96,14 @@ msgstr ""
 "konfigurace samby generována. Hodnoty uzavřené rourou (\"|\"), by se neměly "
 "měnit. Tyto hodnoty jsou brány ze záložky \"Obecná nastavení\"."
 
+msgid "Vfs objects"
+msgstr ""
+
 msgid "Workgroup"
 msgstr "Skupina"
+
+#~ msgid "Mask for new directories"
+#~ msgstr "Maska pro nové adresáře"
+
+#~ msgid "Mask for new files"
+#~ msgstr "Maska pro nové soubory"

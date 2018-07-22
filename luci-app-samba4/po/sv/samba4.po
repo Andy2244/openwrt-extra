@@ -30,6 +30,15 @@ msgstr "Beskrivning"
 msgid "Directory mask"
 msgstr "Mask för mapp"
 
+msgid "Disable Active Directory Domain Controller"
+msgstr ""
+
+msgid "Disable Netbios"
+msgstr ""
+
+msgid "Disable Winbind"
+msgstr ""
+
 msgid "Edit Template"
 msgstr "Redigera mall"
 
@@ -40,14 +49,14 @@ msgstr ""
 msgid "General Settings"
 msgstr "Generella inställningar"
 
+msgid "Guests only"
+msgstr ""
+
 msgid "Hostname"
 msgstr "Värdnamn"
 
-msgid "Mask for new directories"
-msgstr "Mask för nya mappar"
-
-msgid "Mask for new files"
-msgstr "Mask för nya filer"
+msgid "Inherit owner"
+msgstr ""
 
 msgid "Name"
 msgstr "Namn"
@@ -79,5 +88,14 @@ msgid ""
 "Settings' tab."
 msgstr ""
 
+msgid "Vfs objects"
+msgstr ""
+
 msgid "Workgroup"
 msgstr "Arbetsgrupp"
+
+#~ msgid "Mask for new directories"
+#~ msgstr "Mask för nya mappar"
+
+#~ msgid "Mask for new files"
+#~ msgstr "Mask för nya filer"

@@ -36,6 +36,15 @@ msgstr "Descrição"
 msgid "Directory mask"
 msgstr "Máscara do diretório"
 
+msgid "Disable Active Directory Domain Controller"
+msgstr ""
+
+msgid "Disable Netbios"
+msgstr ""
+
+msgid "Disable Winbind"
+msgstr ""
+
 msgid "Edit Template"
 msgstr "Editar modelo"
 
@@ -45,14 +54,14 @@ msgstr "Edita o modelo que é usado para gerar a configuração do samba."
 msgid "General Settings"
 msgstr "Configurações Gerais"
 
+msgid "Guests only"
+msgstr ""
+
 msgid "Hostname"
 msgstr "Nome do equipamento"
 
-msgid "Mask for new directories"
-msgstr "Máscara para novos diretórios"
-
-msgid "Mask for new files"
-msgstr "Máscara para novos arquivos"
+msgid "Inherit owner"
+msgstr ""
 
 msgid "Name"
 msgstr "Nome"
@@ -88,8 +97,17 @@ msgstr ""
 "não devem ser alterados. Estes valores serão obtidos a partir da aba "
 "'Configurações Gerais'."
 
+msgid "Vfs objects"
+msgstr ""
+
 msgid "Workgroup"
 msgstr "Grupo de trabalho"
+
+#~ msgid "Mask for new directories"
+#~ msgstr "Máscara para novos diretórios"
+
+#~ msgid "Mask for new files"
+#~ msgstr "Máscara para novos arquivos"
 
 #~ msgid "Shared Directory"
 #~ msgstr "Diretório Compartilhado"

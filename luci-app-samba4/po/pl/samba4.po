@@ -35,6 +35,15 @@ msgstr "Opis"
 msgid "Directory mask"
 msgstr "Maska katalogu"
 
+msgid "Disable Active Directory Domain Controller"
+msgstr ""
+
+msgid "Disable Netbios"
+msgstr ""
+
+msgid "Disable Winbind"
+msgstr ""
+
 msgid "Edit Template"
 msgstr "Edytuj szablon"
 
@@ -44,14 +53,14 @@ msgstr "Edytuj szablon, który jest używany do generowania konfiguracji samby."
 msgid "General Settings"
 msgstr "Ustawienia ogólne"
 
+msgid "Guests only"
+msgstr ""
+
 msgid "Hostname"
 msgstr "Nazwa hosta"
 
-msgid "Mask for new directories"
-msgstr "Maska dla nowych katalogów"
-
-msgid "Mask for new files"
-msgstr "Maska dla nowych plików"
+msgid "Inherit owner"
+msgstr ""
 
 msgid "Name"
 msgstr "Nazwa"
@@ -87,5 +96,14 @@ msgstr ""
 "kreski pionowej ('|') nie powinny być zmieniane. Wartości ich zostaną "
 "pobrane z zakładki \"Ustawienia ogólne\"."
 
+msgid "Vfs objects"
+msgstr ""
+
 msgid "Workgroup"
 msgstr "Grupa robocza"
+
+#~ msgid "Mask for new directories"
+#~ msgstr "Maska dla nowych katalogów"
+
+#~ msgid "Mask for new files"
+#~ msgstr "Maska dla nowych plików"

@@ -34,6 +34,15 @@ msgstr "説明"
 msgid "Directory mask"
 msgstr "ディレクトリのマスク"
 
+msgid "Disable Active Directory Domain Controller"
+msgstr ""
+
+msgid "Disable Netbios"
+msgstr ""
+
+msgid "Disable Winbind"
+msgstr ""
+
 msgid "Edit Template"
 msgstr "テンプレートの編集"
 
@@ -43,14 +52,14 @@ msgstr "samba設定を生成するテンプレートを編集します。"
 msgid "General Settings"
 msgstr "一般設定"
 
+msgid "Guests only"
+msgstr ""
+
 msgid "Hostname"
 msgstr "ホスト名"
 
-msgid "Mask for new directories"
-msgstr "新規ディレクトリのマスク"
-
-msgid "Mask for new files"
-msgstr "新規ファイルのマスク"
+msgid "Inherit owner"
+msgstr ""
 
 msgid "Name"
 msgstr "名前"
@@ -87,5 +96,14 @@ msgstr ""
 "容です。パイプ('|')で閉じられた値は変更しないでください。これらの値は'一般設"
 "定'タブ内の値によって置き換えられます。"
 
+msgid "Vfs objects"
+msgstr ""
+
 msgid "Workgroup"
 msgstr "ワークグループ"
+
+#~ msgid "Mask for new directories"
+#~ msgstr "新規ディレクトリのマスク"
+
+#~ msgid "Mask for new files"
+#~ msgstr "新規ファイルのマスク"

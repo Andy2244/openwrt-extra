@@ -1,0 +1,28 @@
+--- a/src/Mayaqua/Encrypt.c	2018-07-21
++++ b/src/Mayaqua/Encrypt.c	2018-07-22
+@@ -148,7 +148,7 @@
+ #ifdef _MSC_VER
+ #include <intrin.h> // For __cpuid()
+ #else
+-#include <cpuid.h> // For __get_cpuid()
++//#include <cpuid.h> // For __get_cpuid()
+ #endif
+ 
+ LOCK *openssl_lock = NULL;
+@@ -4273,6 +4273,8 @@ void AesDecrypt(void *dest, void *src, U
+ // Determine whether the AES-NI instruction set is supported by the CPU
+ bool IsAesNiSupported()
+ {
++	return false;
++/*
+ 	bool supported = false;
+ 
+ 	// Unfortunately OpenSSL doesn't provide a function to do it
+@@ -4287,6 +4289,7 @@ bool IsAesNiSupported()
+ #endif
+ 
+ 	return supported;
++*/
+ }
+ 
+ // Calculation of HMAC-SHA-1

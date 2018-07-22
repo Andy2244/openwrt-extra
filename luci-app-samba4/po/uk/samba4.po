@@ -35,6 +35,15 @@ msgstr "Опис"
 msgid "Directory mask"
 msgstr "Маска каталогу"
 
+msgid "Disable Active Directory Domain Controller"
+msgstr ""
+
+msgid "Disable Netbios"
+msgstr ""
+
+msgid "Disable Winbind"
+msgstr ""
+
 msgid "Edit Template"
 msgstr "Редагувати шаблон"
 
@@ -45,14 +54,14 @@ msgstr ""
 msgid "General Settings"
 msgstr "Загальні настройки"
 
+msgid "Guests only"
+msgstr ""
+
 msgid "Hostname"
 msgstr "Назва (ім'я) вузла"
 
-msgid "Mask for new directories"
-msgstr "Маска для нових каталогів"
-
-msgid "Mask for new files"
-msgstr "Маска для нових файлів"
+msgid "Inherit owner"
+msgstr ""
 
 msgid "Name"
 msgstr "Ім'я"
@@ -88,5 +97,14 @@ msgstr ""
 "\" (\"|\") не повинні змінюватися. Вони отримують свої значення з вкладки "
 "\"Загальні налаштування\"."
 
+msgid "Vfs objects"
+msgstr ""
+
 msgid "Workgroup"
 msgstr "Робоча група"
+
+#~ msgid "Mask for new directories"
+#~ msgstr "Маска для нових каталогів"
+
+#~ msgid "Mask for new files"
+#~ msgstr "Маска для нових файлів"

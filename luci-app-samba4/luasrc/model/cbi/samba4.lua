@@ -1,5 +1,3 @@
--- Copyright 2008 Steven Barth <steven@midlink.org>
--- Copyright 2008 Jo-Philipp Wich <jow@openwrt.org>
 -- Licensed to the public under the Apache License 2.0.
 
 m = Map("samba4", translate("Network Shares"))
@@ -17,8 +15,8 @@ h = s:taboption("general", Flag, "homes", translate("Share home-directories"),
         translate("Allow system users to reach their home directories via " ..
                 "network shares"))
 h.rmempty = false
-s:taboption("general", Flag, "disable_netbios", translate("Disable netbios"))
-s:taboption("general", Flag, "disable_ad_dc", translate("Disable AD-DC"))
+s:taboption("general", Flag, "disable_netbios", translate("Disable Netbios"))
+s:taboption("general", Flag, "disable_ad_dc", translate("Disable Active Directory Domain Controller"))
 s:taboption("general", Flag, "disable_winbind", translate("Disable Winbind"))
 
 tmpl = s:taboption("template", Value, "_tmpl",
@@ -64,7 +62,7 @@ br.default = "yes"
 br.enabled = "yes"
 br.disabled = "no"
 
-go = s:option(Flag, "guest_ok", translate("Allow Guests"))
+go = s:option(Flag, "guest_ok", translate("Allow guests"))
 go.rmempty = false
 go.enabled = "yes"
 go.disabled = "no"
@@ -74,20 +72,20 @@ gon.rmempty = false
 gon.enabled = "yes"
 gon.disabled = "no"
 
-io = s:option(Flag, "inherit_owner", translate("Inherit Owner"))
+io = s:option(Flag, "inherit_owner", translate("Inherit owner"))
 io.rmempty = false
 io.enabled = "yes"
 io.disabled = "no"
 
-cm = s:option(Value, "create_mask", translate("Create Mask"))
+cm = s:option(Value, "create_mask", translate("Create mask"))
 cm.rmempty = true
 cm.size = 4
 
-dm = s:option(Value, "dir_mask", translate("Directory Mask"))
+dm = s:option(Value, "dir_mask", translate("Directory mask"))
 dm.rmempty = true
 dm.size = 4
 
-s:option(Value, "vfs_objects", translate("Vfs Objects")).rmempty = true
+s:option(Value, "vfs_objects", translate("Vfs objects")).rmempty = true
 
 function m.on_commit(self,map)
 	require("luci.sys").call('/sbin/reload_config')
