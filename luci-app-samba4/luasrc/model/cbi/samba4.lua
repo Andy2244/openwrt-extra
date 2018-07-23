@@ -33,7 +33,7 @@ end
 
 function tmpl.write(self, section, value)
 	value = value:gsub("\r\n?", "\n")
-	nixio.fs.writefile("//etc/samba/smb.conf.template", value)
+	nixio.fs.writefile("/etc/samba/smb.conf.template", value)
 end
 
 
@@ -46,7 +46,7 @@ s.template = "cbi/tblsection"
 s:option(Value, "name", translate("Name"))
 pth = s:option(Value, "path", translate("Path"))
 if nixio.fs.access("/etc/config/fstab") then
-        pth.titleref = luci.dispatcher.build_url("admin", "system", "fstab")
+	pth.titleref = luci.dispatcher.build_url("admin", "system", "fstab")
 end
 
 s:option(Value, "users", translate("Allowed users")).rmempty = true
@@ -86,9 +86,5 @@ dm.rmempty = true
 dm.size = 4
 
 s:option(Value, "vfs_objects", translate("Vfs objects")).rmempty = true
-
-function m.on_commit(self,map)
-	require("luci.sys").call('/sbin/reload_config')
-end
 
 return m

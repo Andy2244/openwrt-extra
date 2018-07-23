@@ -1,8 +1,8 @@
 #!/bin/sh /etc/rc.common
-START=60
+START=90
 
 start(){
-	logger -t 'softethervpn' "Starting softether vpnserver service."
+	logger -t 'softethervpn-dev' "Starting softether vpnserver service."
 	
 	[ -d /var/softether ] || {
 		mkdir -p /var/softether
@@ -18,7 +18,7 @@ start(){
 }
 
 stop(){
-	logger -t 'softethervpn' "Stopping softether vpnserver service."
+	logger -t 'softethervpn-dev' "Stopping softether vpnserver service."
 	
 	/usr/bin/env LANG=en_US.UTF-8 /var/softether/vpnserver stop
 }

@@ -1,10 +1,13 @@
+# Based partially on the versions of el1n and Federico Di Marco
+
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=softethervpn
-PKG_RELEASE:=1
+PKG_NAME:=softethervpn-server
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/SoftEtherVPN/SoftEtherVPN.git
+PKG_VERSION_NAME:=5.1-git
 PKG_SOURCE_DATE:=2018-07-21
 PKG_SOURCE_VERSION:=879dc8f6b8daa017ebbe843a57fd15ebb36877c3
 PKG_MIRROR_HASH:=8e921f055faf6738be56ea8db136d4307077efb870ca77cf3097a7117eeb3936
@@ -25,7 +28,7 @@ define Package/softethervpn-server
   CATEGORY:=Network
   SUBMENU:=VPN
   DEPENDS:=+libpthread +librt +libreadline +libopenssl +libncurses +kmod-tun +zlib $(ICONV_DEPENDS)
-  TITLE:=Free Cross-platform Multi-protocol VPN server
+  TITLE:=Multi-protocol VPN server (Dev. Edition $(PKG_VERSION_NAME))
   URL:=http://www.softether.org/
 endef
 
@@ -35,10 +38,10 @@ define Package/softethervpn-server/config
 endef
 
 define Package/softethervpn-server/description
-SoftEther VPN is the world's only VPN software which supports SSL-VPN,
-OpenVPN, L2TP, EtherIP, L2TPv3 and IPsec as a single VPN software. SoftEther VPN is not only an alternative VPN server to existing VPN products (OpenVPN,
-IPsec and MS-SSTP), but has also original strong SSL-VPN protocol to penetrate any kinds of firewalls. Ultra-optimized SSL-VPN Protocol of SoftEther VPN
-has very fast throughput, low latency and firewall resistance.
+SoftEther VPN supports SSL-VPN, OpenVPN, L2TP, EtherIP, L2TPv3 and IPsec as a single VPN software.
+SoftEther VPN is not only an alternative VPN server to existing VPN products (OpenVPN, IPsec and MS-SSTP),
+but has also original strong SSL-VPN protocol to penetrate any kinds of firewalls. 
+Ultra-optimized SSL-VPN Protocol of SoftEther VPN has very fast throughput, low latency and firewall resistance.
 endef
 
 define Build/Prepare
@@ -75,19 +78,14 @@ endef
 
 define Package/softethervpn-server/install
 	$(INSTALL_DIR) $(1)/usr/libexec/softethervpn
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpnserver/vpnserver $(1)/usr/libexec/softethervpn
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpnserver/hamcore.se2 $(1)/usr/libexec/softethervpn
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpncmd/vpncmd $(1)/usr/libexec/softethervpn
-	$(INSTALL_BIN) files/launcher.sh $(1)/usr/libexec/softethervpn
-
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpnserver/vpnserver $(1)/usr/libexec/softethervpn/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpnserver/hamcore.se2 $(1)/usr/libexec/softethervpn/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpncmd/vpncmd $(1)/usr/libexec/softethervpn/
+	$(INSTALL_BIN) files/launcher.sh $(1)/usr/libexec/softethervpn/
 	$(INSTALL_DATA) files/dummy $(1)/usr/libexec/softethervpn/vpn_server.config
 	$(INSTALL_DATA) files/dummy $(1)/usr/libexec/softethervpn/lang.config
-
 	$(INSTALL_DIR) $(1)/usr/bin
-
 	$(LN) ../../usr/libexec/softethervpn/launcher.sh $(1)/usr/bin/vpncmd
-
-	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/vpnserver.init $(1)/etc/init.d/softethervpnserver
 endef
