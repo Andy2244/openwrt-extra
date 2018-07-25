@@ -3,15 +3,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=softethervpn-server
-PKG_SOURCE_COMMIT:=879dc8f
-PKG_SOURCE_DATE:=2018-07-21
+PKG_SOURCE_COMMIT:=949c567
+PKG_SOURCE_DATE:=2018-07-25
 PKG_VERSION:=$(PKG_SOURCE_DATE)-$(PKG_SOURCE_COMMIT)
 PKG_VERSION_NAME:=5.1-git
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://codeload.github.com/SoftEtherVPN/SoftEtherVPN/tar.gz/$(PKG_SOURCE_COMMIT)?dummy=/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=5b2d43568af84a7e11ee3929916c3788d37a188b3d44613c4ee01fa0db708131
+PKG_HASH:=c86754f61a94a34f193a4548a356b3f680fb5d2eeb6ce872f3a9d8a25af02175
 PKG_BUILD_DIR:=$(BUILD_DIR)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
 
@@ -57,7 +57,13 @@ endef
 # Tune CFLAGS
 TARGET_CFLAGS += \
 	$(if $(CONFIG_OPENSSL_WITH_SSL3),,-DSSL_OP_NO_SSLv3)
-	
+
+# fix missing libncurses.a
+define Host/Configure
+	$(CP) $(BUILD_DIR_HOST)/ncurses-*/lib/libncurses.a $(STAGING_DIR_HOSTPKG)/lib/ 
+	$(call Host/Configure/Default)
+endef
+
 define Host/Compile
 	$(MAKE) -C $(HOST_BUILD_DIR)/src hamcorebuilder
 endef
