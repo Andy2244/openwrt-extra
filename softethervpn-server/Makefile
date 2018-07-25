@@ -3,25 +3,29 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=softethervpn-server
+PKG_SOURCE_COMMIT:=879dc8f
+PKG_SOURCE_DATE:=2018-07-21
+PKG_VERSION:=$(PKG_SOURCE_DATE)-$(PKG_SOURCE_COMMIT)
+PKG_VERSION_NAME:=5.1-git
 PKG_RELEASE:=2
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/SoftEtherVPN/SoftEtherVPN.git
-PKG_VERSION_NAME:=5.1-git
-PKG_SOURCE_DATE:=2018-07-21
-PKG_SOURCE_VERSION:=879dc8f6b8daa017ebbe843a57fd15ebb36877c3
-PKG_MIRROR_HASH:=8e921f055faf6738be56ea8db136d4307077efb870ca77cf3097a7117eeb3936
+PKG_SOURCE_URL:=https://codeload.github.com/SoftEtherVPN/SoftEtherVPN/tar.gz/$(PKG_SOURCE_COMMIT)?dummy=/
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_HASH:=5b2d43568af84a7e11ee3929916c3788d37a188b3d44613c4ee01fa0db708131
+PKG_BUILD_DIR:=$(BUILD_DIR)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING
 
+HOST_BUILD_DEPENDS:=ncurses/host readline/host
 PKG_BUILD_DEPENDS:=softethervpn-server/host
 
-include $(INCLUDE_DIR)/nls.mk
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/cmake.mk
 include $(INCLUDE_DIR)/host-build.mk
+include $(INCLUDE_DIR)/nls.mk
+include $(INCLUDE_DIR)/cmake.mk
 
 define Package/softethervpn-server
   SECTION:=net
@@ -53,14 +57,13 @@ endef
 # Tune CFLAGS
 TARGET_CFLAGS += \
 	$(if $(CONFIG_OPENSSL_WITH_SSL3),,-DSSL_OP_NO_SSLv3)
-
+	
 define Host/Compile
-	$(MAKE) -C $(HOST_BUILD_DIR)/tmp hamcorebuilder
-#	$(MAKE) -C $(HOST_BUILD_DIR)/tmp hamcore-archive-build
+	$(MAKE) -C $(HOST_BUILD_DIR)/src hamcorebuilder
 endef
 
 define Host/Install
-	$(INSTALL_DIR) $(STAGING_DIR_HOSTPKG)/bin
+	$(INSTALL_DIR) $(STAGING_DIR_HOSTPKG)/bin/
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/tmp/hamcorebuilder $(STAGING_DIR_HOSTPKG)/bin/
 endef
 
