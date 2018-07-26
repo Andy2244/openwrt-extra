@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qemu
-PKG_VERSION:=2.12.0
+PKG_VERSION:=3.0.0-rc2
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://download.qemu.org/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=e69301f361ff65bf5dabd8a19196aeaa5613c1b5ae1678f0823bdf50e7d5c6fc
+PKG_HASH:=b02b30c7d460996835416ef09161f6faef2700e339cf11cd99481ca51b5954f2
 PKG_LICENSE:=GPL-2.0
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
@@ -36,6 +36,7 @@ endef
 
 HOST_CONFIGURE_ARGS +=	\
 	--audio-drv-list=''		\
+	--disable-slirp			\
 	--disable-debug-info	\
 	--disable-modules		\
 	--disable-sdl			\
@@ -64,8 +65,6 @@ HOST_CONFIGURE_ARGS +=	\
 	--disable-werror		\
 	--disable-stack-protector	\
 	--disable-curl			\
-	--disable-linux-aio		\
-	--disable-attr			\
 	--disable-crypto-afalg	\
 	--disable-docs			\
 	--disable-vhost-net		\
@@ -85,7 +84,6 @@ HOST_CONFIGURE_ARGS +=	\
 	--without-vss-sdk		\
 	--without-win-sdk		\
 	--disable-tools			\
-	--disable-seccomp		\
 	--disable-glusterfs		\
 	--disable-gtk			\
 	--disable-gnutls		\
@@ -96,8 +94,6 @@ HOST_CONFIGURE_ARGS +=	\
 	--disable-virglrenderer	\
 	--disable-tpm			\
 	--disable-libssh2		\
-	--disable-tcmalloc		\
-	--disable-jemalloc		\
 	--disable-strip			\
 	--disable-replication	\
 	--disable-vxhs			\
@@ -106,14 +102,25 @@ HOST_CONFIGURE_ARGS +=	\
 	--disable-pie			\
 	--disable-live-block-migration \
 	--disable-numa			\
+	--disable-libxml2		\
 	--disable-capstone		\
+	--disable-debug-mutex	\
 	--disable-git-update	\
 	--disable-hax			\
 	--disable-kvm			\
+	--disable-hvf			\
+	--disable-whpx			\
 	--disable-blobs
 
 #	--disable-tcg
 #	--disable-bsd-user
+#	--disable-linux-aio
+#	--disable-attr
+#	--disable-seccomp
+#	--disable-coroutine-pool
+#	--disable-tcmalloc
+#	--disable-jemalloc
+#	--disable-vhost-user
 
 # QEMU configure script does not recognize these options
 HOST_CONFIGURE_ARGS:=$(filter-out	\
@@ -130,6 +137,7 @@ HOST_CONFIGURE_ARGS:=$(filter-out	\
 CONFIGURE_ARGS:=$(filter-out	\
 	--disable-hax	\
 	--disable-kvm	\
+	--disable-hvf	\
 	--disable-blobs	\
 	, $(HOST_CONFIGURE_ARGS))
 	
