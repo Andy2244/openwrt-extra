@@ -3,15 +3,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=softethervpn-server
-PKG_SOURCE_COMMIT:=949c567
-PKG_SOURCE_DATE:=2018-07-25
+PKG_SOURCE_COMMIT:=be0e3cf
+PKG_SOURCE_DATE:=2018-07-26
 PKG_VERSION:=$(PKG_SOURCE_DATE)-$(PKG_SOURCE_COMMIT)
 PKG_VERSION_NAME:=5.1-git
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://codeload.github.com/SoftEtherVPN/SoftEtherVPN/tar.gz/$(PKG_SOURCE_COMMIT)?dummy=/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=c86754f61a94a34f193a4548a356b3f680fb5d2eeb6ce872f3a9d8a25af02175
+PKG_HASH:=252803ee16f1f45b05b4c206b05da13aefbbb3a63d4dc4d87e1e3feec36d4015
 PKG_BUILD_DIR:=$(BUILD_DIR)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
 
@@ -60,7 +60,7 @@ TARGET_CFLAGS += \
 
 # fix missing libncurses.a
 define Host/Configure
-	$(CP) $(BUILD_DIR_HOST)/ncurses-*/lib/libncurses.a $(STAGING_DIR_HOSTPKG)/lib/ 
+	$(CP) $(BUILD_DIR_HOST)/ncurses-*/lib/libncurses.a $(STAGING_DIR_HOSTPKG)/lib/
 	$(call Host/Configure/Default)
 endef
 
