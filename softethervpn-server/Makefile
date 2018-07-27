@@ -3,15 +3,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=softethervpn-server
-PKG_SOURCE_COMMIT:=be0e3cf
-PKG_SOURCE_DATE:=2018-07-26
+PKG_SOURCE_COMMIT:=110f229
+PKG_SOURCE_DATE:=2018-07-27
 PKG_VERSION:=$(PKG_SOURCE_DATE)-$(PKG_SOURCE_COMMIT)
 PKG_VERSION_NAME:=5.1-git
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://codeload.github.com/SoftEtherVPN/SoftEtherVPN/tar.gz/$(PKG_SOURCE_COMMIT)?dummy=/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=252803ee16f1f45b05b4c206b05da13aefbbb3a63d4dc4d87e1e3feec36d4015
+PKG_HASH:=9577b32dbe5c3a8bbbc4f7f31b69d2fc64d3e57ca0cffeb5caebc071ecf77b90
 PKG_BUILD_DIR:=$(BUILD_DIR)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
 
@@ -65,7 +65,7 @@ define Host/Configure
 endef
 
 define Host/Compile
-	$(MAKE) -C $(HOST_BUILD_DIR)/src hamcorebuilder
+	$(call Host/Compile/Default,hamcorebuilder) 
 endef
 
 define Host/Install
