@@ -2,7 +2,14 @@
 
 ### Description
 
-This is an OpenWrt package feed containing **Samba 4.8.x** and **SoftetherVPN 5.x (dev/git)** servers.
+This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.8.x**](https://www.samba.org/) and [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) servers.
+
+### Update (Aug 2018)
+
+Samba 4, wsdd2, luci-app-samba4 was merged into package/master, so this feeds will contain unmerged or test changes from now on.
+_It should also build against the 18.06 release branch, if not open a issue here._
+
+Snapshots can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/)
 
 #### Note
 Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.
@@ -12,8 +19,6 @@ The package includes experimental support for: **[ad-dc](https://wiki.samba.org/
 The size of the Samba4.ipk and deps are around 5.8 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
 
 ### Usage
-**IMPORTANT: master branch was only tested/build against openwrt/master, package/master (Jun 2018+)**
-
 To use these packages, add the following line to your ```feeds.conf``` or ```feeds.conf.default``` in the OpenWrt buildroot:
 
 ```src-git extra https://github.com/Andy2244/openwrt-extra.git```
@@ -24,8 +29,14 @@ Than include and install all packages from your ```feeds.conf``` via:
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 ```
-Afterwards run: 
-```make menuconfig``` or ```make defconfig```
+If build from master, uninstall and reinstall from extra feed, packages that already exists in the master feed:
+```
+./scripts/feeds uninstall samba4 luci-app-samba4 wsdd2
+./scripts/feeds install -f -p extra samba4 luci-app-samba4 wsdd2
+```
+Make sure the install line notes the extra feed and afterwards run:
+```make menuconfig``` or ```make defconfig``` to expand, create the ```.config```
+
 The packages should appear under **Network->Samba4** and **Network->VPN->softethervpn-server**. There is also a updated **Samba4 luci app** package, you should select.
 
 
