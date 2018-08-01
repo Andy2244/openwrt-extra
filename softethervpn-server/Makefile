@@ -3,15 +3,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=softethervpn-server
-PKG_SOURCE_COMMIT:=110f229
-PKG_SOURCE_DATE:=2018-07-27
+PKG_SOURCE_COMMIT:=4061cfe
+PKG_SOURCE_DATE:=2018-08-01
 PKG_VERSION:=$(PKG_SOURCE_DATE)-$(PKG_SOURCE_COMMIT)
 PKG_VERSION_NAME:=5.1-git
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://codeload.github.com/SoftEtherVPN/SoftEtherVPN/tar.gz/$(PKG_SOURCE_COMMIT)?dummy=/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=9577b32dbe5c3a8bbbc4f7f31b69d2fc64d3e57ca0cffeb5caebc071ecf77b90
+PKG_HASH:=125da4a91e32f1689d7fe8f36552771ab79fcf28feb507bd73eaa65266ce2bc3
 PKG_BUILD_DIR:=$(BUILD_DIR)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
 
@@ -58,12 +58,6 @@ endef
 TARGET_CFLAGS += \
 	$(if $(CONFIG_OPENSSL_WITH_SSL3),,-DSSL_OP_NO_SSLv3)
 
-# fix missing libncurses.a
-define Host/Configure
-	$(CP) $(BUILD_DIR_HOST)/ncurses-*/lib/libncurses.a $(STAGING_DIR_HOSTPKG)/lib/
-	$(call Host/Configure/Default)
-endef
-
 define Host/Compile
 	$(call Host/Compile/Default,hamcorebuilder) 
 endef
@@ -71,6 +65,13 @@ endef
 define Host/Install
 	$(INSTALL_DIR) $(STAGING_DIR_HOSTPKG)/bin/
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/tmp/hamcorebuilder $(STAGING_DIR_HOSTPKG)/bin/
+endef
+
+define Build/Configure
+	# build as shared libs
+	$(SED) 's,STATIC,SHARED,g' $(PKG_BUILD_DIR)/src/Mayaqua/CMakeLists.txt
+	$(SED) 's,STATIC,SHARED,g' $(PKG_BUILD_DIR)/src/Cedar/CMakeLists.txt
+	$(Build/Configure/Default)
 endef
 
 define Build/Compile
@@ -86,6 +87,9 @@ define Package/softethervpn-server/conffiles
 endef
 
 define Package/softethervpn-server/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tmp/Cedar/libcedar.so $(1)/usr/lib/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tmp/Mayaqua/libmayaqua.so $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/libexec/softethervpn
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpnserver/vpnserver $(1)/usr/libexec/softethervpn/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpnserver/hamcore.se2 $(1)/usr/libexec/softethervpn/
