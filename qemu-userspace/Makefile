@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qemu
 PKG_VERSION:=3.0.0-rc3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_URL:=https://download.qemu.org/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -121,6 +121,22 @@ HOST_CONFIGURE_ARGS +=	\
 #	--disable-tcmalloc
 #	--disable-jemalloc
 #	--disable-vhost-user
+
+# only build for supported arch, reduces host buildtime
+QEMU_HOST_TARGET_LIST := \
+	i386 \
+	x86_64 \
+	arm \
+	armeb \
+	mips \
+	mipsel \
+	mips64 \
+	mips64el \
+	aarch64 \
+	ppc
+
+QEMU_HOST_CONFIGURE_TARGET_LIST := $(foreach target,$(QEMU_HOST_TARGET_LIST),$(target)-linux-user)
+HOST_CONFIGURE_ARGS += --target-list='$(QEMU_HOST_CONFIGURE_TARGET_LIST)'
 
 # QEMU configure script does not recognize these options
 HOST_CONFIGURE_ARGS:=$(filter-out	\

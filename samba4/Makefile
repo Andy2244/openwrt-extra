@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.8.3
-PKG_RELEASE:=8
+PKG_RELEASE:=9
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
@@ -127,10 +127,50 @@ CONFIGURE_ARGS:=$(filter-out	\
 	--disable-ipv6		\
 	, $(CONFIGURE_ARGS))
 
+# arch name mapping
+QEMU_ARCH:=$(subst powerpc,ppc,$(ARCH))
+# cpu name mapping
+QEMU_CPU:=$(call qstrip,$(CONFIG_CPU_TYPE))
+ifneq ($(QEMU_CPU),)
+  QEMU_CPU:=$(subst +, ,$(QEMU_CPU))
+  QEMU_CPU:=$(firstword $(QEMU_CPU))
+
+  QEMU_CPU:=$(subst mpcore,,$(QEMU_CPU))
+  QEMU_CPU:=$(subst mips32,,$(QEMU_CPU))
+  QEMU_CPU:=$(subst mips64,,$(QEMU_CPU))
+  QEMU_CPU:=$(subst generic,,$(QEMU_CPU))
+  QEMU_CPU:=$(subst octeonplus,,$(QEMU_CPU))
+  
+  QEMU_CPU:=$(subst 8540,mpc8540,$(QEMU_CPU))
+  QEMU_CPU:=$(subst arm926ej-s,arm926,$(QEMU_CPU))
+  QEMU_CPU:=$(subst xscale,arm926,$(QEMU_CPU))
+  QEMU_CPU:=$(subst arm1176jzf-s,arm1176,$(QEMU_CPU))
+  QEMU_CPU:=$(subst arm1136j-s,arm1136,$(QEMU_CPU))
+  QEMU_CPU:=$(subst cortex-a5,cortex-a7,$(QEMU_CPU))
+  QEMU_CPU:=$(subst cortex-a72,cortex-a57,$(QEMU_CPU))
+  QEMU_CPU:=$(subst cortex-a73,cortex-a57,$(QEMU_CPU))
+  QEMU_CPU:=$(subst 464fp,460ex,$(QEMU_CPU))
+  QEMU_CPU:=$(subst fa526,sa1100,$(QEMU_CPU))
+  QEMU_CPU:=$(subst pentium4,Conroe,$(QEMU_CPU))
+  QEMU_CPU:=$(subst 74kc,74Kf,$(QEMU_CPU))
+  QEMU_CPU:=$(subst 74kf,74Kf,$(QEMU_CPU))
+  QEMU_CPU:=$(subst 24kc,24Kc,$(QEMU_CPU))
+  QEMU_CPU:=$(subst 24kf,24Kf,$(QEMU_CPU))
+endif
+
+QEMU_CPU:=$(strip $(QEMU_CPU))
+ifneq ($(QEMU_CPU),)
+  QEMU_CPU:=-cpu $(QEMU_CPU)
+endif
+
+CROSS-ANSWER-OUT:=$(ARCH)-$(CONFIG_TARGET_BOARD)-$(CONFIG_TARGET_SUBTARGET)-$(CONFIG_CPU_TYPE)
+CROSS-ANSWER-OUT:=$(call qstrip,$(CROSS-ANSWER-OUT))
+
 CONFIGURE_ARGS += \
 		--hostcc="$(HOSTCC)" \
 		--cross-compile \
-		--cross-execute="qemu-$(ARCH) -L $(STAGING_DIR_ROOT)" \
+		--cross-answers="cross-answers-$(CROSS-ANSWER-OUT).txt" \
+		--cross-execute="qemu-$(QEMU_ARCH) $(QEMU_CPU) -L $(STAGING_DIR_ROOT)" \
 		--disable-cups \
 		--disable-iprint \
 		--disable-cephfs \
@@ -206,13 +246,13 @@ SAMBA4_PDB_MODULES :=pdb_smbpasswd,pdb_tdbsam,
 SAMBA4_AUTH_MODULES :=auth_builtin,auth_sam,auth_unix,auth_script,
 SAMBA4_VFS_MODULES :=vfs_default,
 ifeq ($(CONFIG_SAMBA4_SERVER_VFS),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_fruit,vfs_shadow_copy2,vfs_recycle,vfs_fake_perms,vfs_readonly,vfs_cap,vfs_offline,vfs_crossrename,
+	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_fruit,vfs_shadow_copy2,vfs_recycle,vfs_fake_perms,vfs_readonly,vfs_cap,vfs_offline,vfs_crossrename,vfs_catia,vfs_streams_xattr,
 ifeq ($(CONFIG_PACKAGE_kmod-fs-btrfs),y)
 	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_btrfs,
 endif
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_VFSX),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_virusfilter,vfs_shell_snap,vfs_commit,vfs_worm,vfs_xattr_tdb,vfs_streams_xattr,vfs_aio_fork,vfs_aio_pthread,vfs_netatalk,vfs_dirsort,vfs_fileid,vfs_catia,
+	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_virusfilter,vfs_shell_snap,vfs_commit,vfs_worm,vfs_xattr_tdb,vfs_aio_fork,vfs_aio_pthread,vfs_netatalk,vfs_dirsort,vfs_fileid,
 ifeq ($(CONFIG_PACKAGE_kmod-fs-xfs),y)
 	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_linux_xfs_sgid,
 endif
@@ -290,6 +330,7 @@ endif
 endef
 
 define Build/Configure
+	$(RM) -f $(PKG_BUILD_DIR)/cross-answers-$(CROSS-ANSWER-OUT).txt
 	$(call Build/Configure/Default,configure)
 endef
 
