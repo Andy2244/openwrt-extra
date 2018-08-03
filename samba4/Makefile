@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.8.3
-PKG_RELEASE:=9
+PKG_RELEASE:=10
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
@@ -14,7 +14,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=e0569a8a605d5dfb49f1fdd11db796f4d36fe0351c4a7f21387ef253010b82ed
 
 # Buildroot bug? Can't add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
-PKG_BUILD_DEPENDS:=perl/host python/host qemu-userspace/host SAMBA4_SERVER_AD_DC:python-crypto nfs-kernel-server/host
+PKG_BUILD_DEPENDS:=perl/host python/host SAMBA4_SERVER_AD_DC:python-crypto nfs-kernel-server/host
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_SAMBA4_SERVER_NETBIOS \
@@ -29,6 +29,8 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_kmod-fs-xfs
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/kernel.mk
+include $(INCLUDE_DIR)/version.mk
 
 define Package/samba4/Default
   SECTION:=net
@@ -51,6 +53,7 @@ define Package/samba4-libs
   DEPENDS:= +zlib +libtirpc +krb5-libs +libpopt \
 	+PACKAGE_libcap:libcap +PACKAGE_jansson:jansson +PACKAGE_libpthread:libpthread +PACKAGE_libnettle:libnettle \
 	+PACKAGE_libarchive:libarchive +PACKAGE_libgcrypt:libgcrypt +PACKAGE_libpam:libpam \
+	+SAMBA4_SERVER_VFS:attr \
 	+SAMBA4_SERVER_ACL:acl +SAMBA4_SERVER_ACL:attr \
 	+SAMBA4_SERVER_AVAHI:libavahi-client \
 	+SAMBA4_SERVER_AD_DC:python-base +SAMBA4_SERVER_AD_DC:libopenssl +SAMBA4_SERVER_AD_DC:libgnutls +SAMBA4_SERVER_AD_DC:libopenldap
@@ -127,50 +130,10 @@ CONFIGURE_ARGS:=$(filter-out	\
 	--disable-ipv6		\
 	, $(CONFIGURE_ARGS))
 
-# arch name mapping
-QEMU_ARCH:=$(subst powerpc,ppc,$(ARCH))
-# cpu name mapping
-QEMU_CPU:=$(call qstrip,$(CONFIG_CPU_TYPE))
-ifneq ($(QEMU_CPU),)
-  QEMU_CPU:=$(subst +, ,$(QEMU_CPU))
-  QEMU_CPU:=$(firstword $(QEMU_CPU))
-
-  QEMU_CPU:=$(subst mpcore,,$(QEMU_CPU))
-  QEMU_CPU:=$(subst mips32,,$(QEMU_CPU))
-  QEMU_CPU:=$(subst mips64,,$(QEMU_CPU))
-  QEMU_CPU:=$(subst generic,,$(QEMU_CPU))
-  QEMU_CPU:=$(subst octeonplus,,$(QEMU_CPU))
-  
-  QEMU_CPU:=$(subst 8540,mpc8540,$(QEMU_CPU))
-  QEMU_CPU:=$(subst arm926ej-s,arm926,$(QEMU_CPU))
-  QEMU_CPU:=$(subst xscale,arm926,$(QEMU_CPU))
-  QEMU_CPU:=$(subst arm1176jzf-s,arm1176,$(QEMU_CPU))
-  QEMU_CPU:=$(subst arm1136j-s,arm1136,$(QEMU_CPU))
-  QEMU_CPU:=$(subst cortex-a5,cortex-a7,$(QEMU_CPU))
-  QEMU_CPU:=$(subst cortex-a72,cortex-a57,$(QEMU_CPU))
-  QEMU_CPU:=$(subst cortex-a73,cortex-a57,$(QEMU_CPU))
-  QEMU_CPU:=$(subst 464fp,460ex,$(QEMU_CPU))
-  QEMU_CPU:=$(subst fa526,sa1100,$(QEMU_CPU))
-  QEMU_CPU:=$(subst pentium4,Conroe,$(QEMU_CPU))
-  QEMU_CPU:=$(subst 74kc,74Kf,$(QEMU_CPU))
-  QEMU_CPU:=$(subst 74kf,74Kf,$(QEMU_CPU))
-  QEMU_CPU:=$(subst 24kc,24Kc,$(QEMU_CPU))
-  QEMU_CPU:=$(subst 24kf,24Kf,$(QEMU_CPU))
-endif
-
-QEMU_CPU:=$(strip $(QEMU_CPU))
-ifneq ($(QEMU_CPU),)
-  QEMU_CPU:=-cpu $(QEMU_CPU)
-endif
-
-CROSS-ANSWER-OUT:=$(ARCH)-$(CONFIG_TARGET_BOARD)-$(CONFIG_TARGET_SUBTARGET)-$(CONFIG_CPU_TYPE)
-CROSS-ANSWER-OUT:=$(call qstrip,$(CROSS-ANSWER-OUT))
-
 CONFIGURE_ARGS += \
 		--hostcc="$(HOSTCC)" \
 		--cross-compile \
-		--cross-answers="cross-answers-$(CROSS-ANSWER-OUT).txt" \
-		--cross-execute="qemu-$(QEMU_ARCH) $(QEMU_CPU) -L $(STAGING_DIR_ROOT)" \
+		--cross-answers=cross-answers.txt \
 		--disable-cups \
 		--disable-iprint \
 		--disable-cephfs \
@@ -330,7 +293,10 @@ endif
 endef
 
 define Build/Configure
-	$(RM) -f $(PKG_BUILD_DIR)/cross-answers-$(CROSS-ANSWER-OUT).txt
+	$(CP) ./waf-cross-answers/$(ARCH).txt $(PKG_BUILD_DIR)/cross-answers.txt
+	echo 'Checking uname machine type: "$(ARCH)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
+	echo 'Checking uname release type: "$(LINUX_VERSION)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
+	echo 'Checking uname version type: "$(VERSION_DIST) Linux-$(LINUX_VERSION) $(shell date +%Y-%m-%d)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
 	$(call Build/Configure/Default,configure)
 endef
 
