@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.8.3
-PKG_RELEASE:=11
+PKG_RELEASE:=12
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
@@ -369,6 +369,10 @@ endif
 ifeq ($(CONFIG_SAMBA4_SERVER_ACL),y)
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/sharesec $(1)/usr/bin/
 endif
+ifeq ($(CONFIG_SAMBA4_SERVER_AVAHI),y)
+	$(INSTALL_DIR) $(1)/etc/avahi/services
+	$(INSTALL_DATA) ./files/samba.service $(1)/etc/avahi/services/
+endif
 	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/samba $(1)/etc/init.d
 	$(INSTALL_DATA) ./files/samba.config $(1)/etc/config/samba4
 	$(INSTALL_DATA) ./files/smb.conf.template $(1)/etc/samba
@@ -385,6 +389,7 @@ define Package/samba4-server/conffiles
 /etc/samba/idmap.ldb
 /etc/samba/lmhosts
 /etc/nsswitch.conf
+/etc/avahi/services/samba.service
 endef
 
 $(eval $(call BuildPackage,samba4-libs))
