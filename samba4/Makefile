@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.8.3
-PKG_RELEASE:=12
+PKG_RELEASE:=13
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
@@ -14,7 +14,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=e0569a8a605d5dfb49f1fdd11db796f4d36fe0351c4a7f21387ef253010b82ed
 
 # Buildroot bug? Can't add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
-PKG_BUILD_DEPENDS:=perl/host python/host SAMBA4_SERVER_AD_DC:python-crypto nfs-kernel-server/host
+PKG_BUILD_DEPENDS:=SAMBA4_SERVER_AD_DC:python-crypto nfs-kernel-server/host
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_SAMBA4_SERVER_NETBIOS \
