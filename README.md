@@ -9,7 +9,9 @@ This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.8.
 Samba 4, wsdd2, luci-app-samba4 was merged into package/master, so this feeds will contain unmerged or test changes from now on.
 _It should also build against the 18.06 release branch, if not open a issue here._
 
-Snapshots can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/)
+Ready build ipk's for the Snapshot SDK, can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/).
+
+Those "might" also run on 18.06, but are untested on it. I will backport the samba4 package to 18.06 after it has been tested/stabilized.
 
 #### Note
 Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.
