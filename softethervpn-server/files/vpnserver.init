@@ -18,7 +18,7 @@ start_service(){
 
 	procd_open_instance
 	procd_set_param env LANG=en_US.UTF-8
-    procd_set_param command /var/softethervpn/vpnserver execsvc
+    procd_set_param command /var/softethervpn/vpnserver start --foreground
     procd_set_param respawn
     procd_close_instance
 }

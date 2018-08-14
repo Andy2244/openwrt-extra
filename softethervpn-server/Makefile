@@ -3,17 +3,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=softethervpn-server
-PKG_SOURCE_COMMIT:=4061cfe
-PKG_SOURCE_DATE:=2018-08-01
-PKG_VERSION:=$(PKG_SOURCE_DATE)-$(PKG_SOURCE_COMMIT)
 PKG_VERSION_NAME:=5.1-git
 PKG_RELEASE:=1
 
-PKG_SOURCE_URL:=https://codeload.github.com/SoftEtherVPN/SoftEtherVPN/tar.gz/$(PKG_SOURCE_COMMIT)?dummy=/
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=125da4a91e32f1689d7fe8f36552771ab79fcf28feb507bd73eaa65266ce2bc3
-PKG_BUILD_DIR:=$(BUILD_DIR)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/SoftEtherVPN-$(PKG_SOURCE_COMMIT)
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/SoftEtherVPN/SoftEtherVPN.git
+PKG_SOURCE_DATE:=2018-08-13
+PKG_SOURCE_VERSION:=79e2de6e25645484762f0640f467b4e4c4d23fcd
+PKG_MIRROR_HASH:=d4c05d50732b69b8b2fb6898f3f6d8552f328be5a25baf8d39942ba3f8015456
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0
@@ -32,7 +29,7 @@ define Package/softethervpn-server
   CATEGORY:=Network
   SUBMENU:=VPN
   DEPENDS:=+libpthread +librt +libreadline +libopenssl +libncurses +kmod-tun +zlib $(ICONV_DEPENDS)
-  TITLE:=Multi-protocol VPN server (Dev. Edition $(PKG_VERSION_NAME))
+  TITLE:=Multi-protocol VPN server $(PKG_VERSION_NAME)
   URL:=http://www.softether.org/
 endef
 
@@ -48,15 +45,12 @@ but has also original strong SSL-VPN protocol to penetrate any kinds of firewall
 Ultra-optimized SSL-VPN Protocol of SoftEther VPN has very fast throughput, low latency and firewall resistance.
 endef
 
-define Build/Prepare
-	$(Build/Prepare/Default)
-	# remove EUCJP defaults
-	$(SED) 's/"eucJP"/"utf-8"/gI' $(PKG_BUILD_DIR)/src/Mayaqua/Internat.c
-endef	
+export USE_MUSL=YES
+HOST_CFLAGS += -DHWCAPS_ANDROID_MIPS_OR_ARM
 
-# Tune CFLAGS
 TARGET_CFLAGS += \
-	$(if $(CONFIG_OPENSSL_WITH_SSL3),,-DSSL_OP_NO_SSLv3)
+	$(if $(CONFIG_OPENSSL_WITH_SSL3),,-DSSL_OP_NO_SSLv3) \
+	$(FPIC)
 
 define Host/Compile
 	$(call Host/Compile/Default,hamcorebuilder) 
@@ -91,9 +85,9 @@ define Package/softethervpn-server/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tmp/Cedar/libcedar.so $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tmp/Mayaqua/libmayaqua.so $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/libexec/softethervpn
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpnserver/vpnserver $(1)/usr/libexec/softethervpn/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpnserver/hamcore.se2 $(1)/usr/libexec/softethervpn/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/vpncmd/vpncmd $(1)/usr/libexec/softethervpn/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/vpnserver/vpnserver $(1)/usr/libexec/softethervpn/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/vpnserver/hamcore.se2 $(1)/usr/libexec/softethervpn/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/vpncmd/vpncmd $(1)/usr/libexec/softethervpn/
 	$(INSTALL_BIN) files/launcher.sh $(1)/usr/libexec/softethervpn/
 	$(INSTALL_DATA) files/dummy $(1)/usr/libexec/softethervpn/vpn_server.config
 	$(INSTALL_DATA) files/dummy $(1)/usr/libexec/softethervpn/lang.config
