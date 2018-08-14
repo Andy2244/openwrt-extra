@@ -46,7 +46,8 @@ Ultra-optimized SSL-VPN Protocol of SoftEther VPN has very fast throughput, low 
 endef
 
 export USE_MUSL=YES
-HOST_CFLAGS += -DHWCAPS_ANDROID_MIPS_OR_ARM
+# BUG: outdated host/include/elf.h
+HOST_CFLAGS += -DAT_HWCAP2=26
 
 TARGET_CFLAGS += \
 	$(if $(CONFIG_OPENSSL_WITH_SSL3),,-DSSL_OP_NO_SSLv3) \
