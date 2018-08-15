@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.8.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
@@ -53,7 +53,7 @@ define Package/samba4-libs
   TITLE+= libs
   DEPENDS:= +zlib +libtirpc +krb5-libs +libpopt \
 	+PACKAGE_libcap:libcap +PACKAGE_jansson:jansson +PACKAGE_libpthread:libpthread +PACKAGE_libnettle:libnettle \
-	+PACKAGE_libarchive:libarchive +PACKAGE_libgcrypt:libgcrypt +PACKAGE_libpam:libpam \
+	+PACKAGE_libarchive:libarchive +PACKAGE_libgcrypt:libgcrypt +PACKAGE_libpam:libpam +PACKAGE_dbus:dbus +PACKAGE_libavahi-client:libavahi-client \
 	+SAMBA4_SERVER_VFS:attr \
 	+SAMBA4_SERVER_ACL:acl +SAMBA4_SERVER_ACL:attr \
 	+SAMBA4_SERVER_AVAHI:libavahi-client \
