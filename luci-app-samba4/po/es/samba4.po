@@ -96,6 +96,9 @@ msgstr ""
 "generará la configuración de samba. Los valores entre tuberías ('|') no "
 "deben cambiarse. Su valor se toma desde la pestaña 'Configuración General'."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

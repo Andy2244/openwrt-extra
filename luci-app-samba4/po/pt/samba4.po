@@ -97,6 +97,9 @@ msgstr ""
 "| não devem ser alterados. Eles recebem os valores do separador 'Definições "
 "Gerais'."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

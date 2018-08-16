@@ -100,6 +100,9 @@ msgstr ""
 "werden, da diese beim Erstellen der Konfiguration mit den Werten aus dem Tab "
 "'Allgemeine Einstellungen' ersetzt werden."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr "Virtuelle Filesystem Module"
 

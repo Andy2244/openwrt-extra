@@ -97,6 +97,9 @@ msgstr ""
 "não devem ser alterados. Estes valores serão obtidos a partir da aba "
 "'Configurações Gerais'."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

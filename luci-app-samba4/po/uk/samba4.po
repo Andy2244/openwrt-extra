@@ -97,6 +97,9 @@ msgstr ""
 "\" (\"|\") не повинні змінюватися. Вони отримують свої значення з вкладки "
 "\"Загальні налаштування\"."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

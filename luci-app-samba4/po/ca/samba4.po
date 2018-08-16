@@ -99,6 +99,9 @@ msgstr ""
 "barra ('|') no es deuen canviar. Reben els seus valors de la pestanya "
 "'Ajusts generals'."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

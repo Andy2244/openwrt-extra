@@ -85,6 +85,9 @@ msgstr ""
 "konfigurasjon vil bli generert fra. Verdier omsluttet av ('|') bør ikke "
 "endres. De får sine verdier fra 'Generelle Innstillinger' fanen."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

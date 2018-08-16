@@ -15,9 +15,16 @@ h = s:taboption("general", Flag, "homes", translate("Share home-directories"),
         translate("Allow system users to reach their home directories via " ..
                 "network shares"))
 h.rmempty = false
-s:taboption("general", Flag, "disable_netbios", translate("Disable Netbios"))
-s:taboption("general", Flag, "disable_ad_dc", translate("Disable Active Directory Domain Controller"))
-s:taboption("general", Flag, "disable_winbind", translate("Disable Winbind"))
+
+if nixio.fs.access("/usr/sbin/nmbd") then
+	s:taboption("general", Flag, "disable_netbios", translate("Disable Netbios"))
+end
+if nixio.fs.access("/usr/sbin/samba") then
+	s:taboption("general", Flag, "disable_ad_dc", translate("Disable Active Directory Domain Controller"))
+end
+if nixio.fs.access("/usr/sbin/winbindd") then
+	s:taboption("general", Flag, "disable_winbind", translate("Disable Winbind"))
+end
 
 tmpl = s:taboption("template", Value, "_tmpl",
 	translate("Edit the template that is used for generating the samba configuration."), 
@@ -77,6 +84,11 @@ io.rmempty = false
 io.enabled = "yes"
 io.disabled = "no"
 
+tm = s:option(Flag, "timemachine", translate("Timemachine share"))
+tm.rmempty = false
+tm.enabled = "yes"
+tm.disabled = "no"
+
 cm = s:option(Value, "create_mask", translate("Create mask"))
 cm.rmempty = true
 cm.size = 4
@@ -85,6 +97,7 @@ dm = s:option(Value, "dir_mask", translate("Directory mask"))
 dm.rmempty = true
 dm.size = 4
 
-s:option(Value, "vfs_objects", translate("Vfs objects")).rmempty = true
+vfs = s:option(Value, "vfs_objects", translate("Vfs objects"))
+vfs.rmempty = true
 
 return m

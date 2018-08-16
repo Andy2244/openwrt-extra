@@ -95,6 +95,9 @@ msgstr ""
 "('|') should not be changed. They get their values from the 'General "
 "settings' tab."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

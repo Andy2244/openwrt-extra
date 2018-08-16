@@ -88,6 +88,9 @@ msgid ""
 "Settings' tab."
 msgstr ""
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

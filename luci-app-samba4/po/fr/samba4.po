@@ -97,6 +97,9 @@ msgstr ""
 " (« | ») ne doivent pas être modifiées, elles proviennent de l'onglet "
 "« Paramètres généraux »."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

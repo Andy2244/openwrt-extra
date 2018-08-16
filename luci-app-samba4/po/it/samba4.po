@@ -100,6 +100,9 @@ msgstr ""
 "('|') non dovrebbero essere toccati. Essi vengono generati dalla schermata "
 "'Opzioni Generali'."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

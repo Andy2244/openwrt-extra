@@ -97,6 +97,9 @@ msgstr ""
 "közé zárt értékek módosítása nem szükséges, az értéküket az általános "
 "beállítások fülről kapják."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

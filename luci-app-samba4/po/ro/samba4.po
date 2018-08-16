@@ -95,6 +95,9 @@ msgstr ""
 "genereaza configuratia samba. Valorile dintre liniuta verticala ('|') n-ar "
 "trebui schimbate, ele iau valorile direct din tab-ul de \"Setari generale\"."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 

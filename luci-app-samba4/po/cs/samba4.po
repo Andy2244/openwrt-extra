@@ -96,6 +96,9 @@ msgstr ""
 "konfigurace samby generována. Hodnoty uzavřené rourou (\"|\"), by se neměly "
 "měnit. Tyto hodnoty jsou brány ze záložky \"Obecná nastavení\"."
 
+msgid "Timemachine share"
+msgstr ""
+
 msgid "Vfs objects"
 msgstr ""
 
