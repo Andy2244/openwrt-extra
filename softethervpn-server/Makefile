@@ -8,9 +8,9 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/SoftEtherVPN/SoftEtherVPN.git
-PKG_SOURCE_DATE:=2018-08-13
-PKG_SOURCE_VERSION:=79e2de6e25645484762f0640f467b4e4c4d23fcd
-PKG_MIRROR_HASH:=d4c05d50732b69b8b2fb6898f3f6d8552f328be5a25baf8d39942ba3f8015456
+PKG_SOURCE_DATE:=2018-08-23
+PKG_SOURCE_VERSION:=e530932df61d2e6a1c5b07374c9817d5cdc4295b
+PKG_MIRROR_HASH:=c723eabf30f2e564113b5014b42a212f384fa8775f903d855c5ae23bf265de54
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0
@@ -33,25 +33,18 @@ define Package/softethervpn-server
   URL:=http://www.softether.org/
 endef
 
-# needs SSLv3_method for < 1.1
-define Package/softethervpn-server/config
-  select OPENSSL_WITH_SSL3
-endef
-
 define Package/softethervpn-server/description
-SoftEther VPN supports SSL-VPN, OpenVPN, L2TP, EtherIP, L2TPv3 and IPsec as a single VPN software.
-SoftEther VPN is not only an alternative VPN server to existing VPN products (OpenVPN, IPsec and MS-SSTP),
-but has also original strong SSL-VPN protocol to penetrate any kinds of firewalls. 
-Ultra-optimized SSL-VPN Protocol of SoftEther VPN has very fast throughput, low latency and firewall resistance.
+  SoftEther VPN supports SSL-VPN, OpenVPN, L2TP, EtherIP, L2TPv3 and IPsec as a single VPN software.
+  SoftEther VPN is not only an alternative VPN server to existing VPN products (OpenVPN, IPsec and MS-SSTP),
+  but has also original strong SSL-VPN protocol to penetrate any kinds of firewalls. 
+  Ultra-optimized SSL-VPN Protocol of SoftEther VPN has very fast throughput, low latency and firewall resistance.
 endef
 
 export USE_MUSL=YES
 # BUG: outdated host/include/elf.h
 HOST_CFLAGS += -DAT_HWCAP2=26
 
-TARGET_CFLAGS += \
-	$(if $(CONFIG_OPENSSL_WITH_SSL3),,-DSSL_OP_NO_SSLv3) \
-	$(FPIC)
+TARGET_CFLAGS += $(FPIC)
 
 define Host/Compile
 	$(call Host/Compile/Default,hamcorebuilder) 
