@@ -2,8 +2,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
-PKG_VERSION:=4.8.4
-PKG_RELEASE:=4
+PKG_VERSION:=4.8.5
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
@@ -11,7 +11,7 @@ PKG_LICENSE_FILES:=COPYING
 
 PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=f5044d149e01894a08b1d114b8b69aed78171a7bb19608bd1fd771453b9a5406
+PKG_HASH:=e58ee6b1262d4128b8932ceee59d5f0b0a9bbe00547eb3cc4c41552de1a65155
 
 # Buildroot bug? Can't add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
 PKG_BUILD_DEPENDS:=SAMBA4_SERVER_AD_DC:python-crypto nfs-kernel-server/host SAMBA4_WAF_CROSS_EXECUTE:qemu-userspace/host
@@ -214,7 +214,11 @@ endif
 		
 # Optional AES-NI support - https://lists.samba.org/archive/samba-technical/2017-September/122738.html
 # Support for Nettle wasn't comitted
-CONFIGURE_ARGS += --accel-aes=none
+ifdef CONFIG_TARGET_x86_64
+	CONFIGURE_ARGS += --accel-aes=intelaesni
+else
+	CONFIGURE_ARGS += --accel-aes=none
+endif
 
 CONFIGURE_ARGS += \
 		--with-lockdir=/var/lock \
