@@ -24,7 +24,10 @@ msgstr ""
 msgid "Allowed users"
 msgstr "Utilisateurs autorisés"
 
-msgid "Browseable"
+msgid "Apple Time-machine share"
+msgstr ""
+
+msgid "Browse-able"
 msgstr ""
 
 msgid "Create mask"
@@ -50,6 +53,17 @@ msgstr "Éditer le modèle"
 
 msgid "Edit the template that is used for generating the samba configuration."
 msgstr "Éditer le modèle utilisé pour générer la configuration Samba."
+
+msgid "Enable macOS compatible shares"
+msgstr ""
+
+msgid ""
+"Enables Apple's AAPL extension globally and adds macOS compatibility options "
+"to all shares."
+msgstr ""
+
+msgid "Force Root"
+msgstr ""
 
 msgid "General Settings"
 msgstr "Paramètres généraux"
@@ -97,7 +111,7 @@ msgstr ""
 " (« | ») ne doivent pas être modifiées, elles proviennent de l'onglet "
 "« Paramètres généraux »."
 
-msgid "Timemachine share"
+msgid "Time-machine size in GB"
 msgstr ""
 
 msgid "Vfs objects"
