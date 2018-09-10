@@ -6,12 +6,12 @@ This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.8.
 
 ### Update (Aug 2018)
 
-Samba 4, wsdd2, luci-app-samba4 was merged into package/master, so this feeds will contain unmerged or test changes from now on.\
-Ready build ipk's for the Snapshot SDK, can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/).
+Samba 4, wsdd2, luci-app-samba4 was merged into package/master *(Snapshots)*, so this feeds will contain unmerged or test changes from now on.\
+Ready build ipk's for *Snapshots* based firmware, can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/).
 
 #### Note
 Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.\
-The package includes experimental support for: **[ad-dc](https://wiki.samba.org/index.php/Setting_up_Samba_as_an_Active_Directory_Domain_Controller), [winbind](https://wiki.samba.org/index.php/Configuring_Winbindd_on_a_Samba_AD_DC), avahi, quota, acl** *(no cluster, printer,cups/iprint support)*
+The package includes untested options for: **[ad-dc](https://wiki.samba.org/index.php/Setting_up_Samba_as_an_Active_Directory_Domain_Controller), [winbind](https://wiki.samba.org/index.php/Configuring_Winbindd_on_a_Samba_AD_DC)** *(report back if something is missing, broken)*.
 
 The size of the Samba4-server/libs.ipk and deps are around 5.8 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
 
@@ -55,7 +55,7 @@ The packages should appear under **Network->Samba4** and **Network->VPN->softeth
 ### Problems
 
 #### Visibility (share names are not visible)
-If you cant see your share in the Windows 10 explorer as a workgroup user, make sure the ```wsdd2``` package is installed and enabled.
+If you cant see your share in the Windows 10 explorer, make sure the ```wsdd2``` package is installed and enabled.
 
 **On Windows 10** check those services: 
 * Start the ```Function Discovery Provider Host``` and ```Function Discovery Resource Publication``` services, and then set them to Automatic (Delayed Start).
