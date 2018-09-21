@@ -8,9 +8,9 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/SoftEtherVPN/SoftEtherVPN.git
-PKG_SOURCE_DATE:=2018-08-23
-PKG_SOURCE_VERSION:=e530932df61d2e6a1c5b07374c9817d5cdc4295b
-PKG_MIRROR_HASH:=c723eabf30f2e564113b5014b42a212f384fa8775f903d855c5ae23bf265de54
+PKG_SOURCE_DATE:=2018-09-19
+PKG_SOURCE_VERSION:=a78bcb4f21b7d109874178011b1f794143c3b061
+PKG_MIRROR_HASH:=7424b56e594b8c0e7e96cc4978ea8bc97c0fc3b271480c936a800a00a4cce813
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0
@@ -29,7 +29,7 @@ define Package/softethervpn-server
   CATEGORY:=Network
   SUBMENU:=VPN
   DEPENDS:=+libpthread +librt +libreadline +libopenssl +libncurses +kmod-tun +zlib $(ICONV_DEPENDS)
-  TITLE:=Multi-protocol VPN server $(PKG_VERSION_NAME)
+  TITLE:=Multi-protocol VPN server v$(PKG_VERSION_NAME)
   URL:=http://www.softether.org/
 endef
 
