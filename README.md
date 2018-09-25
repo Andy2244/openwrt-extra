@@ -28,10 +28,10 @@ FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
 FEED_1_PACKAGES="samba4-server luci-app-samba4 wsdd2"
 ```
 
-*Softether*
+*Softether5*
 ```
 FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
-FEED_1_PACKAGES="softethervpn-server ncurses"
+FEED_1_PACKAGES="softethervpn5-server"
 ```
 
 #### Advanced (already setup OpenWrt sdk)
@@ -50,7 +50,7 @@ Than include and install all packages from your ```feeds.conf```, while ensuring
 Make sure the install line notes the extra feed and afterwards run:
 ```make menuconfig``` or ```make defconfig``` to expand, create the ```.config```
 
-The packages should appear under **Network->Samba4** and **Network->VPN->softethervpn-server**. There is also a updated **Samba4 luci app** package, you should select.
+The packages should appear under **Network->Samba4** and **Network->VPN->softethervpn5-server**. There is also a updated **Samba4 luci app** package, you should select.
 
 ### Problems
 
