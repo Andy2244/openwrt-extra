@@ -4,9 +4,9 @@
 
 This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.9.x**](https://www.samba.org/) and [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) servers.
 
-### Update (Aug 2018)
+### Update (Jan 2019)
 
-Samba 4, wsdd2, luci-app-samba4 was merged into package/master *(Snapshots)*, so this feeds will contain unmerged or test changes from now on.\
+Samba 4, wsdd2, luci-app-samba4, Softethervpn5 was merged into package/master *(Snapshots)*, so this feeds will contain unmerged or test changes from now on.\
 Ready build ipk's for *Snapshots* based firmware, can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/).
 
 #### Note
