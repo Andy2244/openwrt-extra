@@ -1,0 +1,9 @@
+[global]
+	netbios name = router
+	server string = CIFSD on OpenWRT
+	map to guest = Bad User
+
+[share]
+	path = /mnt/sda
+	writeable = yes
+	guest ok = yes
