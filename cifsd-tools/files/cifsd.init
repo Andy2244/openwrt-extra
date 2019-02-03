@@ -19,7 +19,9 @@ start(){
 
 	[ -f /tmp/cifsd.lock ] && rm /tmp/cifsd.lock
 	
-	modprobe cifsd
+	# try remove again before start
+	rmmod cifsd &>/dev/null
+	modprobe cifsd &>/dev/null
 	if !(lsmod | grep cifsd &>/dev/null); then
 		logger -t 'cifsd' "modprobe of cifsd module failed, cant start cifsd!"
 		exit 1
@@ -32,7 +34,7 @@ start(){
 stop(){
 	logger -t 'cifsd' "Stopping CIFS/SMB userspace service."
 	
-	kill $(cat /tmp/cifsd.lock 2>/dev/null)
+	kill $(cat /tmp/cifsd.lock &>/dev/null)
 	sleep 2
 
 	# check if process did hang aka lock file is still there (NOTE: there are 2 cifsd processes!)
@@ -42,12 +44,12 @@ stop(){
 		kill -9 `ps | grep cifsd | grep -v grep | awk '{print $1}'` >/dev/null 2>&1
 		sleep 1
 		kill -9 `ps | grep cifsd | grep -v grep | awk '{print $1}'` >/dev/null 2>&1
-		rm /tmp/cifsd.lock
+		rm /tmp/cifsd.lock &>/dev/null
 		sleep 2
 	fi
 	
 	# cifsd kernel module may not reflect some config change, without full removal	
-	rmmod cifsd
+	rmmod cifsd &>/dev/null
 	if (lsmod | grep cifsd &>/dev/null); then
 		logger -t 'cifsd' "Could not unload kernel module, /etc/cifs/smb.conf changes might not work without a reboot."
 	fi
