@@ -73,7 +73,7 @@
 ;******************************************************************************
 
 ;[global]
-;	server string = CIFSD on OpenWRT
+;	server string = CIFSD on OpenWrt
 
 ;[homes]
 ;	comment = content server share
@@ -81,7 +81,7 @@
 
 ;[share]
 ;	comment = content server share
-;	path = /mnt/sda
+;	path = /mnt
 ;	valid users = smbuser
 ;	writeable = yes
 ;	guest ok = yes
