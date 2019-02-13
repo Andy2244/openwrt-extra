@@ -11,12 +11,6 @@ start(){
 		exit 1
 	fi
 
-	# needed even on guest only config, default file has the "smbuser" dummy
-	if [ ! -f /etc/cifs/cifsdpwd.db ]; then
-		logger -t 'cifsd' "missing user database /etc/cifs/cifsdpwd.db, please create one via (cifsadmin -a username)"
-		exit 1
-	fi
-
 	[ -f /tmp/cifsd.lock ] && rm /tmp/cifsd.lock
 	
 	# try remove again before start
@@ -44,14 +38,18 @@ stop(){
 		logger -t 'cifsd' "Detected hanging process, forcing end!"
 		kill -9 $(cat /tmp/cifsd.lock 2>/dev/null)
 		kill -9 `ps | grep cifsd | grep -v grep | awk '{print $1}'` >/dev/null 2>&1
-		sleep 1
+		sleep 2
 		kill -9 `ps | grep cifsd | grep -v grep | awk '{print $1}'` >/dev/null 2>&1
 		rm /tmp/cifsd.lock 2>/dev/null
-		sleep 2
 	fi
 	
 	# cifsd kernel module may not reflect some config change, without full removal	
 	rmmod cifsd 2>/dev/null
+	if (lsmod | grep cifsd &>/dev/null); then
+		# try after default ipc timeout (8s) seconds TODO: find better way..
+		sleep 10
+		rmmod cifsd &>/dev/null
+	fi
 	if (lsmod | grep cifsd &>/dev/null); then
 		logger -t 'cifsd' "Could not unload kernel module, /etc/cifs/smb.conf changes might not work without a reboot."
 	fi

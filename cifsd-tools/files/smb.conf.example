@@ -17,6 +17,10 @@
 ;		the name that these services are advertised under.
 ;	- map to guest
 ;		when to map automatically to guest user (bad user, bad password, bad uid)
+;	- ipc timeout
+;		Close all open sessions after the given timeout in seconds, after the cifsd userspace
+;		service was stopped/killed. Ensures the kernel module can be unloaded and remaining 
+;		connections are closed.
 ;
 ; Supported [share] level parameters list:
 ;	- comment
@@ -74,6 +78,7 @@
 
 ;[global]
 ;	server string = CIFSD on OpenWrt
+;	ipc timeout = 8
 
 ;[homes]
 ;	comment = content server share

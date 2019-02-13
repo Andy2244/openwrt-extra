@@ -1,5 +1,6 @@
 [global]
 	server string = CIFSD on OpenWrt
+	ipc timeout = 8
 	map to guest = Bad User
 
 [share]

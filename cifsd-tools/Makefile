@@ -5,9 +5,9 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/namjaejeon/cifsd-tools.git
-PKG_SOURCE_DATE:=2019-02-08
-PKG_SOURCE_VERSION:=2b930c62bfe190ba0d4be2bb87118518c37a7aaf
-PKG_MIRROR_HASH:=7dd691dce07c1948b648f0831c2a982ca095ba275b25d47c05d8bbbb75abd53c
+PKG_SOURCE_DATE:=2019-02-13
+PKG_SOURCE_VERSION:=d28c1f499fb83f145448891d9c3f56b373f73514
+PKG_MIRROR_HASH:=b58fec4c5db34d6f33bdd92441a74ffadaad7f29ed25d3088b957607ff2a7b7f
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0
@@ -40,7 +40,6 @@ define Package/cifsd-tools/install
 	$(INSTALL_DIR) $(1)/etc/cifs
 	$(INSTALL_DATA) ./files/smb.conf.example $(1)/etc/cifs/
 	$(INSTALL_DATA) ./files/smb.conf.guest-example $(1)/etc/cifs/
-	$(INSTALL_DATA) ./files/cifsdpwd.db $(1)/etc/cifs/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/cifsd.init $(1)/etc/init.d/cifsd
 endef
