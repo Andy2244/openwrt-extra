@@ -64,6 +64,7 @@
 ;		Veto the Apple specific files that a NetAtalk server
 ;		creates.
 ;		veto files = /.AppleDouble/.bin/.AppleDesktop/Network Trash Folder/
+;	- hide dot files
 ;
 ;
 ; Rules to update this file:

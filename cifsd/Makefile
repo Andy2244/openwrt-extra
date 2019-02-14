@@ -6,9 +6,9 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/namjaejeon/cifsd.git
-PKG_SOURCE_DATE:=2019-02-13
-PKG_SOURCE_VERSION:=e946dd6cb5bf79f0f742b6092a0acbd36491898f
-PKG_MIRROR_HASH:=7acfe855af3d7ba64ac0e7448cdde1638ad0516d510e5f20f386880eab22581c
+PKG_SOURCE_DATE:=2019-02-14
+PKG_SOURCE_VERSION:=ca6dd64b656a096b3b17da911d6fb5bbe8d12ad2
+PKG_MIRROR_HASH:=cdce91db394a42d4ee8b2d96c6dba66d51d422550e94467e99dc66b861471bec
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0
@@ -41,6 +41,8 @@ endef
 define KernelPackage/fs-cifsd/description
 	Kernel module for a CIFS/SMBv2,3 fileserver.
 endef
+
+TARGET_CFLAGS+= -DCONFIG_CIFSD_ACL
 
 define Build/Compile
 	$(MAKE) -C "$(LINUX_DIR)" \
