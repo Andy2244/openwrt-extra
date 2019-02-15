@@ -23,7 +23,8 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/cifsd-tools
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=CIFS/SMB kernel server userspace tools
+  SUBMENU:=Filesystem
+  TITLE:=Kernel CIFS/SMB server support and userspace tools
   DEPENDS:=+kmod-fs-cifsd +glib2 +libnl-core +libnl-genl $(ICONV_DEPENDS)
 endef
 
