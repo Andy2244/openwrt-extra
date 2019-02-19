@@ -65,6 +65,8 @@
 ;		creates.
 ;		veto files = /.AppleDouble/.bin/.AppleDesktop/Network Trash Folder/
 ;	- hide dot files
+;	- create mask
+;	- directory mask
 ;
 ;
 ; Rules to update this file:
@@ -91,3 +93,6 @@
 ;	valid users = smbuser
 ;	writeable = yes
 ;	guest ok = yes
+;	create mask = 775
+;	directory mask = 775
+
