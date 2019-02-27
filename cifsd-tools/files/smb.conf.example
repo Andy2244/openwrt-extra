@@ -67,6 +67,8 @@
 ;	- hide dot files
 ;	- create mask
 ;	- directory mask
+;	- force group
+;	- force user
 ;
 ;
 ; Rules to update this file:
@@ -93,6 +95,6 @@
 ;	valid users = smbuser
 ;	writeable = yes
 ;	guest ok = yes
-;	create mask = 775
-;	directory mask = 775
+;	create mask = 0775
+;	directory mask = 0775
 

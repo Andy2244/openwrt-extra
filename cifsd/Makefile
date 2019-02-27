@@ -5,10 +5,10 @@ PKG_NAME:=cifsd
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/namjaejeon/cifsd.git
-PKG_SOURCE_DATE:=2019-02-25
-PKG_SOURCE_VERSION:=fbb664cad78940d425639515d29d54100edf1785
-PKG_MIRROR_HASH:=b034593a00672cf0700535b559456e9d87ae4936fe0a0eeabf649c65b810db0f
+PKG_SOURCE_URL:=https://github.com/cifsd-team/cifsd.git
+PKG_SOURCE_DATE:=2019-02-27
+PKG_SOURCE_VERSION:=dbfbde5b48609a7a7afb99d1d3ae70cee93597e8
+PKG_MIRROR_HASH:=23217697530cebd7dc3385b4977e0de74f720865217fd396e0b67dd037145785
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0
@@ -33,16 +33,13 @@ define KernelPackage/fs-cifsd
 		+kmod-crypto-sha512 \
 		+kmod-crypto-aead \
 		+kmod-crypto-ccm
-	KCONFIG:= \
-		CONFIG_KEYS=y \
-		CONFIG_CRYPTO_ARC4=y
 endef
 
 define KernelPackage/fs-cifsd/description
 	Kernel module for a CIFS/SMBv2,3 fileserver.
 endef
 
-# broken atm
+# broken atm (needs CONFIG_KEYS=y)
 #EXTRA_CFLAGS+=-DCONFIG_CIFSD_ACL
 
 define Build/Compile
