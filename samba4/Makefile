@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.9.4
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
@@ -14,7 +14,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=6d98a8d8bcccbe788e4bbb406362e6676311aca711a3f3cc9b3a404bb9ff0b4f
 
 # Buildroot bug? Can't add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
-PKG_BUILD_DEPENDS:=SAMBA4_SERVER_AD_DC:python-crypto nfs-kernel-server/host SAMBA4_WAF_CROSS_EXECUTE:qemu-userspace/host
+PKG_BUILD_DEPENDS:=SAMBA4_SERVER_AD_DC:python-crypto samba4/host e2fsprogs/host SAMBA4_WAF_CROSS_EXECUTE:qemu-userspace/host
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_SAMBA4_WAF_CROSS_EXECUTE \
@@ -30,6 +30,7 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_PACKAGE_kmod-fs-xfs
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/version.mk
 
@@ -51,7 +52,7 @@ endef
 define Package/samba4-libs
   $(call Package/samba4/Default)
   TITLE+= libs
-  DEPENDS:= +zlib +libtirpc +krb5-libs +libpopt \
+  DEPENDS:= +zlib +libtirpc +libpopt +libcomerr \
 	+PACKAGE_libcap:libcap +PACKAGE_libpthread:libpthread +PACKAGE_libnettle:libnettle \
 	+PACKAGE_libgcrypt:libgcrypt +PACKAGE_libpam:libpam +PACKAGE_dbus:dbus +PACKAGE_libavahi-client:libavahi-client \
 	+SAMBA4_SERVER_VFS:attr \
@@ -75,10 +76,10 @@ define Package/samba4-server
 endef
 
 define Package/samba4-server/description
-  installs: smbd (daemon) smbpasswd pdbedit testparm
+  installs: smbd, nmbd (daemon) smbpasswd pdbedit testparm
 
-    This provides the basic fileserver service and is the minimum needed to serve file shares.
-    HINT: https://fitzcarraldoblog.wordpress.com/2016/10/17/a-correct-method-of-configuring-samba-for-browsing-smb-shares-in-a-home-network/
+  This provides the basic fileserver service and is the minimum needed to serve file shares.
+  HINT: https://fitzcarraldoblog.wordpress.com/2016/10/17/a-correct-method-of-configuring-samba-for-browsing-smb-shares-in-a-home-network/
 endef
 
 define Package/samba4-server/config
@@ -129,6 +130,7 @@ CONFIGURE_VARS += \
 	CPP="$(TARGET_CROSS)cpp"
 
 CONFIGURE_CMD = ./buildtools/bin/waf
+HOST_CONFIGURE_CMD = ./buildtools/bin/waf configure
 
 # Strip options that WAF configure script does not recognize
 CONFIGURE_ARGS:=$(filter-out	\
@@ -138,6 +140,14 @@ CONFIGURE_ARGS:=$(filter-out	\
 	--disable-nls		\
 	--disable-ipv6		\
 	, $(CONFIGURE_ARGS))
+
+HOST_CONFIGURE_ARGS:=$(filter-out	\
+	--host=%		\
+	--build=%		\
+	--program-suffix=%	\
+	--disable-nls		\
+	--disable-ipv6		\
+	, $(HOST_CONFIGURE_ARGS))
 
 CONFIGURE_ARGS += \
 		--hostcc="$(HOSTCC)" \
@@ -163,6 +173,35 @@ CONFIGURE_ARGS += \
 		--without-gettext \
 		--without-regedit \
 		--without-gpgme
+
+HOST_CONFIGURE_ARGS += \
+		--hostcc="$(HOSTCC)" \
+		--disable-cups \
+		--disable-iprint \
+		--disable-cephfs \
+		--disable-fault-handling \
+		--disable-glusterfs \
+		--disable-rpath \
+		--disable-rpath-install \
+		--disable-rpath-private-install \
+		--enable-fhs \
+		--without-automount \
+		--without-iconv \
+		--without-lttng \
+		--without-ntvfs-fileserver \
+		--without-pam \
+		--without-systemd \
+		--without-utmp \
+		--without-dmapi \
+		--without-fam \
+		--without-gettext \
+		--without-regedit \
+		--without-gpgme
+
+HOST_CONFIGURE_ARGS += --disable-avahi --without-quotas --without-acl-support --without-winbind \
+	--without-ad-dc --without-json-audit --without-libarchive --disable-python --nopyc --nopyo \
+	--disable-gnutls --without-dnsupdate --without-ads --without-ldap		
+HOST_CONFIGURE_VARS += python_LDFLAGS="" python_LIBDIR=""
 
 ifeq ($(CONFIG_SAMBA4_WAF_CROSS_EXECUTE),y)
 	# arch name mapping
@@ -226,13 +265,6 @@ CONFIGURE_ARGS += \
 		--with-piddir=/var/run \
 		--with-privatedir=/etc/samba
 
-CONFIGURE_ARGS += \
-		--with-system-mitkrb5 "$(STAGING_DIR)/usr" \
-		--with-system-mitkdc=/usr/sbin/krb5kdc
-
-		## embedded-heimdal
-		# --bundled-libraries=talloc,tevent,tdb,ldb,com_err,cmocka,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
-
 ifeq ($(CONFIG_SAMBA4_SERVER_AVAHI),y)
 	CONFIGURE_ARGS += --enable-avahi
 else
@@ -249,10 +281,11 @@ else
 	CONFIGURE_ARGS += --without-acl-support
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-	CONFIGURE_ARGS += --enable-gnutls --with-dnsupdate --with-ads --with-ldap --with-experimental-mit-ad-dc
+	CONFIGURE_ARGS += --enable-gnutls --with-dnsupdate --with-ads --with-ldap
 	TARGET_CFLAGS := -I$(STAGING_DIR)/usr/include/python2.7 $(TARGET_CFLAGS)
 else
-	CONFIGURE_ARGS += --without-ad-dc --without-json-audit --without-libarchive --disable-python --nopyc --nopyo --disable-gnutls --without-dnsupdate --without-ads --without-ldap
+	CONFIGURE_ARGS += --without-ad-dc --without-json-audit --without-libarchive --disable-python --nopyc --nopyo \
+		--disable-gnutls --without-dnsupdate --without-ads --without-ldap
 	CONFIGURE_VARS += \
 		python_LDFLAGS="" \
 		python_LIBDIR=""
@@ -308,6 +341,10 @@ CONFIGURE_ARGS += \
 		--with-static-modules=$(SAMBA4_MODULES)!DEFAULT,!FORCED \
 		--with-shared-modules=$(SAMBA4_MODULES_SHARDED)!DEFAULT,!FORCED
 
+HOST_CONFIGURE_ARGS += \
+		--with-static-modules=!DEFAULT,!FORCED \
+		--with-shared-modules=!DEFAULT,!FORCED
+
 # Setup build/install targets
 # CONFIG_PACKAGE_samba4-server
 BUILD_TARGETS_SERVER :=smbd/smbd,smbpasswd,pdbedit,testparm
@@ -319,7 +356,7 @@ ifeq ($(CONFIG_SAMBA4_SERVER_NETBIOS),y)
 	BUILD_TARGETS_SERVER :=$(BUILD_TARGETS_SERVER),nmbd
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-	BUILD_TARGETS_SERVER :=$(BUILD_TARGETS_SERVER),samba,nsstest,ntlm_auth
+	BUILD_TARGETS_SERVER :=$(BUILD_TARGETS_SERVER),samba,nsstest,ntlm_auth,samba4kinit,samba4kgetcred,samba4kpasswd,samba4ktutil
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_WINBIND),y)
 	BUILD_TARGETS_SERVER :=$(BUILD_TARGETS_SERVER),winbindd,wbinfo,winbind_krb5_locator
@@ -327,20 +364,34 @@ endif
 # CONFIG_PACKAGE_samba4-client
 BUILD_TARGETS_CLIENT :=client/smbclient,client/cifsdd
 # CONFIG_PACKAGE_samba4-admin
-BUILD_TARGETS_ADMIN :=net,smbcontrol,profiles,rpcclient,smbcacls,smbcquotas
+BUILD_TARGETS_ADMIN :=net,smbcontrol,profiles,rpcclient,smbcacls,smbcquotas,eventlogadm
 # CONFIG_PACKAGE_samba4-utils
 BUILD_TARGETS_UTILS :=smbstatus,smbtree,smbget,mvxattr,nmblookup
 
 # lib bundling
 # NOTE: bundle + make private, we want to avoid version configuration (build, link) conflicts
-CONFIGURE_ARGS += --builtin-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace
+#CONFIGURE_ARGS += --builtin-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka
 #CONFIGURE_ARGS += --nonshared-binary=$(BUILD_TARGETS_SERVER)
+HOST_CONFIGURE_ARGS += --builtin-libraries=replace --nonshared-binary=asn1_compile
+
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,pytalloc-util,pyldb-util,NONE
+CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,pytalloc-util,pyldb-util,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
 else
-CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,NONE
+CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
 endif
-CONFIGURE_ARGS += --private-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace
+CONFIGURE_ARGS += --private-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace
+
+define Host/Compile
+	(cd $(HOST_BUILD_DIR); \
+		./buildtools/bin/waf build \
+		--targets=asn1_compile \
+	)
+endef
+
+define Host/Install
+	$(INSTALL_DIR) $(STAGING_DIR_HOSTPKG)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/asn1_compile $(STAGING_DIR_HOSTPKG)/bin/
+endef
 
 define Build/Prepare
 	$(Build/Prepare/Default)
@@ -373,8 +424,8 @@ endif
 define Build/Compile
 	(cd $(PKG_BUILD_DIR); \
 		./buildtools/bin/waf install -j$(shell nproc) \
-		--targets=$(SAMBA4_MODULES)$(SAMBA4_MODULES_SHARDED)$(BUILD_TARGETS_SERVER),$(BUILD_TARGETS_UTILS),$(BUILD_TARGETS_ADMIN),$(BUILD_TARGETS_CLIENT) \
 		--destdir="$(PKG_INSTALL_DIR)" \
+		--targets=$(SAMBA4_MODULES)$(SAMBA4_MODULES_SHARDED)$(BUILD_TARGETS_SERVER),$(BUILD_TARGETS_UTILS),$(BUILD_TARGETS_ADMIN),$(BUILD_TARGETS_CLIENT) \
 	)
 endef
 
@@ -396,6 +447,8 @@ endef
 define Package/samba4-admin/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/{net,smbcontrol,profiles,rpcclient,smbcacls,smbcquotas} $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/eventlogadm $(1)/usr/sbin/
 endef
 
 define Package/samba4-utils/install
@@ -417,6 +470,9 @@ define Package/samba4-server/install
 	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/pdb ]; then \
 		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/pdb $(1)/usr/lib/samba/; \
 	fi
+	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/krb5 ]; then \
+		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/krb5 $(1)/usr/lib/samba/; \
+	fi
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/{smbpasswd,pdbedit,testparm} $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/sbin
@@ -425,6 +481,8 @@ ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/python2.7 $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/{samba-tool,ntlm_auth,smbtar} $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{samba,samba-gpupdate,samba_dnsupdate,samba_kcc,samba_spnupdate,samba_upgradedns} $(1)/usr/sbin/
+	# waf does not install those?
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/{samba4kinit,samba4kgetcred,samba4kpasswd,samba4ktutil} $(1)/usr/bin/
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_NETBIOS),y)
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/nmbd $(1)/usr/sbin/
@@ -452,8 +510,10 @@ define Package/samba4-server/conffiles
 /etc/samba/idmap.ldb
 /etc/samba/lmhosts
 /etc/nsswitch.conf
+/etc/krb5.conf
 endef
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,samba4-libs))
 $(eval $(call BuildPackage,samba4-server))
 $(eval $(call BuildPackage,samba4-client))
