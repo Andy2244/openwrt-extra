@@ -2,7 +2,7 @@
 
 ### Description
 
-This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.9.x**](https://www.samba.org/) and [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) servers.
+This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.9.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [Cifsd](https://github.com/cifsd-team/cifsd) servers.
 
 ### Update (Jan 2019)
 
