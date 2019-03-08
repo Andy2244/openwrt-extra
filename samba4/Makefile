@@ -438,6 +438,10 @@ define Package/samba4-libs/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/*.so* $(1)/usr/lib/
+ifeq ($(CONFIG_SAMBA4_WAF_CROSS_EXECUTE),y)
+	$(INSTALL_DIR) $(1)/etc/samba
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/"cross-answers-$(CROSS-ANSWER-OUT).txt" $(1)/etc/samba
+endif
 endef
 
 define Package/samba4-client/install
