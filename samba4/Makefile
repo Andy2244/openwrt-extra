@@ -2,8 +2,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
-PKG_VERSION:=4.9.4
-PKG_RELEASE:=5
+PKG_VERSION:=4.9.5
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
@@ -11,7 +11,7 @@ PKG_LICENSE_FILES:=COPYING
 
 PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=6d98a8d8bcccbe788e4bbb406362e6676311aca711a3f3cc9b3a404bb9ff0b4f
+PKG_HASH:=078956d2d98e22011265afd4b7221efe4861067dcba4a031583b01f34d423700
 
 # Buildroot bug? Can't add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
 PKG_BUILD_DEPENDS:=SAMBA4_SERVER_AD_DC:python-crypto samba4/host e2fsprogs/host SAMBA4_WAF_CROSS_EXECUTE:qemu-userspace/host
@@ -438,10 +438,6 @@ define Package/samba4-libs/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/*.so* $(1)/usr/lib/
-ifeq ($(CONFIG_SAMBA4_WAF_CROSS_EXECUTE),y)
-	$(INSTALL_DIR) $(1)/etc/samba
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/"cross-answers-$(CROSS-ANSWER-OUT).txt" $(1)/etc/samba
-endif
 endef
 
 define Package/samba4-client/install
