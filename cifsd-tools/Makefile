@@ -1,13 +1,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cifsd-tools
-PKG_RELEASE:=1
-
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/cifsd-team/cifsd-tools.git
 PKG_SOURCE_DATE:=2019-03-05
 PKG_SOURCE_VERSION:=486bb6f7737db7a008c739da1e080eddb1d4a63b
-PKG_MIRROR_HASH:=843e4041ffe980e140f35c984336fa3549a32b070f951084c6c909ff75008058
+PKG_RELEASE:=1
+
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/cifsd-team/cifsd-tools/tar.gz/$(PKG_SOURCE_VERSION)?
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
+PKG_HASH:=4baef1f1b308b5fb361ef83bd58f7a79f20d49affd6a52f5cdef5ab342395488
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0

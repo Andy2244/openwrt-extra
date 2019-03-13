@@ -7,5 +7,5 @@
 	path = /mnt
 	writeable = yes
 	guest ok = yes
-	create mask = 777
-	directory mask = 777
+	create mask = 0777
+	directory mask = 0777
