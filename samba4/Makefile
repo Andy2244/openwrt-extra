@@ -13,8 +13,7 @@ PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=078956d2d98e22011265afd4b7221efe4861067dcba4a031583b01f34d423700
 
-# Buildroot bug? Can't add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
-PKG_BUILD_DEPENDS:=SAMBA4_SERVER_AD_DC:python-crypto samba4/host e2fsprogs/host SAMBA4_WAF_CROSS_EXECUTE:qemu-userspace/host
+PKG_BUILD_DEPENDS:=samba4/host e2fsprogs/host SAMBA4_WAF_CROSS_EXECUTE:qemu-userspace/host
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_SAMBA4_WAF_CROSS_EXECUTE \
@@ -73,6 +72,7 @@ define Package/samba4-server
   $(call Package/samba4/Default)
   TITLE+= server
   DEPENDS:= +samba4-libs
+  EXTRA_DEPENDS:=$(if $(CONFIG_SAMBA4_SERVER_AD_DC),python-crypto,)
 endef
 
 define Package/samba4-server/description
@@ -82,6 +82,7 @@ define Package/samba4-server/description
   HINT: https://fitzcarraldoblog.wordpress.com/2016/10/17/a-correct-method-of-configuring-samba-for-browsing-smb-shares-in-a-home-network/
 endef
 
+# BUG: We cant add DEPENDS:= +SAMBA4_SERVER_AD_DC:python-crypto, so this only happens here via select!
 define Package/samba4-server/config
   select PACKAGE_wsdd2
   source "$(SOURCE)/Config.in"
@@ -130,25 +131,33 @@ CONFIGURE_VARS += \
 	CPP="$(TARGET_CROSS)cpp"
 
 CONFIGURE_CMD = ./buildtools/bin/waf
-HOST_CONFIGURE_CMD = ./buildtools/bin/waf configure
+HOST_CONFIGURE_CMD = ./buildtools/bin/waf
 
 # Strip options that WAF configure script does not recognize
 CONFIGURE_ARGS:=$(filter-out	\
-	--host=%		\
-	--build=%		\
-	--program-suffix=%	\
+	--target=%			\
+	--host=%			\
+	--build=%			\
+	--program-prefix=%	\
+	--program-suffix=% 	\
 	--disable-nls		\
 	--disable-ipv6		\
 	, $(CONFIGURE_ARGS))
 
 HOST_CONFIGURE_ARGS:=$(filter-out	\
-	--host=%		\
-	--build=%		\
-	--program-suffix=%	\
+	--target=%			\
+	--host=%			\
+	--build=%			\
+	--program-prefix=%	\
+	--program-suffix=% 	\
 	--disable-nls		\
 	--disable-ipv6		\
 	, $(HOST_CONFIGURE_ARGS))
 
+# Waf needs the "configure" argument
+CONFIGURE_ARGS:=configure $(CONFIGURE_ARGS)
+HOST_CONFIGURE_ARGS:=configure $(HOST_CONFIGURE_ARGS)
+	
 CONFIGURE_ARGS += \
 		--hostcc="$(HOSTCC)" \
 		--cross-compile \
@@ -200,7 +209,7 @@ HOST_CONFIGURE_ARGS += \
 
 HOST_CONFIGURE_ARGS += --disable-avahi --without-quotas --without-acl-support --without-winbind \
 	--without-ad-dc --without-json-audit --without-libarchive --disable-python --nopyc --nopyo \
-	--disable-gnutls --without-dnsupdate --without-ads --without-ldap		
+	--disable-gnutls --without-dnsupdate --without-ads --without-ldap
 HOST_CONFIGURE_VARS += python_LDFLAGS="" python_LIBDIR=""
 
 ifeq ($(CONFIG_SAMBA4_WAF_CROSS_EXECUTE),y)
@@ -302,41 +311,46 @@ SAMBA4_IDMAP_MODULES_SHARED :=
 SAMBA4_PDB_MODULES :=pdb_smbpasswd,pdb_tdbsam,
 SAMBA4_AUTH_MODULES :=auth_builtin,auth_sam,auth_unix,auth_script,
 SAMBA4_VFS_MODULES :=vfs_default,
+SAMBA4_VFS_MODULES_SHARED :=
 ifeq ($(CONFIG_SAMBA4_SERVER_VFS),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_fruit,vfs_shadow_copy2,vfs_recycle,vfs_fake_perms,vfs_readonly,vfs_cap,vfs_offline,vfs_crossrename,vfs_catia,vfs_streams_xattr,vfs_xattr_tdb,
+	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_fruit,vfs_shadow_copy2,vfs_recycle,vfs_fake_perms,vfs_readonly,vfs_cap,vfs_offline,vfs_crossrename,vfs_catia,vfs_streams_xattr,vfs_xattr_tdb,
 ifeq ($(CONFIG_PACKAGE_kmod-fs-btrfs),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_btrfs,
+	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_btrfs,
 endif
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_VFSX),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_virusfilter,vfs_shell_snap,vfs_commit,vfs_worm,vfs_aio_fork,vfs_aio_pthread,vfs_netatalk,vfs_dirsort,vfs_fileid,
+	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_virusfilter,vfs_shell_snap,vfs_commit,vfs_worm,vfs_aio_fork,vfs_aio_pthread,vfs_netatalk,vfs_dirsort,vfs_fileid,
 ifeq ($(CONFIG_PACKAGE_kmod-fs-xfs),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_linux_xfs_sgid,
+	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_linux_xfs_sgid,
 endif
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_QUOTAS),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_default_quota,
+	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_default_quota,
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_ACL),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_posixacl,vfs_acl_xattr,vfs_acl_tdb,
+	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_posixacl,
+	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_acl_xattr,vfs_acl_tdb,
 	# vfs_zfsacl needs https://github.com/zfsonlinux/zfs/tree/master/include/sys/zfs_acl.h
 	# vfs_nfs4acl_xattr needs https://github.com/notriddle/libdrpc/blob/master/rpc/xdr.h
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-	SAMBA4_PDB_MODULES :=$(SAMBA4_PDB_MODULES)pdb_samba_dsdb,
+	SAMBA4_PDB_MODULES :=$(SAMBA4_PDB_MODULES)pdb_samba_dsdb,pdb_ldapsam,
 	SAMBA4_AUTH_MODULES :=$(SAMBA4_AUTH_MODULES)auth_samba4,
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_audit,vfs_extd_audit,vfs_full_audit,
+	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_audit,vfs_extd_audit,vfs_full_audit,
 endif
 ifeq ($(CONFIG_SAMBA4_SERVER_WINBIND),y)
-	SAMBA4_IDMAP_MODULES :=$(SAMBA4_IDMAP_MODULES)idmap_passdb,idmap_nss,idmap_tdb,idmap_tdb2,idmap_script,nss_info_template,
-	SAMBA4_IDMAP_MODULES_SHARED :=$(SAMBA4_IDMAP_MODULES_SHARED)idmap_autorid,idmap_rid,idmap_ad,idmap_rfc2307,
+	SAMBA4_IDMAP_MODULES :=$(SAMBA4_IDMAP_MODULES)idmap_tdb,idmap_passdb,idmap_nss,nss_info_template,
+	SAMBA4_IDMAP_MODULES_SHARED :=$(SAMBA4_IDMAP_MODULES_SHARED)idmap_autorid,idmap_rid,idmap_hash,idmap_tdb2,idmap_script,
+ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
+	SAMBA4_IDMAP_MODULES_SHARED :=$(SAMBA4_IDMAP_MODULES_SHARED)idmap_ad,idmap_ldap,idmap_rfc2307,
 	# idmap_ad needs --with-ads
 	# idmap_rfc2307 needs ldap headers
+endif
 	SAMBA4_AUTH_MODULES :=$(SAMBA4_AUTH_MODULES)auth_winbind,
 endif
 
-SAMBA4_MODULES :=${SAMBA4_AUTH_MODULES}${SAMBA4_PDB_MODULES}${SAMBA4_IDMAP_MODULES}${SAMBA4_VFS_MODULES}
-SAMBA4_MODULES_SHARDED :=${SAMBA4_IDMAP_MODULES_SHARED}
+SAMBA4_MODULES :=${SAMBA4_VFS_MODULES}${SAMBA4_AUTH_MODULES}${SAMBA4_PDB_MODULES}${SAMBA4_IDMAP_MODULES}
+SAMBA4_MODULES_SHARDED :=${SAMBA4_VFS_MODULES_SHARED}${SAMBA4_IDMAP_MODULES_SHARED}
 
 CONFIGURE_ARGS += \
 		--with-static-modules=$(SAMBA4_MODULES)!DEFAULT,!FORCED \
@@ -371,16 +385,17 @@ BUILD_TARGETS_UTILS :=smbstatus,smbtree,smbget,mvxattr,nmblookup
 
 # lib bundling
 # NOTE: bundle + make private, we want to avoid version configuration (build, link) conflicts
-#CONFIGURE_ARGS += --builtin-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka
-#CONFIGURE_ARGS += --nonshared-binary=$(BUILD_TARGETS_SERVER)
+CONFIGURE_ARGS += --builtin-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka
 HOST_CONFIGURE_ARGS += --builtin-libraries=replace --nonshared-binary=asn1_compile
 
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,pytalloc-util,pyldb-util,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
+CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,pytalloc-util,pyldb-util,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
 else
-CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,texpect,tdb,ldb,tdr,cmocka,replace,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
+CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
 endif
+# BUG: --private-libraries, Does not work for System possible libs, will not get "samba4" suffix!
 CONFIGURE_ARGS += --private-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace
+# CONFIGURE_ARGS += --disable-symbol-versions
 
 define Host/Compile
 	(cd $(HOST_BUILD_DIR); \
@@ -407,7 +422,7 @@ endef
 ifeq ($(CONFIG_SAMBA4_WAF_CROSS_EXECUTE),y)
 define Build/Configure
 	$(RM) -f $(PKG_BUILD_DIR)/cross-answers-$(CROSS-ANSWER-OUT).txt
-	$(call Build/Configure/Default,configure)
+	$(call Build/Configure/Default)
 endef
 else
 define Build/Configure
@@ -417,20 +432,20 @@ define Build/Configure
 	echo 'Checking uname version type: "$(VERSION_DIST) Linux-$(LINUX_VERSION) $(shell date +%Y-%m-%d)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
 	# NOTE: For some unknown reason this answer is not needed on some hosts/distros, yet needed on others?
 	echo 'Checking whether POSIX capabilities are available: OK' >> $(PKG_BUILD_DIR)/cross-answers.txt
-	$(call Build/Configure/Default,configure)
+	$(call Build/Configure/Default)
 endef
 endif
 
 # BUG: We need to use "waf install --targets=" otherwise a "make install" or "waf install" will retrigger a full recompile of all possible targets!
 define Build/Compile
 	(cd $(PKG_BUILD_DIR); \
-		./buildtools/bin/waf install -j$(shell nproc) \
+		./buildtools/bin/waf install \
+		--jobs=$(shell nproc) \
 		--destdir="$(PKG_INSTALL_DIR)" \
 		--targets=$(SAMBA4_MODULES)$(SAMBA4_MODULES_SHARDED)$(BUILD_TARGETS_SERVER),$(BUILD_TARGETS_UTILS),$(BUILD_TARGETS_ADMIN),$(BUILD_TARGETS_CLIENT) \
 	)
 endef
 
-# No default install see above
 define Build/Install
 endef
 
@@ -438,6 +453,21 @@ define Package/samba4-libs/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/*.so* $(1)/usr/lib/
+	
+	$(INSTALL_DIR) $(1)/usr/lib/samba/vfs $(1)/usr/lib/samba/idmap $(1)/usr/lib/samba/ldb $(1)/usr/lib/samba/krb5
+	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/idmap ]; then \
+		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/idmap $(1)/usr/lib/samba/; \
+	fi
+	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/vfs ]; then \
+		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/vfs $(1)/usr/lib/samba/; \
+	fi
+	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/krb5 ]; then \
+		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/krb5 $(1)/usr/lib/samba/; \
+	fi
+ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
+	$(INSTALL_DIR) $(1)/usr/lib/python2.7
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/python2.7 $(1)/usr/lib/
+endif
 endef
 
 define Package/samba4-client/install
@@ -458,28 +488,11 @@ define Package/samba4-utils/install
 endef
 
 define Package/samba4-server/install
-	$(INSTALL_DIR) $(1)/usr/lib/samba
-	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/idmap ]; then \
-		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/idmap $(1)/usr/lib/samba/; \
-	fi
-	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/auth ]; then \
-		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/auth $(1)/usr/lib/samba/; \
-	fi
-	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/vfs ]; then \
-		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/vfs $(1)/usr/lib/samba/; \
-	fi
-	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/pdb ]; then \
-		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/pdb $(1)/usr/lib/samba/; \
-	fi
-	if [ -d $(PKG_INSTALL_DIR)/usr/lib/samba/krb5 ]; then \
-		$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba/krb5 $(1)/usr/lib/samba/; \
-	fi
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/{smbpasswd,pdbedit,testparm} $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/smbd $(1)/usr/sbin/
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/python2.7 $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/{samba-tool,ntlm_auth,smbtar} $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{samba,samba-gpupdate,samba_dnsupdate,samba_kcc,samba_spnupdate,samba_upgradedns} $(1)/usr/sbin/
 	# waf does not install those?
