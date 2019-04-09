@@ -9,11 +9,15 @@ PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=COPYING
 
-PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
+PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/ \
+				https://ftp5.gwdg.de/pub/samba/stable/ \
+				https://ftp.yz.yamagata-u.ac.jp/pub/network/samba/ \
+				http://ftp.uni-bayreuth.de/netsoftware/samba/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=078956d2d98e22011265afd4b7221efe4861067dcba4a031583b01f34d423700
 
-PKG_BUILD_DEPENDS:=samba4/host e2fsprogs/host SAMBA4_WAF_CROSS_EXECUTE:qemu-userspace/host
+# samba4=(asn1_compile) e2fsprogs=(compile_et) nfs-kernel-server=(rpcgen)
+PKG_BUILD_DEPENDS:=samba4/host e2fsprogs/host nfs-kernel-server/host SAMBA4_WAF_CROSS_EXECUTE:qemu-userspace/host
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_SAMBA4_WAF_CROSS_EXECUTE \
@@ -157,7 +161,7 @@ HOST_CONFIGURE_ARGS:=$(filter-out	\
 # Waf needs the "configure" argument
 CONFIGURE_ARGS:=configure $(CONFIGURE_ARGS)
 HOST_CONFIGURE_ARGS:=configure $(HOST_CONFIGURE_ARGS)
-	
+
 CONFIGURE_ARGS += \
 		--hostcc="$(HOSTCC)" \
 		--cross-compile \
@@ -446,6 +450,7 @@ define Build/Compile
 	)
 endef
 
+# No default install see above
 define Build/Install
 endef
 
