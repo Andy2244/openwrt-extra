@@ -1,20 +1,19 @@
 include $(TOPDIR)/rules.mk
-include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=cifsd
-PKG_SOURCE_DATE:=2019-03-28
-PKG_SOURCE_VERSION:=290162b6726780f9453a971d8afb1b3406ce899b
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_URL:=https://codeload.github.com/cifsd-team/cifsd/tar.gz/$(PKG_SOURCE_VERSION)?
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_HASH:=bf254de1cc70775585757de025da8af38ae8f451a79f68df70c9773e7f1695cb
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/cifsd-team/cifsd.git
+PKG_SOURCE_DATE:=2019-04-21
+PKG_SOURCE_VERSION:=80b3e9274f64a261e846b4300f8ae3ff4f75b827
+PKG_MIRROR_HASH:=0788067adfa55b6be1f8c81ae4631d994f5edc8de69fd3af062dacdfbad75921
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING
 
+include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/package.mk
 
 define KernelPackage/fs-cifsd
