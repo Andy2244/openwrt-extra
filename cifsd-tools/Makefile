@@ -1,14 +1,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cifsd-tools
-PKG_SOURCE_DATE:=2019-04-21
-PKG_SOURCE_VERSION:=e2705d6bd3642c3ca2b1c8d1b947797a31c61d9f
+PKG_SOURCE_DATE:=2019-05-19
+PKG_SOURCE_VERSION:=fef760c420dfb2a3622b9bd1e98ef46d48212282
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/cifsd-team/cifsd-tools/tar.gz/$(PKG_SOURCE_VERSION)?
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_HASH:=77610756f1b8b5d958516c15a6a82e4dbf0f649b0f3d05991062d931caacdd80
+PKG_HASH:=e07bfb5a9d02229364f79a6b1774a9447a25eab29f4615c8a120cb85d956d7e6
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0
@@ -39,16 +39,20 @@ define Package/cifsd-tools/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libcifsdtools.so* $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{cifsadmin,cifsd} $(1)/usr/sbin/
-	$(INSTALL_DIR) $(1)/etc/cifs
-	$(INSTALL_DATA) ./files/smb.conf.example $(1)/etc/cifs/
-	$(INSTALL_DATA) ./files/smb.conf.guest-example $(1)/etc/cifs/
-	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/cifs $(1)/etc/init.d
+	$(INSTALL_DATA) ./files/cifsd.config $(1)/etc/config/cifsd
+	$(INSTALL_DATA) ./files/smb.conf.template $(1)/etc/cifs/
 	$(INSTALL_BIN) ./files/cifsd.init $(1)/etc/init.d/cifsd
+	# copy examples until we have a wiki page
+	$(INSTALL_DATA) ./files/cifsd.config.example $(1)/etc/cifs/
+	$(INSTALL_DATA) ./files/smb.conf.help $(1)/etc/cifs/
 endef
 
 define Package/cifsd-tools/conffiles
-/etc/cifs/cifsdpwd.db
+/etc/config/cifsd
+/etc/cifs/smb.conf.template 
 /etc/cifs/smb.conf
+/etc/cifs/cifsdpwd.db
 endef 
 
 $(eval $(call BuildPackage,cifsd-tools))

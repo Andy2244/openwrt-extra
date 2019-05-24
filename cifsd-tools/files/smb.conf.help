@@ -148,8 +148,13 @@
 ;******************************************************************************
 
 [global]
+	server string = CIFSD on OpenWrt
 	netbios name = CIFSD
+	map to guest = Bad User
 
-[homes]
+[share]
 	comment = content server share
-	path = /tmp
+	path = /mnt
+	guest ok = yes
+	create mask = 0777
+	directory mask = 0777
