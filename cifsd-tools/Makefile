@@ -1,17 +1,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cifsd-tools
-PKG_SOURCE_DATE:=2019-05-31
-PKG_SOURCE_VERSION:=d2b3a1b94e7bd09b75413a70f182c738f6528856
+PKG_SOURCE_DATE:=2019-07-05
+PKG_SOURCE_VERSION:=539fa21a8dd427a8ca2dc13c9a5a1c975be96d3c
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/cifsd-team/cifsd-tools/tar.gz/$(PKG_SOURCE_VERSION)?
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_HASH:=678d6a1f1f1620369c8f14d37070b38d016811177d72a227eeedccf34e80a0d3
+PKG_HASH:=0d1095f6bfa7e6bd568d01023857d1e56e68e98fb64ce8876a7dd7b1b2edf4f6
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
-PKG_LICENSE:=GPL-2.0
+PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=1
@@ -26,6 +26,7 @@ define Package/cifsd-tools
   CATEGORY:=Network
   SUBMENU:=Filesystem
   TITLE:=Kernel CIFS/SMB server support and userspace tools
+  URL:=https://github.com/cifsd-team
   DEPENDS:=+kmod-fs-cifsd +glib2 +libnl-core +libnl-genl $(ICONV_DEPENDS)
 endef
 
@@ -40,7 +41,7 @@ define Package/cifsd-tools/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{cifsadmin,cifsd} $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/cifs $(1)/etc/init.d
-	$(INSTALL_DATA) ./files/cifsd.config $(1)/etc/config/cifsd
+	$(INSTALL_CONF) ./files/cifsd.config $(1)/etc/config/cifsd
 	$(INSTALL_DATA) ./files/smb.conf.template $(1)/etc/cifs/
 	$(INSTALL_BIN) ./files/cifsd.init $(1)/etc/init.d/cifsd
 	# copy examples until we have a wiki page

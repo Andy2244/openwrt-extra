@@ -5,12 +5,12 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/cifsd-team/cifsd.git
-PKG_SOURCE_DATE:=2019-05-31
-PKG_SOURCE_VERSION:=e0804cb48a36054c0b2d392d3dabd845c9be2ad8
-PKG_MIRROR_HASH:=72797679635741ff88ded72d9c2215dc51ba15d197536bfdf1592225da11f6bd
+PKG_SOURCE_DATE:=2019-06-28
+PKG_SOURCE_VERSION:=626aafbff6ad5bfe176d6ea965266074e74dcac9
+PKG_MIRROR_HASH:=28077925bb0fbd3ad2c22917ad3546a4ee2f4ae49efed748e463aac7912ccd0b
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
-PKG_LICENSE:=GPL-2.0
+PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/kernel.mk
@@ -19,6 +19,7 @@ include $(INCLUDE_DIR)/package.mk
 define KernelPackage/fs-cifsd
 	SUBMENU:=Filesystems
 	TITLE:=CIFS/SMB kernel server support
+	URL:=https://github.com/cifsd-team
 	FILES:=$(PKG_BUILD_DIR)/cifsd.ko
 	DEPENDS:= \
 		+kmod-nls-base \
