@@ -2,7 +2,7 @@
 
 ### Description
 
-This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.9.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [Cifsd](https://github.com/cifsd-team/cifsd) servers.
+This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.10.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [Cifsd](https://github.com/cifsd-team/cifsd) servers.
 
 ### Update (Jan 2019)
 
@@ -11,9 +11,12 @@ Ready build ipk's for *Snapshots* based firmware, can be downloaded from here: [
 
 #### Note
 Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.\
-The package includes untested options for: **[ad-dc](https://wiki.samba.org/index.php/Setting_up_Samba_as_an_Active_Directory_Domain_Controller), [winbind](https://wiki.samba.org/index.php/Configuring_Winbindd_on_a_Samba_AD_DC)** *(Needs manual setup, report back if something is missing, broken)*.
 
-The size of the Samba4-server/libs.ipk and deps are around 5.8 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
+The size of the Samba4-server/libs.ipk and deps are around 6.5 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
+
+~~The package includes untested options for: **[ad-dc](https://wiki.samba.org/index.php/Setting_up_Samba_as_an_Active_Directory_Domain_Controller), [winbind](https://wiki.samba.org/index.php/Configuring_Winbindd_on_a_Samba_AD_DC)** *(Needs manual setup, report back if something is missing, broken)*.~~
+
+*(ad-dc is broken for 4.10, try the 4.9 branch)*
 
 ### Usage
 
