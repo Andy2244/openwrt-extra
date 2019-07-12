@@ -7,7 +7,7 @@ CIFSD_IFACE=""
 
 smb_header()
 {
-	config_get CIFSD_IFACE $1 interface "lan loopback"
+	config_get CIFSD_IFACE $1 interface "lan"
 
 	# resolve interfaces
 	local interfaces=$(
@@ -18,7 +18,7 @@ smb_header()
 			local device
 			network_is_up $net || continue
 			network_get_device device "$net"
-			echo -n "${device:-$net},"
+			echo -n "${device:-$net} "
 		done
 	)
 
