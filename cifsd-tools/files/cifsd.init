@@ -57,6 +57,7 @@ smb_add_share()
 	local read_list
 	local hide_dot_files
 	local veto_files
+	local writeable
 
 	config_get name $1 name
 	config_get path $1 path
@@ -72,6 +73,7 @@ smb_add_share()
 	config_get read_list $1 read_list
 	config_get_bool hide_dot_files	$1 hide_dot_files	0
 	config_get veto_files $1 veto_files
+	config_get writeable $1 writeable
 
 	[ -z "$name" -o -z "$path" ] && return
 
@@ -97,6 +99,8 @@ smb_add_share()
 
 	[ "$hide_dot_files" -eq 1 ] && echo -e "\thide dot files = yes" >> /var/etc/cifs/smb.conf
 	[ -n "$veto_files" ] && echo -e "\tveto files = $veto_files" >> /var/etc/cifs/smb.conf
+
+	[ -n "$writeable" ] && echo -e "\twriteable = $writeable" >> /var/etc/cifs/smb.conf
 }
 
 init_config()
