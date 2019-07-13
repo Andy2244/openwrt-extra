@@ -9,3 +9,4 @@ config share
 	option dir_mask '0777'
 	option read_only 'no'
 	option force_root '1'
+	option writeable 'yes'
