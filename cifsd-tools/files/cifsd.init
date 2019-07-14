@@ -51,13 +51,13 @@ smb_add_share()
 	local dir_mask
 	local browseable
 	local read_only
+	local writeable
 	local guest_ok
 	local force_root
 	local write_list
 	local read_list
 	local hide_dot_files
 	local veto_files
-	local writeable
 
 	config_get name $1 name
 	config_get path $1 path
@@ -67,13 +67,13 @@ smb_add_share()
 	config_get dir_mask $1 dir_mask
 	config_get browseable $1 browseable
 	config_get read_only $1 read_only
+	config_get writeable $1 writeable
 	config_get guest_ok $1 guest_ok
 	config_get_bool force_root	$1 force_root	0
 	config_get write_list $1 write_list
 	config_get read_list $1 read_list
 	config_get_bool hide_dot_files	$1 hide_dot_files	0
 	config_get veto_files $1 veto_files
-	config_get writeable $1 writeable
 
 	[ -z "$name" -o -z "$path" ] && return
 
@@ -92,6 +92,7 @@ smb_add_share()
 
 	[ -n "$browseable" ] && echo -e "\tbrowseable = $browseable" >> /var/etc/cifs/smb.conf
 	[ -n "$read_only" ] && echo -e "\tread only = $read_only" >> /var/etc/cifs/smb.conf
+	[ -n "$writeable" ] && echo -e "\twriteable = $writeable" >> /var/etc/cifs/smb.conf
 	[ -n "$guest_ok" ] && echo -e "\tguest ok = $guest_ok" >> /var/etc/cifs/smb.conf
 
 	[ -n "$write_list" ] && echo -e "\twrite list = $write_list" >> /var/etc/cifs/smb.conf
@@ -99,8 +100,6 @@ smb_add_share()
 
 	[ "$hide_dot_files" -eq 1 ] && echo -e "\thide dot files = yes" >> /var/etc/cifs/smb.conf
 	[ -n "$veto_files" ] && echo -e "\tveto files = $veto_files" >> /var/etc/cifs/smb.conf
-
-	[ -n "$writeable" ] && echo -e "\twriteable = $writeable" >> /var/etc/cifs/smb.conf
 }
 
 init_config()

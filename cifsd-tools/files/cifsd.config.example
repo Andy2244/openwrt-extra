@@ -7,6 +7,5 @@ config share
 	option guest_ok 'yes'
 	option create_mask '0666'
 	option dir_mask '0777'
-	option read_only 'no'
-	option force_root '1'
 	option writeable 'yes'
+	option force_root '1'

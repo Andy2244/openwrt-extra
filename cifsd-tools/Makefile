@@ -1,14 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cifsd-tools
+PKG_RELEASE:=2
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/cifsd-team/cifsd-tools.git
 PKG_SOURCE_DATE:=2019-07-05
 PKG_SOURCE_VERSION:=539fa21a8dd427a8ca2dc13c9a5a1c975be96d3c
-PKG_RELEASE:=1
-
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_URL:=https://codeload.github.com/cifsd-team/cifsd-tools/tar.gz/$(PKG_SOURCE_VERSION)?
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
-PKG_HASH:=0d1095f6bfa7e6bd568d01023857d1e56e68e98fb64ce8876a7dd7b1b2edf4f6
+PKG_MIRROR_HASH:=8c1b22d9926112a7e8ec94a3f731639a3789bef1aeb447f0bd7c41a1884e4dc5
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -26,8 +25,8 @@ define Package/cifsd-tools
   CATEGORY:=Network
   SUBMENU:=Filesystem
   TITLE:=Kernel CIFS/SMB server support and userspace tools
-  URL:=https://github.com/cifsd-team
-  DEPENDS:=+kmod-fs-cifsd +glib2 +libnl-core +libnl-genl $(ICONV_DEPENDS)
+  URL:=https://github.com/cifsd-team/cifsd-tools
+  DEPENDS:=+kmod-fs-cifsd +glib2 +libnl-core +libnl-genl
 endef
 
 define Package/cifsd-tools/description

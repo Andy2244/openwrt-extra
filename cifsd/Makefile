@@ -19,7 +19,7 @@ include $(INCLUDE_DIR)/package.mk
 define KernelPackage/fs-cifsd
 	SUBMENU:=Filesystems
 	TITLE:=CIFS/SMB kernel server support
-	URL:=https://github.com/cifsd-team
+	URL:=https://github.com/cifsd-team/cifsd
 	FILES:=$(PKG_BUILD_DIR)/cifsd.ko
 	DEPENDS:= \
 		+kmod-nls-base \
