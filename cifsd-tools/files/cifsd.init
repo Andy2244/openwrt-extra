@@ -35,7 +35,7 @@ smb_header()
 	    /etc/cifs/smb.conf.template > /var/etc/cifs/smb.conf
 
 	[ -e /etc/cifs/smb.conf ] || ln -nsf /var/etc/cifs/smb.conf /etc/cifs/smb.conf
-	
+
 	if [ ! -L /etc/cifs/smb.conf ]; then
 		logger -t 'cifsd' "Local custom /etc/cifs/smb.conf file detected, all UCI/Luci config settings are ignored!"
 	fi
@@ -75,7 +75,7 @@ smb_add_share()
 	config_get_bool hide_dot_files	$1 hide_dot_files	0
 	config_get veto_files $1 veto_files
 
-	[ -z "$name" -o -z "$path" ] && return
+	[ -z "$name" ] || [ -z "$path" ] && return
 
 	echo -e "\n[$name]\n\tpath = $path" >> /var/etc/cifs/smb.conf
 	[ -n "$comment" ] && echo -e "\tcomment = $comment" >> /var/etc/cifs/smb.conf
@@ -117,9 +117,9 @@ init_config()
 service_triggers()
 {
 	PROCD_RELOAD_DELAY=2000
-	
+
 	procd_add_reload_trigger "dhcp" "system" "cifsd"
-	
+
 	local i
 	for i in $CIFSD_IFACE; do
 		procd_add_reload_interface_trigger $i
@@ -129,20 +129,19 @@ service_triggers()
 start_service()
 {
 	init_config
-	
+
 	if [ ! -e /etc/cifs/smb.conf ]; then
 		logger -t 'cifsd' "missing config /etc/cifs/smb.conf, needs to-be created manually!"
 		exit 1
 	fi
 
 	[ -f /tmp/cifsd.lock ] && rm /tmp/cifsd.lock
-	
+
 	# try remove again before start
-	if (lsmod | grep cifsd &>/dev/null); then
-		rmmod cifsd &>/dev/null
-	fi
-	modprobe cifsd 2>/dev/null
-	if ! (lsmod | grep cifsd &>/dev/null); then
+	[ -e /sys/module/cifsd/ ] && rmmod cifsd > /dev/null 2>&1
+
+	modprobe cifsd 2> /dev/null
+	if [ ! -e /sys/module/cifsd ]; then
 		logger -t 'cifsd' "modprobe of cifsd module failed, cant start cifsd!"
 		exit 1
 	fi

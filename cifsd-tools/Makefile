@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cifsd-tools
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/cifsd-team/cifsd-tools.git
@@ -13,8 +13,9 @@ PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=COPYING
 
-PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
+PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
 PKG_REMOVE_FILES:=autogen.sh aclocal.m4
 
 include $(INCLUDE_DIR)/package.mk
@@ -50,9 +51,9 @@ endef
 
 define Package/cifsd-tools/conffiles
 /etc/config/cifsd
-/etc/cifs/smb.conf.template 
+/etc/cifs/smb.conf.template
 /etc/cifs/smb.conf
 /etc/cifs/cifsdpwd.db
-endef 
+endef
 
 $(eval $(call BuildPackage,cifsd-tools))
