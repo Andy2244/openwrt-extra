@@ -10,7 +10,8 @@ smb_header()
 	config_get CIFSD_IFACE $1 interface "lan"
 
 	# resolve interfaces
-	local interfaces=$(
+	local interfaces
+	interfaces=$(
 		. /lib/functions/network.sh
 
 		local net
@@ -23,7 +24,8 @@ smb_header()
 	)
 
 	local workgroup description
-	local hostname="$(cat /proc/sys/kernel/hostname)"
+	local hostname
+	hostname="$(cat /proc/sys/kernel/hostname)"
 
 	config_get workgroup		$1 workgroup	"WORKGROUP"
 	config_get description		$1 description	"Cifsd on OpenWrt"
@@ -58,6 +60,9 @@ smb_add_share()
 	local read_list
 	local hide_dot_files
 	local veto_files
+	local inherit_owner
+	local force_create_mode
+	local force_directory_mode
 
 	config_get name $1 name
 	config_get path $1 path
@@ -74,32 +79,40 @@ smb_add_share()
 	config_get read_list $1 read_list
 	config_get_bool hide_dot_files	$1 hide_dot_files	0
 	config_get veto_files $1 veto_files
+	config_get inherit_owner $1 inherit_owner
+	config_get force_create_mode $1 force_create_mode
+	config_get force_directory_mode $1 force_directory_mode
 
 	[ -z "$name" ] || [ -z "$path" ] && return
 
-	echo -e "\n[$name]\n\tpath = $path" >> /var/etc/cifs/smb.conf
-	[ -n "$comment" ] && echo -e "\tcomment = $comment" >> /var/etc/cifs/smb.conf
-	
-	if [ "$force_root" -eq 1 ]; then
-		echo -e "\tforce user = root" >> /var/etc/cifs/smb.conf
-		echo -e "\tforce group = root" >> /var/etc/cifs/smb.conf
-	else
-		[ -n "$users" ] && echo -e "\tvalid users = $users" >> /var/etc/cifs/smb.conf
-	fi
+	{
+		printf "\n[%s]\n\tpath = %s\n" "$name" "$path"
+		[ -n "$comment" ] && printf "\tcomment = %s\n" "$comment"
 
-	[ -n "$create_mask" ] && echo -e "\tcreate mask = $create_mask" >> /var/etc/cifs/smb.conf
-	[ -n "$dir_mask" ] && echo -e "\tdirectory mask = $dir_mask" >> /var/etc/cifs/smb.conf
+		if [ "$force_root" -eq 1 ]; then
+			printf "\tforce user = %s\n" "root"
+			printf "\tforce group = %s\n" "root"
+		else
+			[ -n "$users" ] && printf "\tvalid users = %s\n" "$users"
+		fi
 
-	[ -n "$browseable" ] && echo -e "\tbrowseable = $browseable" >> /var/etc/cifs/smb.conf
-	[ -n "$read_only" ] && echo -e "\tread only = $read_only" >> /var/etc/cifs/smb.conf
-	[ -n "$writeable" ] && echo -e "\twriteable = $writeable" >> /var/etc/cifs/smb.conf
-	[ -n "$guest_ok" ] && echo -e "\tguest ok = $guest_ok" >> /var/etc/cifs/smb.conf
+		[ -n "$create_mask" ] && printf "\tcreate mask = %s\n" "$create_mask"
+		[ -n "$dir_mask" ] && printf "\tdirectory mask = %s\n" "$dir_mask"
+		[ -n "$force_create_mode" ] && printf "\tforce create mode = %s\n" "$force_create_mode"
+		[ -n "$force_directory_mode" ] && printf "\tforce directory mode = %s\n" "$force_directory_mode"
 
-	[ -n "$write_list" ] && echo -e "\twrite list = $write_list" >> /var/etc/cifs/smb.conf
-	[ -n "$read_list" ] && echo -e "\tread list = $read_list" >> /var/etc/cifs/smb.conf
+		[ -n "$browseable" ] && printf "\tbrowseable = %s\n" "$browseable"
+		[ -n "$read_only" ] && printf "\tread only = %s\n" "$read_only"
+		[ -n "$writeable" ] && printf "\twriteable = %s\n" "$writeable"
+		[ -n "$guest_ok" ] && printf "\tguest ok = %s\n" "$guest_ok"
+		[ -n "$inherit_owner" ] && printf "\tinherit owner = %s\n" "$inherit_owner"
 
-	[ "$hide_dot_files" -eq 1 ] && echo -e "\thide dot files = yes" >> /var/etc/cifs/smb.conf
-	[ -n "$veto_files" ] && echo -e "\tveto files = $veto_files" >> /var/etc/cifs/smb.conf
+		[ -n "$write_list" ] && printf "\twrite list = %s\n" "$write_list"
+		[ -n "$read_list" ] && printf "\tread list = %s\n" "$read_list"
+
+		[ "$hide_dot_files" -eq 1 ] && printf "\thide dot files = %s\n" "yes"
+		[ -n "$veto_files" ] && printf "\tveto files = %s\n" "$veto_files"
+	} >> /var/etc/cifs/smb.conf
 }
 
 init_config()
@@ -135,14 +148,9 @@ start_service()
 		exit 1
 	fi
 
-	[ -f /tmp/cifsd.lock ] && rm /tmp/cifsd.lock
-
-	# try remove again before start
-	[ -e /sys/module/cifsd/ ] && rmmod cifsd > /dev/null 2>&1
-
 	modprobe cifsd 2> /dev/null
 	if [ ! -e /sys/module/cifsd ]; then
-		logger -t 'cifsd' "modprobe of cifsd module failed, cant start cifsd!"
+		logger -t 'cifsd' "modprobe of cifsd module failed, can\'t start cifsd!"
 		exit 1
 	fi
 
@@ -150,4 +158,26 @@ start_service()
 	procd_open_instance
 	procd_set_param command /usr/sbin/cifsd --n
 	procd_close_instance
+}
+
+stop_service()
+{
+	logger -t 'cifsd' "Stopping CIFSD userspace service."
+	killall cifsd > /dev/null 2>&1
+	sleep 1
+	[ -e /sys/class/cifsd-control/kill_server ] && echo hard > /sys/class/cifsd-control/kill_server
+	sleep 2
+	[ -e /sys/module/cifsd ] && rmmod cifsd > /dev/null 2>&1
+	# With open smb connections rmmod takes longer
+	if [ -e /sys/module/cifsd ]; then
+		sleep 5
+		rmmod cifsd > /dev/null 2>&1
+	fi
+	[ -f /tmp/cifsd.lock ] && rm /tmp/cifsd.lock
+}
+
+reload_service() {
+	stop_service "$@"
+	sleep 1
+	start_service "$@"
 }
