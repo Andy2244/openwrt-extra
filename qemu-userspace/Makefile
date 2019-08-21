@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qemu
-PKG_VERSION:=3.1.0
+PKG_VERSION:=4.1.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://download.qemu.org/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_HASH:=6a0508df079a0a33c2487ca936a56c12122f105b8a96a44374704bef6c69abfc
+PKG_HASH:=656e60218689bdeec69903087fd7582d5d3e72238d02f4481d8dc6d79fd909c6
 PKG_LICENSE:=GPL-2.0
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
@@ -53,7 +53,6 @@ HOST_CONFIGURE_ARGS +=	\
 	--disable-netmap		\
 	--disable-xen			\
 	--disable-xen-pci-passthrough	\
-	--disable-xen-pv-domain-build	\
 	--disable-brlapi		\
 	--disable-bluez			\
 	--disable-tcg-interpreter	\
@@ -92,7 +91,6 @@ HOST_CONFIGURE_ARGS +=	\
 	--disable-vte			\
 	--disable-virglrenderer	\
 	--disable-tpm			\
-	--disable-libssh2		\
 	--disable-strip			\
 	--disable-replication	\
 	--disable-vxhs			\
