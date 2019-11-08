@@ -5,9 +5,9 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/cifsd-team/cifsd-tools.git
-PKG_SOURCE_DATE:=2019-08-19
-PKG_SOURCE_VERSION:=bbeab27f0a1695f711fb84d9cd29a83f818ef90e
-PKG_MIRROR_HASH:=f8bef545400aa8c0db6ba0fffdf0c0a2f201603503728f140df133aff3a39cbb
+PKG_SOURCE_DATE:=2019-10-31
+PKG_SOURCE_VERSION:=3e6be471ee4a78d71d920787f2f91d2f745de575
+PKG_MIRROR_HASH:=f5f8b2e8b2248f0ca39d8647f9d5243957d293ba738cb2596323fa965ae723f3
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -31,7 +31,7 @@ define Package/cifsd-tools
 endef
 
 define Package/cifsd-tools/description
-  Userspace tools (cifsd, cifsadmin) for the CIFS/SMB kernel fileserver.
+  Userspace tools (cifsd, cifsuseradd, cifsshareadd) for the CIFS/SMB kernel fileserver.
   The config file location is /etc/cifs/smb.conf
 endef
 
@@ -39,7 +39,7 @@ define Package/cifsd-tools/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libcifsdtools.so* $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{cifsadmin,cifsd} $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{cifsuseradd,cifsshareadd,cifsd} $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/cifs $(1)/etc/init.d
 	$(INSTALL_CONF) ./files/cifsd.config $(1)/etc/config/cifsd
 	$(INSTALL_DATA) ./files/smb.conf.template $(1)/etc/cifs/
