@@ -233,13 +233,16 @@ define Package/samba4-suite-full/install
 
 	$(INSTALL_DIR) $(1)/usr/lib/python2.7
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/python2.7 $(1)/usr/lib/
-	
+
+	$(INSTALL_DIR) $(1)/usr/share/
+	$(CP) $(PKG_INSTALL_DIR)/usr/share/samba $(1)/usr/share/
+
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
-	
+
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/* $(1)/usr/sbin/
-	
+
 	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/samba $(1)/etc/init.d
 	$(INSTALL_CONF) ./files/samba.config $(1)/etc/config/samba4
 	$(INSTALL_DATA) ./files/smb.conf.template $(1)/etc/samba
