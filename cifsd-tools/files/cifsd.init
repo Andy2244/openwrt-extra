@@ -103,7 +103,12 @@ smb_add_share()
 
 		[ -n "$browseable" ] && printf "\tbrowseable = %s\n" "$browseable"
 		[ -n "$read_only" ] && printf "\tread only = %s\n" "$read_only"
-		[ -n "$writeable" ] && printf "\twriteable = %s\n" "$writeable"
+		# possible upstream bug?
+		if [ "$read_only" = "no" ]; then
+			printf "\twriteable = yes\n"
+		else
+			[ -n "$writeable" ] && printf "\twriteable = %s\n" "$writeable"
+		fi
 		[ -n "$guest_ok" ] && printf "\tguest ok = %s\n" "$guest_ok"
 		[ -n "$inherit_owner" ] && printf "\tinherit owner = %s\n" "$inherit_owner"
 
