@@ -2,7 +2,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba4-suite-full
-PKG_VERSION:=4.9.15
+PKG_VERSION:=4.9.16
 PKG_RELEASE:=1
 
 PKG_SOURCE:=samba-$(PKG_VERSION).tar.gz
@@ -12,7 +12,7 @@ PKG_SOURCE_URL:=https://ftp.heanet.ie/mirrors/ftp.samba.org/stable/ \
 		http://www.nic.funet.fi/index/samba/pub/samba/stable/ \
 		http://samba.mirror.bit.nl/samba/ftp/stable/ \
 		https://download.samba.org/pub/samba/stable/
-PKG_HASH:=377102b80b97941bf0d131b828cae8415190e5bdd2928c2e2c954e29f1904496
+PKG_HASH:=613987fac719ed90f3daad6ca12517329f0754dd51c573f6b3623e6b03cb3916
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
@@ -22,8 +22,8 @@ PKG_CPE_ID:=cpe:/a:samba:samba
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/samba-$(PKG_VERSION)-suite-full
 PKG_BUILD_DIR:=$(BUILD_DIR)/samba-$(PKG_VERSION)-suite-full
 
-# samba4=(asn1_compile) e2fsprogs=(compile_et) nfs-kernel-server=(rpcgen)
-HOST_BUILD_DEPENDS:=python/host nfs-kernel-server/host e2fsprogs/host
+# samba4=(asn1_compile,compile_et) nfs-kernel-server=(rpcgen)
+HOST_BUILD_DEPENDS:=python/host nfs-kernel-server/host
 PKG_BUILD_DEPENDS:=samba4-suite-full/host
 
 include $(INCLUDE_DIR)/package.mk
@@ -39,8 +39,8 @@ define Package/samba4-suite-full
   CATEGORY:=Network
   TITLE:=Samba $(PKG_VERSION) Suite-Full (EXPERIMENTAL)
   URL:=https://www.samba.org/
-  DEPENDS:= +zlib +libtirpc +libpopt +libcomerr +libreadline \
-	+PACKAGE_libcap:libcap +PACKAGE_libpthread:libpthread +PACKAGE_libnettle:libnettle +PACKAGE_libgcrypt:libgcrypt +PACKAGE_libpam:libpam +PACKAGE_dbus:dbus \
+  DEPENDS:= +zlib +libtirpc +libpopt +libcomerr +libreadline +libcap \
+	+PACKAGE_libpthread:libpthread +PACKAGE_libnettle:libnettle +PACKAGE_libgcrypt:libgcrypt +PACKAGE_libpam:libpam +PACKAGE_dbus:dbus \
 	+attr +acl +libavahi-client \
 	+python-base +python-crypto +libopenssl +libgnutls +libopenldap +jansson +libarchive
   EXTRA_DEPENDS:=$(if $(PACKAGE_samba4-libs),@BROKEN)
@@ -177,10 +177,9 @@ HOST_CONFIGURE_ARGS += \
 		--with-shared-modules=!DEFAULT,!FORCED
 
 # lib bundling
-# NOTE: bundle + make private, we want to avoid version configuration (build, link) conflicts
 #CONFIGURE_ARGS += --builtin-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka
-HOST_CONFIGURE_ARGS += --builtin-libraries=replace --nonshared-binary=asn1_compile
-
+HOST_CONFIGURE_ARGS += --builtin-libraries=replace --nonshared-binary=asn1_compile,compile_et
+# NOTE: We use RPATH here!
 CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,!asn1_compile,!compile_et 
 # BUG: --private-libraries, Does not work for System possible libs, will not get "samba4" suffix!
 CONFIGURE_ARGS += --private-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace
@@ -191,13 +190,14 @@ CONFIGURE_ARGS += --private-library-extension=s4
 define Host/Compile
 	(cd $(HOST_BUILD_DIR); \
 		./buildtools/bin/waf build \
-		--targets=asn1_compile \
+		--targets=asn1_compile,compile_et \
 	)
 endef
 
 define Host/Install
 	$(INSTALL_DIR) $(STAGING_DIR_HOSTPKG)/bin/
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/asn1_compile $(STAGING_DIR_HOSTPKG)/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/compile_et $(STAGING_DIR_HOSTPKG)/bin/
 endef
 
 define Build/Configure
