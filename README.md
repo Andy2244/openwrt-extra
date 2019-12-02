@@ -4,13 +4,12 @@
 
 This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.9.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [Cifsd](https://github.com/cifsd-team/cifsd) servers.
 
-### Update (Jan 2019)
+The 'samba4' package is the basic fileserver, while 'samba4-suite-full' is the complete samba4 suite, including all tools to manage, join domains and run in AD-DC mode, winbindd is also included there. The main difference between those two packages, is size, so 'samba4' needs around 6.5 MB and 'samba4-suite-full' needs 12 MB.
 
-Samba 4, wsdd2, luci-app-samba4, Softethervpn5 was merged into package/master *(Snapshots)*, so this feeds will contain unmerged or test changes from now on.\
 Ready build ipk's for *Snapshots* based firmware, can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/).
 
 #### Note
-Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.\
+Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.
 
 The size of the Samba4-server/libs.ipk and deps are around 6.5 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
 
@@ -68,7 +67,11 @@ If you cant see your share in the Windows 10 explorer, make sure the ```wsdd2```
 If you encounter invalid user access errors, try enabling the ```Force Root``` option. This will ignore the ```Allowed users``` and force access rights via the root user.
 
 #### CPU problems
-If your firmware support's ```renice``` (busybox process tools option) than the init script will lower all samba related processes, which can help to avoid samba stalling other processes.
+The process priority/niceness can be set in the config and may avoid samba stalling other processes on low end devices.
+```
+config procd 'extra'
+	option samba_nice '3'
+ ```
 
 #### Compatible Filesystems
 You should use a native linux filesystem with samba4, like btrfs, ext2/3/4 or F2FS (ssd/flash drives). The NTFS driver in openWRT is readonly for none-root useres, so will not work correctly, you can instead use exFAT (enable _build patented_ in menuconfig) if you need a Windows compatible FS. You can format a drive to ext2/3/4 on Windows via [partitionwizard-portable](https://www.partitionwizard.com/C37D9BE2-4B03-481d-B1FA-72CFAFD1C96C/mt_pw_free_x_64bit.zip).
