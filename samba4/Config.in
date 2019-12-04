@@ -37,23 +37,3 @@ config SAMBA4_SERVER_VFSX
 
 		Additional VFS modules that aren't commonly used, vfs_linux_xfs_sgid requires kmod-fs-xfs to be selected separately
 	default n
-
-config SAMBA4_SERVER_ACL
-	bool "ACL support (xattr)"
-	depends on PACKAGE_samba4-server
-	help
-		installs: sharesec
-			modules: vfs_acl_xattr vfs_acl_tdb vfs_posixacl
-
-		Extended access control list support
-	default n
-
-config SAMBA4_SERVER_QUOTAS
-	bool "Disk quota support"
-	depends on PACKAGE_samba4-server
-	help
-		installs:
-			modules: vfs_default_quota
-
-		Support for disk quotas using the quotas VFS module (vfs_default_quota)
-	default n
