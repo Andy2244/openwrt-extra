@@ -358,10 +358,13 @@ BUILD_TARGETS_UTILS :=smbstatus,smbtree,smbget,mvxattr,nmblookup
 CONFIGURE_ARGS += --builtin-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,com_err
 HOST_CONFIGURE_ARGS += --builtin-libraries=replace --nonshared-binary=asn1_compile,compile_et
 #CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,!asn1_compile,!compile_et,!popt
-CONFIGURE_ARGS += --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,com_err,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
+CONFIGURE_ARGS += --bundled-libraries=NONE,talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,com_err,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc
 # BUG: --private-libraries, Does not work for System possible libs, will not get "samba4" suffix!
 CONFIGURE_ARGS += --private-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,com_err
 # CONFIGURE_ARGS += --disable-symbol-versions
+
+export COMPILE_ET=$(STAGING_DIR_HOSTPKG)/bin/compile_et_samba
+export ASN1_COMPILE=$(STAGING_DIR_HOSTPKG)/bin/asn1_compile_samba
 
 define Host/Compile
 	(cd $(HOST_BUILD_DIR); \
