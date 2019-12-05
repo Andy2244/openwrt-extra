@@ -23,7 +23,7 @@ config SAMBA4_SERVER_VFS
 	depends on PACKAGE_samba4-server
 	help
 		installs:
-			modules: (vfs_btrfs) vfs_fruit vfs_shadow_copy2 vfs_recycle vfs_fake_perms vfs_readonly vfs_cap vfs_offline vfs_crossrename vfs_catia vfs_streams_xattr
+			modules: (vfs_btrfs) vfs_fruit vfs_shadow_copy2 vfs_recycle vfs_fake_perms vfs_readonly vfs_cap vfs_offline vfs_crossrename vfs_catia vfs_streams_xattr vfs_default_quota
 
 		Commonly used VFS modules, vfs_btrfs requires kmod-fs-btrfs to be selected separately
 	default y
@@ -36,4 +36,28 @@ config SAMBA4_SERVER_VFSX
 			modules: vfs_virusfilter vfs_shell_snap vfs_commit vfs_worm vfs_xattr_tdb vfs_aio_fork vfs_aio_pthread (vfs_linux_xfs_sgid) vfs_netatalk vfs_dirsort vfs_fileid
 
 		Additional VFS modules that aren't commonly used, vfs_linux_xfs_sgid requires kmod-fs-xfs to be selected separately
+	default n
+
+config SAMBA4_SERVER_ACL
+	bool "ACL support (xattr)"
+	depends on PACKAGE_samba4-server
+	help
+		installs: sharesec
+			modules: vfs_acl_xattr vfs_acl_tdb vfs_posixacl
+
+		Extended access control list support
+	default n
+
+config SAMBA4_SERVER_AD_DC
+	bool "Active Directory Domain Controller support (EXPERIMENTAL)"
+	depends on PACKAGE_samba4-server
+	select SAMBA4_SERVER_VFS
+	help
+		installs: samba (meta-daemon) python3-crypto ntlm_auth
+			scripts: samba-tool
+
+		Run as a Active Directory Domain Controller
+		see: https://wiki.samba.org/index.php/Setting_up_Samba_as_an_Active_Directory_Domain_Controller
+		HINT: see section (# Using the Domain Controller as a File Server)
+		NOTE: Extroot is recommend for this setup, as it is not optimized to run completely from RAM/tempfs!
 	default n
