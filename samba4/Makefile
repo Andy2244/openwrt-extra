@@ -293,16 +293,19 @@ HOST_CONFIGURE_ARGS += \
 		--with-shared-modules=!DEFAULT,!FORCED
 
 # lib bundling
+PY_VER:=$(PYTHON3_VERSION_MAJOR)$(PYTHON3_VERSION_MINOR)
 # NOTE: bundle + make private, we want to avoid version configuration (build, link) conflicts
 HOST_CONFIGURE_ARGS += --builtin-libraries=replace --nonshared-binary=asn1_compile,compile_et
+SYSTEM_BUNDLED_LIBS:=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,com_err
+EXTRA_BUNDLED_LIBS:=roken,wind,hx509,libtasn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc
+PYTHON_BUNDLED_LIBS:=pytalloc-util.cpython-$(PY_VER),pyldb-util.cpython-$(PY_VER)
 # CONFIGURE_ARGS += --builtin-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,com_err
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-	# BUG: '!zlib' not working, we need zlib-dev -> recursive menuconfig bug
-	CONFIGURE_ARGS += --bundled-libraries='ALL,!asn1_compile,!compile_et,!zlib,!popt'
+	CONFIGURE_ARGS += --bundled-libraries=NONE,$(SYSTEM_BUNDLED_LIBS),$(EXTRA_BUNDLED_LIBS),$(PYTHON_BUNDLED_LIBS)
 else
-	CONFIGURE_ARGS += --bundled-libraries=NONE,talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,com_err,roken,wind,hx509,libtasn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc
+	CONFIGURE_ARGS += --bundled-libraries=NONE,$(SYSTEM_BUNDLED_LIBS),$(EXTRA_BUNDLED_LIBS)
 endif
-CONFIGURE_ARGS += --private-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,com_err,pytalloc-util,pyldb-util
+CONFIGURE_ARGS += --private-libraries=$(SYSTEM_BUNDLED_LIBS)
 
 export COMPILE_ET=$(STAGING_DIR_HOSTPKG)/bin/compile_et_samba
 export ASN1_COMPILE=$(STAGING_DIR_HOSTPKG)/bin/asn1_compile_samba
