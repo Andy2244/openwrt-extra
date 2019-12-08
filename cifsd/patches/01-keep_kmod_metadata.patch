@@ -1,0 +1,20 @@
+--- a/glob.h	2019-12-08
++++ b/glob.h	2019-12-08
+@@ -7,6 +7,8 @@
+ #ifndef __CIFSD_GLOB_H
+ #define __CIFSD_GLOB_H
+ 
++#undef CONFIG_MODULE_STRIPPED
++
+ #include <linux/ctype.h>
+ #include <linux/version.h>
+ 
+@@ -50,7 +52,7 @@ extern int cifsd_caseless_search;
+ 
+ #define cifsd_err(fmt, ...)					\
+ 			pr_err(cifsd_pr_fmt("%s:%d: " fmt),	\
+-				__func__,			\
++			__func__,			\
+ 				__LINE__,			\
+ 				##__VA_ARGS__)
+ 
