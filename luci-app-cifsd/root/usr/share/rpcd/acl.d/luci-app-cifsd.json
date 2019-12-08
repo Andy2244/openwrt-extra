@@ -4,7 +4,8 @@
 		"read": {
 			"file": {
 				"/etc/cifs/smb.conf.template": [ "read" ],
-				"/usr/sbin/cifsd": [ "exec" ]
+				"/usr/sbin/cifsd": [ "exec" ],
+				"/sbin/modinfo": [ "exec" ]
 			}
 		},
 		"write": {

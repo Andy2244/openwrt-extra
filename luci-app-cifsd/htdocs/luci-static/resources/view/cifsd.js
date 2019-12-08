@@ -8,7 +8,8 @@ return L.view.extend({
 		return Promise.all([
 			L.resolveDefault(fs.stat('/sbin/block'), null),
 			L.resolveDefault(fs.stat('/etc/config/fstab'), null),
-			L.resolveDefault(fs.exec("cifsd", ["-h"]), {}).then(function(res) { return L.toArray((res.stderr || '').match(/version : (\S+ \S+)/))[1] }),
+			L.resolveDefault(fs.exec('/usr/sbin/cifsd', ['-V']), {}).then(function(res) { return L.toArray((res.stdout || '').match(/version : (\S+)/))[1] }),
+			L.resolveDefault(fs.exec('/sbin/modinfo', ['cifsd']), {}).then(function(res) { return L.toArray((res.stdout || '').match(/version:\t(\S+)/))[1] }),
 		]);
 	},
 	render: function(stats) {
@@ -18,9 +19,12 @@ return L.view.extend({
 		m = new form.Map('cifsd', _('Network Shares'));
 
 		if (stats[2]) {
-			v = 'Version ' + stats[2].trim();
+			v = stats[2].trim();
 		}
-		s = m.section(form.TypedSection, 'globals', 'Cifsd ' + v);
+		if (stats[3]) {
+			v = v + '  Kmod: ' + stats[3].trim();
+		}
+		s = m.section(form.TypedSection, 'globals', 'Cifsd: ' + v);
 		s.anonymous = true;
 
 		s.tab('general',  _('General Settings'));
