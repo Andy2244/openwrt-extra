@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cifsd-tools
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/cifsd-team/cifsd-tools.git
@@ -16,11 +16,9 @@ PKG_LICENSE_FILES:=COPYING
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
-# Why does autoreconf not pickup CONFIG_PACKAGE_glib2 changes without deleting the config.* files?
-PKG_REMOVE_FILES:=autogen.sh config.*
+PKG_REMOVE_FILES:=autogen.sh
 
-PKG_BUILD_DEPENDS:=glib2 libnl libiconv
-PKG_CONFIG_DEPENDS:=CONFIG_PACKAGE_glib2
+PKG_BUILD_DEPENDS:=glib2 libnl
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
@@ -31,7 +29,6 @@ define Package/cifsd-tools/Default
   SUBMENU:=Filesystem
   TITLE:=Kernel SMB/CIFS
   URL:=https://github.com/cifsd-team/cifsd-tools
-  DEPENDS:=+PACKAGE_glib2:glib2 +PACKAGE_glib2:libnl-core +PACKAGE_glib2:libnl-genl $(ICONV_DEPENDS)
 endef
 
 define Package/cifsd-tools/Default/description
@@ -48,7 +45,7 @@ endef
 define Package/cifsd-server/description
   installs: cifsd
 
-  This provides the basic fileserver service and is the minimum needed to serve 'guest only' file shares.
+  This provides the basic fileserver service and is the minimum needed to serve 'guest only' file shares or use a existing cifsdpwd.db.
 endef
 
 define Package/cifsd-utils
@@ -76,13 +73,19 @@ CONFIGURE_ARGS += \
 	--disable-shared \
 	--enable-static
 
-TARGET_CFLAGS += $(if $(CONFIG_PACKAGE_glib2),,-static)
-TARGET_LDFLAGS += $(if $(CONFIG_PACKAGE_glib2),,--static)
+# TARGET_CFLAGS += -static
+# TARGET_LDFLAGS += --static
+# TARGET_LDFLAGS += -Wl,-rpath-link=$(STAGING_DIR)/usr/lib -liconv
+export AM_LDFLAGS:= -all-static
+# needed to prevent "unsupported jump between ISA modes" in libglib-2.0.a(libglib_2_0_la-gconvert.o)
+ifneq ($(findstring mips,$(CONFIG_ARCH)),)
+	TARGET_CFLAGS += -minterlink-compressed
+endif
 
+# Why is 'TARGET_LDFLAGS += -liconv' and nls.mk not working here?
 define Build/Prepare
 	$(Build/Prepare/Default)
 	$(SED) 's/LIBNL_LIBS./& -liconv/' $(PKG_BUILD_DIR)/{cifsd,cifsshareadd,cifsuseradd}/Makefile.am
-	# $(SED) 's/LIBNL_LIBS./& -liconv/' $(PKG_BUILD_DIR)/{cifsd,cifsshareadd,cifsuseradd}/Makefile.am
 endef
 
 define Package/cifsd-server/install

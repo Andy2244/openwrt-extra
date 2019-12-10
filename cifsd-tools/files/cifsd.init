@@ -39,7 +39,7 @@ smb_header()
 	[ -e /etc/cifs/smb.conf ] || ln -nsf /var/etc/cifs/smb.conf /etc/cifs/smb.conf
 
 	if [ ! -L /etc/cifs/smb.conf ]; then
-		logger -t 'cifsd' "Local custom /etc/cifs/smb.conf file detected, all UCI/Luci config settings are ignored!"
+		logger -p daemon.warn -t 'cifsd' "Local custom /etc/cifs/smb.conf file detected, all UCI/Luci config settings are ignored!"
 	fi
 }
 
@@ -140,31 +140,42 @@ service_triggers()
 	done
 }
 
+kill_server()
+{
+	if [ -e /sys/module/cifsd ]; then
+		if [ -e /sys/class/cifsd-control/kill_server ]; then
+			logger -p daemon.info -t 'cifsd' "triggering kill_server"
+			echo hard > /sys/class/cifsd-control/kill_server
+			sleep 1
+			TIMEOUT=0
+			# we need a extra timeout for the reset (cifsd-control: reset startup running)
+			while ! (grep -q startup /sys/class/cifsd-control/stats); do
+				sleep 1
+				[ $((TIMEOUT=TIMEOUT+1)) -gt 10 ] && return
+			done
+		fi
+	fi
+}
+
 start_service()
 {
 	init_config
 
 	if [ ! -e /etc/cifs/smb.conf ]; then
-		logger -t 'cifsd' "missing config /etc/cifs/smb.conf, needs to-be created manually!"
+		logger -p daemon.warn -t 'cifsd' "missing config /etc/cifs/smb.conf, needs to-be created manually!"
 		exit 1
 	fi
-
-	if [ -e /sys/module/cifsd ]; then
-		if [ -e /sys/class/cifsd-control/kill_server ]; then
-			# upstream "BUG": ensure changes in smb.conf are reflected on a running kernel-server
-			echo hard > /sys/class/cifsd-control/kill_server
-			# we need a extra timeout for the reset
-			sleep 5
-		fi
-	fi
+	
+	# NOTE: We don't do a soft-reload via signal, since [global] smb.conf setting changes will be ignored, so always reset hard.
+	kill_server
 	
 	modprobe cifsd 2> /dev/null
 	if [ ! -e /sys/module/cifsd ]; then
-		logger -t 'cifsd' "modprobe of cifsd module failed, can\'t start cifsd!"
+		logger -p daemon.error -t 'cifsd' "modprobe of cifsd module failed, can\'t start cifsd!"
 		exit 1
 	fi
 
-	logger -t 'cifsd' "Starting CIFS/SMB userspace service."
+	logger -p daemon.notice -t 'cifsd' "Starting CIFS/SMB userspace service."
 	procd_open_instance
 	procd_set_param command /usr/sbin/cifsd --n
 	procd_set_param file /var/etc/cifs/smb.conf
@@ -173,31 +184,17 @@ start_service()
 
 stop_service()
 {
-	logger -t 'cifsd' "Stopping CIFSD userspace service."
+	logger -p daemon.notice -t 'cifsd' "Stopping CIFSD userspace service."
 	killall cifsd > /dev/null 2>&1
 	
 	[ -e /sys/module/cifsd ] && rmmod cifsd > /dev/null 2>&1
 	# With open smb connections rmmod is not possible, without waiting for the long 'ipc timeout', so we use 'kill_server'!
-	if [ -e /sys/module/cifsd ]; then
-		logger -t 'cifsd' "triggering kill_server"
-		if [ -e /sys/class/cifsd-control/kill_server ]; then
-			echo hard > /sys/class/cifsd-control/kill_server
-			# we need a extra timeout for the reset
-			sleep 5
-		fi
-	fi
+	[ -e /sys/module/cifsd ] && kill_server
 	# next try
-	[ -e /sys/module/cifsd ] && rmmod cifsd > /dev/null 2>&1
-	# check again
-	if [ -e /sys/module/cifsd ]; then
-		# wait more...
-		sleep 3
-	fi
-	# last try
 	[ -e /sys/module/cifsd ] && rmmod cifsd > /dev/null 2>&1
 	
 	if [ -e /sys/module/cifsd ]; then
-		logger -t 'cifsd' "module still loaded after 8s timeout"
+		logger -p daemon.error -t 'cifsd' "module still loaded after 10s timeout"
 	fi
 	[ -f /tmp/cifsd.lock ] && rm /tmp/cifsd.lock
 }
