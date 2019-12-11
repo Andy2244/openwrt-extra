@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libmill
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/sustrik/libmill.git
@@ -26,8 +26,8 @@ define Package/libmill
   URL:=http://libmill.org
 endef
 
-define Package/libev/description
- Libmill is a library that introduces Go-style concurrency to C.
+define Package/libmill/description
+  Libmill is a library that introduces Go-style concurrency to C.
 endef
 
 # see issue #167 (GCC 6.2.1 breaks libmill)
