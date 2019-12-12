@@ -130,7 +130,7 @@ init_config()
 
 service_triggers()
 {
-	PROCD_RELOAD_DELAY=2000
+	# PROCD_RELOAD_DELAY=2000
 
 	procd_add_reload_trigger "dhcp" "system" "cifsd"
 
@@ -146,13 +146,6 @@ kill_server()
 		if [ -e /sys/class/cifsd-control/kill_server ]; then
 			logger -p daemon.info -t 'cifsd' "triggering kill_server"
 			echo hard > /sys/class/cifsd-control/kill_server
-			sleep 1
-			TIMEOUT=0
-			# we need a extra timeout for the reset (cifsd-control: reset startup running)
-			while ! (grep -q startup /sys/class/cifsd-control/stats); do
-				sleep 1
-				[ $((TIMEOUT=TIMEOUT+1)) -gt 10 ] && return
-			done
 		fi
 	fi
 }
@@ -169,7 +162,7 @@ start_service()
 	# NOTE: We don't do a soft-reload via signal, since [global] smb.conf setting changes will be ignored, so always reset hard.
 	kill_server
 	
-	modprobe cifsd 2> /dev/null
+	[ ! -e /sys/module/cifsd ] && modprobe cifsd 2> /dev/null
 	if [ ! -e /sys/module/cifsd ]; then
 		logger -p daemon.error -t 'cifsd' "modprobe of cifsd module failed, can\'t start cifsd!"
 		exit 1
@@ -188,13 +181,13 @@ stop_service()
 	killall cifsd > /dev/null 2>&1
 	
 	[ -e /sys/module/cifsd ] && rmmod cifsd > /dev/null 2>&1
-	# With open smb connections rmmod is not possible, without waiting for the long 'ipc timeout', so we use 'kill_server'!
+	# kill server if we cant rmmod
 	[ -e /sys/module/cifsd ] && kill_server
 	# next try
 	[ -e /sys/module/cifsd ] && rmmod cifsd > /dev/null 2>&1
 	
 	if [ -e /sys/module/cifsd ]; then
-		logger -p daemon.error -t 'cifsd' "module still loaded after 10s timeout"
+		logger -p daemon.error -t 'cifsd' "module still loaded after kill_server?"
 	fi
 	[ -f /tmp/cifsd.lock ] && rm /tmp/cifsd.lock
 }

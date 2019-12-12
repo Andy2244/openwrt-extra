@@ -1,0 +1,13 @@
+--- a/connection.h	2019-12-07 10:46:44.000000000 +0100
++++ b/connection.h	2019-12-12 17:00:36.130431258 +0100
+@@ -141,8 +141,8 @@ struct cifsd_transport {
+ 	struct task_struct		*handler;
+ };
+ 
+-#define CIFSD_TCP_RECV_TIMEOUT	(7 * HZ)
+-#define CIFSD_TCP_SEND_TIMEOUT	(5 * HZ)
++#define CIFSD_TCP_RECV_TIMEOUT	(1 * HZ)
++#define CIFSD_TCP_SEND_TIMEOUT	(1 * HZ)
+ #define CIFSD_TCP_PEER_SOCKADDR(c)	((struct sockaddr *)&((c)->peer_addr))
+ 
+ bool cifsd_conn_alive(struct cifsd_conn *conn);

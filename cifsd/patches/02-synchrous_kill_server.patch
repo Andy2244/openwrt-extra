@@ -1,0 +1,35 @@
+---
+ connection.c | 2 +-
+ server.c     | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/connection.c b/connection.c
+index 59095e8..a8175fa 100644
+--- a/connection.c
++++ b/connection.c
+@@ -417,7 +417,7 @@ again:
+ 	read_unlock(&conn_list_lock);
+ 
+ 	if (!list_empty(&conn_list)) {
+-		schedule_timeout_interruptible(CIFSD_TCP_RECV_TIMEOUT / 2);
++		schedule_timeout_interruptible(HZ / 10); /* 100ms */
+ 		goto again;
+ 	}
+ }
+diff --git a/server.c b/server.c
+index 34a141d..d038e84 100644
+--- a/server.c
++++ b/server.c
+@@ -436,7 +436,9 @@ static ssize_t kill_server_store(struct class *class,
+ 
+ 	cifsd_err("kill command received\n");
+ 	WRITE_ONCE(server_conf.state, SERVER_STATE_RESETTING);
+-	server_queue_ctrl_reset_work();
++	__module_get(THIS_MODULE);
++	server_ctrl_handle_reset(NULL);
++	module_put(THIS_MODULE);
+ 	return len;
+ }
+ 
+-- 
+2.17.1
