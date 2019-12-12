@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glib2
 PKG_VERSION:=2.58.3
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE:=glib-$(PKG_VERSION).tar.xz
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
@@ -21,7 +21,6 @@ HOST_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=gettext
 HOST_BUILD_DEPENDS:=gettext-full/host libiconv/host libffi/host
 PKG_INSTALL:=1
-PKG_USE_MIPS16:=0
 
 PKG_CPE_ID:=cpe:/a:gnome:glib
 
@@ -47,9 +46,6 @@ define Package/glib2/description
 endef
 
 TARGET_CFLAGS += -Wno-error=implicit-function-declaration
-ifneq ($(findstring mips,$(CONFIG_ARCH)),)
-	TARGET_CFLAGS += -minterlink-compressed
-endif
 
 HOST_CONFIGURE_ARGS += \
 	--disable-libelf \
