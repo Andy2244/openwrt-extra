@@ -123,8 +123,8 @@ define Package/samba4-utils/description
   Utilities collection
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -I$(STAGING_DIR)/usr/include/tirpc
-TARGET_LDFLAGS += -Wl,--gc-sections
+TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto -I$(STAGING_DIR)/usr/include/tirpc
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 CONFIGURE_VARS += \
 	CPP="$(TARGET_CROSS)cpp"
