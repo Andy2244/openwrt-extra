@@ -45,7 +45,7 @@ define Package/glib2/description
   The GLib library of C routines
 endef
 
-TARGET_CFLAGS += -Wno-error=implicit-function-declaration
+TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto -Wno-error=implicit-function-declaration
 
 HOST_CONFIGURE_ARGS += \
 	--disable-libelf \
