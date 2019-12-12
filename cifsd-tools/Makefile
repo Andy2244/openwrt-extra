@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cifsd-tools
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/cifsd-team/cifsd-tools.git
@@ -75,12 +75,8 @@ CONFIGURE_ARGS += \
 
 # TARGET_CFLAGS += -static
 # TARGET_LDFLAGS += --static
-# TARGET_LDFLAGS += -Wl,-rpath-link=$(STAGING_DIR)/usr/lib -liconv
+# TARGET_LDFLAGS += -liconv
 export AM_LDFLAGS:= -all-static
-# needed to prevent "unsupported jump between ISA modes" in libglib-2.0.a(libglib_2_0_la-gconvert.o)
-ifneq ($(findstring mips,$(CONFIG_ARCH)),)
-	TARGET_CFLAGS += -minterlink-compressed
-endif
 
 # Why is 'TARGET_LDFLAGS += -liconv' and nls.mk not working here?
 define Build/Prepare
