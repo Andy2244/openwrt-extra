@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.11.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://ftp.heanet.ie/mirrors/ftp.samba.org/stable/ \
@@ -58,7 +58,7 @@ endef
 define Package/samba4-libs
   $(call Package/samba4/Default)
   TITLE+= libs
-  DEPENDS:= +libtirpc +libreadline +libpopt +zlib +libgnutls +libtasn1 +libuuid +libopenssl +USE_GLIBC:libpthread \
+  DEPENDS:= +libtirpc +libreadline +libpopt +libcap +zlib +libgnutls +libtasn1 +libuuid +libopenssl +USE_GLIBC:libpthread \
 	+SAMBA4_SERVER_VFS:attr \
 	+SAMBA4_SERVER_VFSX:libaio \
 	+SAMBA4_SERVER_AVAHI:libavahi-client \
@@ -123,7 +123,7 @@ define Package/samba4-utils/description
   Utilities collection
 endef
 
-TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -flto -I$(STAGING_DIR)/usr/include/tirpc
+TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -I$(STAGING_DIR)/usr/include/tirpc
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 CONFIGURE_VARS += \
