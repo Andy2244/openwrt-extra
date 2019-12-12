@@ -2,7 +2,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
-PKG_VERSION:=4.11.2
+PKG_VERSION:=4.11.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -12,16 +12,16 @@ PKG_SOURCE_URL:=https://ftp.heanet.ie/mirrors/ftp.samba.org/stable/ \
 		http://www.nic.funet.fi/index/samba/pub/samba/stable/ \
 		http://samba.mirror.bit.nl/samba/ftp/stable/ \
 		https://download.samba.org/pub/samba/stable/
-PKG_HASH:=d27bf1b7cf5f25fb5587896fccb73747a705f7cf7ee352b5cbab82841db09f1f
+PKG_HASH:=1acbe4a14d546e0b45ed638547ad40052b346293d23441715c903172ceb1a145
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=COPYING
 PKG_CPE_ID:=cpe:/a:samba:samba
 
-# samba4=(asn1_compile,compile_et) nfs-kernel-server=(rpcgen)
-HOST_BUILD_DEPENDS:=python3/host nfs-kernel-server/host
-PKG_BUILD_DEPENDS:=samba4/host
+# samba4=(asn1_compile,compile_et) rpcsvc-proto=(rpcgen)
+HOST_BUILD_DEPENDS:=python3/host perl/host
+PKG_BUILD_DEPENDS:=samba4/host libtasn1/host rpcsvc-proto/host
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_SAMBA4_SERVER_NETBIOS \
@@ -29,7 +29,6 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_SAMBA4_SERVER_VFS \
 	CONFIG_SAMBA4_SERVER_VFSX \
 	CONFIG_SAMBA4_SERVER_AD_DC \
-	CONFIG_SAMBA4_SERVER_ACL \
 	CONFIG_PACKAGE_kmod-fs-btrfs \
 	CONFIG_PACKAGE_kmod-fs-xfs
 
@@ -59,18 +58,18 @@ endef
 define Package/samba4-libs
   $(call Package/samba4/Default)
   TITLE+= libs
-  DEPENDS:= +zlib +libtirpc +libpopt +libreadline +libcap +libgnutls +libopenssl +libuuid \
-	+PACKAGE_libpthread:libpthread +PACKAGE_libnettle:libnettle +PACKAGE_libgcrypt:libgcrypt +PACKAGE_libpam:libpam +PACKAGE_dbus:dbus +PACKAGE_libavahi-client:libavahi-client \
+  DEPENDS:= +libtirpc +libreadline +libpopt +zlib +libgnutls +libtasn1 +libuuid +libopenssl +USE_GLIBC:libpthread \
 	+SAMBA4_SERVER_VFS:attr \
-	+SAMBA4_SERVER_ACL:acl +SAMBA4_SERVER_ACL:attr \
+	+SAMBA4_SERVER_VFSX:libaio \
 	+SAMBA4_SERVER_AVAHI:libavahi-client \
-	+SAMBA4_SERVER_AD_DC:python3-crypto +SAMBA4_SERVER_AD_DC:libopenldap +SAMBA4_SERVER_AD_DC:jansson +SAMBA4_SERVER_AD_DC:libarchive
+	+SAMBA4_SERVER_AD_DC:python3-cryptodome +SAMBA4_SERVER_AD_DC:libopenldap +SAMBA4_SERVER_AD_DC:jansson +SAMBA4_SERVER_AD_DC:libarchive +SAMBA4_SERVER_AD_DC:acl +SAMBA4_SERVER_AD_DC:attr
 endef
 
 define Package/samba4-server
   $(call Package/samba4/Default)
   TITLE+= server
   DEPENDS:= +samba4-libs
+  CONFLICTS:=samba36-server
 endef
 
 define Package/samba4-server/description
@@ -124,7 +123,7 @@ define Package/samba4-utils/description
   Utilities collection
 endef
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -I$(STAGING_DIR)/usr/include/tirpc
 TARGET_LDFLAGS += -Wl,--gc-sections
 
 CONFIGURE_VARS += \
@@ -235,22 +234,17 @@ ifeq ($(CONFIG_SAMBA4_SERVER_AVAHI),y)
 else
 	CONFIGURE_ARGS += --disable-avahi
 endif
-ifeq ($(CONFIG_SAMBA4_SERVER_ACL),y)
-	CONFIGURE_ARGS += --with-acl-support
-else
-	CONFIGURE_ARGS += --without-acl-support
-endif
 
 # NOTE: We need host python-bin, but target python-config here!
 CONFIGURE_VARS += python_LDFLAGS="" python_LIBDIR=""
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-	CONFIGURE_ARGS += --without-winbind
+	CONFIGURE_ARGS += --without-winbind --without-ldb-lmdb --with-acl-support
 	CONFIGURE_VARS += \
 		PYTHON="$(HOST_PYTHON3_BIN)" \
 		PYTHON_CONFIG="$(STAGING_DIR)/host/bin/$(PYTHON3)-config"
 else
-	CONFIGURE_ARGS += --without-winbind --without-ads --without-ldap --without-ad-dc --without-ldb-lmdb \
-		--without-json --without-libarchive --disable-python --nopyc --nopyo --without-dnsupdate 
+	CONFIGURE_ARGS += --without-winbind --without-ads --without-ldap --without-ldb-lmdb --without-ad-dc \
+		--without-json --without-libarchive --disable-python --nopyc --nopyo --without-dnsupdate --without-acl-support
 endif
 
 SAMBA4_PDB_MODULES :=pdb_smbpasswd,pdb_tdbsam,
@@ -269,16 +263,13 @@ ifeq ($(CONFIG_PACKAGE_kmod-fs-xfs),y)
 	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_linux_xfs_sgid,
 endif
 endif
-ifeq ($(CONFIG_SAMBA4_SERVER_ACL),y)
-	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_posixacl,
-	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_acl_xattr,vfs_acl_tdb,
-	# vfs_zfsacl needs https://github.com/zfsonlinux/zfs/tree/master/include/sys/zfs_acl.h
-	# vfs_nfs4acl_xattr needs https://github.com/notriddle/libdrpc/blob/master/rpc/xdr.h
-endif
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
 	SAMBA4_PDB_MODULES :=$(SAMBA4_PDB_MODULES)pdb_samba_dsdb,pdb_ldapsam,
 	SAMBA4_AUTH_MODULES :=$(SAMBA4_AUTH_MODULES)auth_samba4,
-	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_audit,vfs_extd_audit,vfs_full_audit,
+	SAMBA4_VFS_MODULES :=$(SAMBA4_VFS_MODULES)vfs_posixacl,
+	SAMBA4_VFS_MODULES_SHARED :=$(SAMBA4_VFS_MODULES_SHARED)vfs_audit,vfs_extd_audit,vfs_full_audit,vfs_acl_xattr,vfs_acl_tdb,
+	# vfs_zfsacl needs https://github.com/zfsonlinux/zfs/tree/master/include/sys/zfs_acl.h
+	# vfs_nfs4acl_xattr needs https://github.com/notriddle/libdrpc/blob/master/rpc/xdr.h
 endif
 
 SAMBA4_MODULES :=${SAMBA4_VFS_MODULES}${SAMBA4_AUTH_MODULES}${SAMBA4_PDB_MODULES}
@@ -297,13 +288,12 @@ PY_VER:=$(PYTHON3_VERSION_MAJOR)$(PYTHON3_VERSION_MINOR)
 # NOTE: bundle + make private, we want to avoid version configuration (build, link) conflicts
 HOST_CONFIGURE_ARGS += --builtin-libraries=replace --nonshared-binary=asn1_compile,compile_et
 SYSTEM_BUNDLED_LIBS:=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,com_err
-EXTRA_BUNDLED_LIBS:=roken,wind,hx509,libtasn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc
 PYTHON_BUNDLED_LIBS:=pytalloc-util.cpython-$(PY_VER),pyldb-util.cpython-$(PY_VER)
 # CONFIGURE_ARGS += --builtin-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,com_err
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
-	CONFIGURE_ARGS += --bundled-libraries=NONE,$(SYSTEM_BUNDLED_LIBS),$(EXTRA_BUNDLED_LIBS),$(PYTHON_BUNDLED_LIBS)
+	CONFIGURE_ARGS += --bundled-libraries=NONE,$(SYSTEM_BUNDLED_LIBS),$(PYTHON_BUNDLED_LIBS)
 else
-	CONFIGURE_ARGS += --bundled-libraries=NONE,$(SYSTEM_BUNDLED_LIBS),$(EXTRA_BUNDLED_LIBS)
+	CONFIGURE_ARGS += --bundled-libraries=NONE,$(SYSTEM_BUNDLED_LIBS)
 endif
 CONFIGURE_ARGS += --private-libraries=$(SYSTEM_BUNDLED_LIBS)
 
@@ -400,9 +390,6 @@ ifeq ($(CONFIG_SAMBA4_SERVER_NETBIOS),y)
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/nmbd $(1)/usr/sbin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/nmblookup $(1)/usr/bin/
 endif
-ifeq ($(CONFIG_SAMBA4_SERVER_ACL),y)
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/{sharesec,smbcacls} $(1)/usr/bin/
-endif
 ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/$(PYTHON3) $(1)/usr/lib/
@@ -412,6 +399,7 @@ ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),y)
 	$(SED) '1s,^#!/.*python3.*,#!/usr/bin/python3,' $(PKG_INSTALL_DIR)/usr/bin/samba-tool
 	$(SED) '1s,^#!/.*python3.*,#!/usr/bin/python3,' $(PKG_INSTALL_DIR)/usr/sbin/{samba-gpupdate,samba_dnsupdate,samba_kcc,samba_spnupdate,samba_upgradedns,samba_downgrade_db}
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/{samba-tool,ntlm_auth,oLschema2ldif} $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/{sharesec,smbcacls} $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/{samba,samba-gpupdate,samba_dnsupdate,samba_kcc,samba_spnupdate,samba_upgradedns,samba_downgrade_db} $(1)/usr/sbin/
 endif
 	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/samba $(1)/etc/init.d

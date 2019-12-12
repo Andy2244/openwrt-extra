@@ -38,22 +38,12 @@ config SAMBA4_SERVER_VFSX
 		Additional VFS modules that aren't commonly used, vfs_linux_xfs_sgid requires kmod-fs-xfs to be selected separately
 	default n
 
-config SAMBA4_SERVER_ACL
-	bool "ACL support (xattr)"
-	depends on PACKAGE_samba4-server
-	help
-		installs: sharesec
-			modules: vfs_acl_xattr vfs_acl_tdb vfs_posixacl
-
-		Extended access control list support
-	default n
-
 config SAMBA4_SERVER_AD_DC
 	bool "Active Directory Domain Controller support (EXPERIMENTAL)"
 	depends on PACKAGE_samba4-server
 	select SAMBA4_SERVER_VFS
 	help
-		installs: samba (meta-daemon) python3-crypto ntlm_auth
+		installs: samba (meta-daemon) PyCryptodome ntlm_auth
 			scripts: samba-tool
 
 		Run as a Active Directory Domain Controller
