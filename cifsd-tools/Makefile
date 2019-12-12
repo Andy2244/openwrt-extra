@@ -73,8 +73,8 @@ CONFIGURE_ARGS += \
 	--disable-shared \
 	--enable-static
 
-# TARGET_CFLAGS += -static
-# TARGET_LDFLAGS += --static
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 # TARGET_LDFLAGS += -liconv
 export AM_LDFLAGS:= -all-static
 
