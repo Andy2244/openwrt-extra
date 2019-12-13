@@ -8,13 +8,3 @@
 +
  #include <linux/ctype.h>
  #include <linux/version.h>
- 
-@@ -50,7 +52,7 @@ extern int cifsd_caseless_search;
- 
- #define cifsd_err(fmt, ...)					\
- 			pr_err(cifsd_pr_fmt("%s:%d: " fmt),	\
--				__func__,			\
-+			__func__,			\
- 				__LINE__,			\
- 				##__VA_ARGS__)
- 

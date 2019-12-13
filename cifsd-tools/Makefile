@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cifsd-tools
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/cifsd-team/cifsd-tools.git
@@ -18,7 +18,7 @@ PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 PKG_REMOVE_FILES:=autogen.sh
 
-PKG_BUILD_DEPENDS:=glib2 libnl
+PKG_BUILD_DEPENDS:=glib2
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
@@ -29,6 +29,7 @@ define Package/cifsd-tools/Default
   SUBMENU:=Filesystem
   TITLE:=Kernel SMB/CIFS
   URL:=https://github.com/cifsd-team/cifsd-tools
+  DEPENDS:= $(ICONV_DEPENDS) $(INTL_DEPENDS)
 endef
 
 define Package/cifsd-tools/Default/description
@@ -39,7 +40,7 @@ endef
 define Package/cifsd-server
   $(call Package/cifsd-tools/Default)
   TITLE+= server
-  DEPENDS+= +kmod-fs-cifsd
+  DEPENDS+= +kmod-fs-cifsd +libnl-core +libnl-genl
 endef
 
 define Package/cifsd-server/description
@@ -73,16 +74,10 @@ CONFIGURE_ARGS += \
 	--disable-shared \
 	--enable-static
 
-TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
-# TARGET_LDFLAGS += -liconv
-export AM_LDFLAGS:= -all-static
+CONFIGURE_VARS += GLIB_LIBS="$(STAGING_DIR)/usr/lib/libglib-2.0.a"
 
-# Why is 'TARGET_LDFLAGS += -liconv' and nls.mk not working here?
-define Build/Prepare
-	$(Build/Prepare/Default)
-	$(SED) 's/LIBNL_LIBS./& -liconv/' $(PKG_BUILD_DIR)/{cifsd,cifsshareadd,cifsuseradd}/Makefile.am
-endef
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed -liconv $(if $(INTL_FULL),-lintl)
 
 define Package/cifsd-server/install
 	$(INSTALL_DIR) $(1)/usr/sbin
