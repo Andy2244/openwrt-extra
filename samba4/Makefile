@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.11.3
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://ftp.heanet.ie/mirrors/ftp.samba.org/stable/ \
@@ -125,6 +125,8 @@ endef
 
 TARGET_CFLAGS += $(FPIC) -ffunction-sections -fdata-sections -I$(STAGING_DIR)/usr/include/tirpc
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+# dont mess with sambas private rpath!
+RSTRIP:=:
 
 CONFIGURE_VARS += \
 	CPP="$(TARGET_CROSS)cpp"
