@@ -1,35 +1,89 @@
----
- connection.c | 2 +-
- server.c     | 4 +++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/connection.c b/connection.c
-index 59095e8..a8175fa 100644
 --- a/connection.c
 +++ b/connection.c
+@@ -409,7 +409,7 @@ again:
+ 
+ 		task = conn->transport->handler;
+ 		if (task)
+-			cifsd_err("Stop session handler %s/%d\n",
++			cifsd_debug("Stop session handler %s/%d\n",
+ 				  task->comm,
+ 				  task_pid_nr(task));
+ 		conn->status = CIFSD_SESS_EXITING;
 @@ -417,7 +417,7 @@ again:
  	read_unlock(&conn_list_lock);
  
  	if (!list_empty(&conn_list)) {
 -		schedule_timeout_interruptible(CIFSD_TCP_RECV_TIMEOUT / 2);
-+		schedule_timeout_interruptible(HZ / 10); /* 100ms */
++		schedule_timeout_interruptible(HZ/10); /* 100ms */
  		goto again;
  	}
  }
 diff --git a/server.c b/server.c
-index 34a141d..d038e84 100644
+index 34a141d..e990e7a 100644
 --- a/server.c
 +++ b/server.c
-@@ -436,7 +436,9 @@ static ssize_t kill_server_store(struct class *class,
+@@ -435,8 +435,12 @@ static ssize_t kill_server_store(struct class *class,
+ 		return len;
  
  	cifsd_err("kill command received\n");
++	mutex_lock(&ctrl_lock);
  	WRITE_ONCE(server_conf.state, SERVER_STATE_RESETTING);
 -	server_queue_ctrl_reset_work();
 +	__module_get(THIS_MODULE);
 +	server_ctrl_handle_reset(NULL);
 +	module_put(THIS_MODULE);
++	mutex_unlock(&ctrl_lock);
  	return len;
  }
  
+diff --git a/transport_tcp.c b/transport_tcp.c
+index c825d4c..530f02a 100644
+--- a/transport_tcp.c
++++ b/transport_tcp.c
+@@ -52,6 +52,32 @@ static inline void cifsd_tcp_reuseaddr(struct socket *sock)
+ 		(char *)&val, sizeof(val));
+ }
+ 
++static inline void cifsd_tcp_rev_timeout(struct socket *sock, unsigned int sec)
++{
++	struct timeval tv = { .tv_sec = sec, .tv_usec = 0 };
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 1, 0)
++	kernel_setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO_OLD, (char *)&tv,
++			  sizeof(tv));
++#else
++	kernel_setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,
++			  sizeof(tv));
++#endif
++}
++
++static inline void cifsd_tcp_snd_timeout(struct socket *sock, unsigned int sec)
++{
++	struct timeval tv = { .tv_sec = sec, .tv_usec = 0 };
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 1, 0)
++	kernel_setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO_OLD, (char *)&tv,
++			  sizeof(tv));
++#else
++	kernel_setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&tv,
++			  sizeof(tv));
++#endif
++}
++
+ static struct tcp_transport *alloc_transport(struct socket *client_sk)
+ {
+ 	struct tcp_transport *t;
+@@ -369,6 +395,10 @@ static void tcp_destroy_socket(struct socket *cifsd_socket)
+ 	if (!cifsd_socket)
+ 		return;
+ 
++	/* set zero to timeout */
++	cifsd_tcp_rev_timeout(cifsd_socket, 0);
++	cifsd_tcp_snd_timeout(cifsd_socket, 0);
++
+ 	ret = kernel_sock_shutdown(cifsd_socket, SHUT_RDWR);
+ 	if (ret)
+ 		cifsd_err("Failed to shutdown socket: %d\n", ret);
 -- 
-2.17.1
+2.21.0
+
