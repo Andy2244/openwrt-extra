@@ -49,6 +49,10 @@ define Package/cifsd-server/description
   This provides the basic fileserver service and is the minimum needed to serve 'guest only' file shares or use a existing cifsdpwd.db.
 endef
 
+define Package/cifsd-server/config
+  select PACKAGE_wsdd2
+endef
+
 define Package/cifsd-utils
   $(call Package/cifsd-tools/Default)
   TITLE+= user management-util
