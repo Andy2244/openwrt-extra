@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.11.3
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://ftp.heanet.ie/mirrors/ftp.samba.org/stable/ \
@@ -333,11 +333,13 @@ endef
 
 define Build/Configure
 	$(CP) ./waf-cross-answers/$(ARCH).txt $(PKG_BUILD_DIR)/cross-answers.txt
+	echo 'Checking uname sysname type: "$(VERSION_DIST)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
 	echo 'Checking uname machine type: "$(ARCH)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
 	echo 'Checking uname release type: "$(LINUX_VERSION)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
 	echo 'Checking uname version type: "$(VERSION_DIST) Linux-$(LINUX_VERSION) $(shell date +%Y-%m-%d)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
-	# NOTE: For some unknown reason this answer is not needed on some hosts/distros, yet needed on others?
+	# NOTE: special answers for freeBSD/CircleCI
 	echo 'Checking whether POSIX capabilities are available: OK' >> $(PKG_BUILD_DIR)/cross-answers.txt
+	echo 'checking for clnt_create(): OK' >> $(PKG_BUILD_DIR)/cross-answers.txt
 	$(call Build/Configure/Default)
 endef
 
