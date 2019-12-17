@@ -2,18 +2,20 @@
 
 ### Description
 
-This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.9.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [Cifsd](https://github.com/cifsd-team/cifsd) servers.
+This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.11.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [**Cifsd**](https://github.com/cifsd-team/cifsd) servers.
 
-The 'samba4' package is the basic fileserver, while 'samba4-suite-full' is the complete samba4 suite, including all tools to manage, join domains and run in AD-DC mode, winbindd is also included there. The main difference between those two packages, is size, so 'samba4' needs around 6.5 MB and 'samba4-suite-full' needs 12 MB.
+#### Cifsd
+The 'cifsd-server' package is a tiny (300kb) samba4 alternative, if all you want is a smb2/3 compatible fileserver.
 
+#### Download/ipks
 Ready build ipk's for *Snapshots* based firmware, can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/).
 
 #### Note
 Samba [VFS modules](https://wiki.samba.org/index.php/Virtual_File_System_Modules) are supported and can be added via luci.
 
-The size of the Samba4-server/libs.ipk and deps are around 6.5 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
+The size of the Samba4-server/libs.ipk and deps are around 8 MB, so you need a >8MB NVRAM device to fit the final image or setup a [ext-root](https://openwrt.org/docs/guide-user/additional-software/extroot_configuration) *(recommend for ad-dc operation)*.
 
-The package includes untested options for: **[ad-dc](https://wiki.samba.org/index.php/Setting_up_Samba_as_an_Active_Directory_Domain_Controller), [winbind](https://wiki.samba.org/index.php/Configuring_Winbindd_on_a_Samba_AD_DC)** *(Needs manual setup, report back if something is missing, broken)*.
+The package includes untested options for: **[ad-dc](https://wiki.samba.org/index.php/Setting_up_Samba_as_an_Active_Directory_Domain_Controller)** *(Needs manual setup via 'samba-tool' to create a custom smb.conf)*.
 
 ### Usage
 
@@ -28,12 +30,18 @@ FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
 FEED_1_PACKAGES="samba4-server luci-app-samba4 wsdd2"
 ```
 
+*Cifsd*
+```
+FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
+FEED_1_PACKAGES="cifsd-server luci-app-cifsd wsdd2"
+```
+*NOTE: Consist of a 'cifsd.ko' kernel module and the 'cifsd' userspace binary.*
+
 *Softether5*
 ```
 FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
 FEED_1_PACKAGES="softethervpn5-server"
 ```
-
 #### Advanced (already setup OpenWrt sdk)
 To use these packages, add the following line to your ```feeds.conf``` or ```feeds.conf.default``` in the OpenWrt buildroot:
 
@@ -74,4 +82,4 @@ config procd 'extra'
  ```
 
 #### Compatible Filesystems
-You should use a native linux filesystem with samba4, like btrfs, ext2/3/4 or F2FS (ssd/flash drives). The NTFS driver in openWRT is readonly for none-root useres, so will not work correctly, you can instead use exFAT (enable _build patented_ in menuconfig) if you need a Windows compatible FS. You can format a drive to ext2/3/4 on Windows via [partitionwizard-portable](https://www.partitionwizard.com/C37D9BE2-4B03-481d-B1FA-72CFAFD1C96C/mt_pw_free_x_64bit.zip).
+You should use a native linux filesystem with samba4/cifsd, like btrfs, ext2/3/4 or F2FS (ssd/flash drives). The NTFS driver in openWRT is readonly for none-root useres, so will not work correctly, you can instead use exFAT (enable _build patented_ in menuconfig) if you need a Windows compatible FS. You can format a drive to ext2/3/4 on Windows via [partitionwizard-portable](https://www.partitionwizard.com/download/v11.6-portable/11x64.zip).
