@@ -2,10 +2,10 @@
 
 ### Description
 
-This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.11.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [**Cifsd**](https://github.com/cifsd-team/cifsd) servers.
+This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.11.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [**Smbd**](https://github.com/cifsd-team/smbd) servers.
 
-#### Cifsd
-The 'cifsd-server' package is a tiny (300kb) samba4 alternative, if all you want is a smb2/3 compatible fileserver.
+#### Smbd
+The 'smbd-server' package is a tiny (200kb) samba4 alternative, if all you want is a smb2/3 compatible fileserver.
 
 #### Download/ipks
 Ready build ipk's for *Snapshots* based firmware, can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/).
@@ -30,12 +30,12 @@ FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
 FEED_1_PACKAGES="samba4-server luci-app-samba4 wsdd2"
 ```
 
-*Cifsd*
+*Smbd*
 ```
 FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
-FEED_1_PACKAGES="cifsd-server luci-app-cifsd wsdd2"
+FEED_1_PACKAGES="smbd-server luci-app-smbd wsdd2"
 ```
-*NOTE: Consist of a 'cifsd.ko' kernel module and the 'cifsd' userspace binary.*
+*NOTE: Consist of a 'smbd.ko' kernel module and the 'usmbd' userspace binary.*
 
 *Softether5*
 ```
@@ -58,7 +58,7 @@ Than include and install all packages from your ```feeds.conf```, while ensuring
 Make sure the install line notes the extra feed and afterwards run:
 ```make menuconfig``` or ```make defconfig``` to expand, create the ```.config```
 
-The packages should appear under **Network->Samba4** and **Network->VPN->softethervpn5-server**. There is also a updated **Samba4 luci app** package, you should select.
+The packages should appear under **Network->Samba4**, **Network->VPN->softethervpn5-server** and **Network->Filesystem->smbd-server**.
 
 ### Problems
 
@@ -82,4 +82,4 @@ config procd 'extra'
  ```
 
 #### Compatible Filesystems
-You should use a native linux filesystem with samba4/cifsd, like btrfs, ext2/3/4 or F2FS (ssd/flash drives). The NTFS driver in openWRT is readonly for none-root useres, so will not work correctly, you can instead use exFAT (enable _build patented_ in menuconfig) if you need a Windows compatible FS. You can format a drive to ext2/3/4 on Windows via [partitionwizard-portable](https://www.partitionwizard.com/download/v11.6-portable/11x64.zip).
+You should use a native linux filesystem with samba4/smbd, like btrfs, ext2/3/4 or F2FS (ssd/flash drives). The NTFS driver in openWRT is readonly for none-root useres, so will not work correctly, you can instead use exFAT (enable _build patented_ in menuconfig) if you need a Windows compatible FS. You can format a drive to ext2/3/4 on Windows via [partitionwizard-portable](https://www.partitionwizard.com/download/v11.6-portable/11x64.zip).
