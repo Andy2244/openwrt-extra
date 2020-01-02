@@ -4,11 +4,9 @@ PKG_NAME:=smbd
 PKG_VERSION:=3.0.1
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/cifsd-team/smbd.git
-PKG_SOURCE_DATE:=2019-12-28
-PKG_SOURCE_VERSION:=a608ddfb71572d23615080adf3a0ab25e013bf85
-PKG_MIRROR_HASH:=5c59935237d71a2a3875d80d9d3a6875e24889b918feaf5d66b6d6e970d7b3e2
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/cifsd-team/$(PKG_NAME)/archive/$(PKG_VERSION)/
+PKG_HASH:=6d1bf695aacd5a009eb30c10b31ff7c8942c8f201f7eb436b3cfa66f49d1f9f5
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -43,9 +41,6 @@ define KernelPackage/fs-smbd/description
   Smbd is an In-kernel SMB2/3 fileserver.
   It's an implementation of the SMB protocol in kernel space for sharing files and IPC services over network.
 endef
-
-# broken atm (needs CONFIG_KEYS=y)
-#EXTRA_CFLAGS+=-DCONFIG_SMBD_ACL
 
 define Build/Compile
 	$(KERNEL_MAKE) SUBDIRS="$(PKG_BUILD_DIR)" \

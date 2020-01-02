@@ -4,11 +4,9 @@ PKG_NAME:=smbd-tools
 PKG_VERSION:=3.0.1
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/cifsd-team/smbd-tools.git
-PKG_SOURCE_DATE:=2019-12-28
-PKG_SOURCE_VERSION:=e6fb2bde6a7ec5d8c19e5cee58c70739a8064cb4
-PKG_MIRROR_HASH:=ec569095fe6a6080091de0ea64ce7438bcf4b0865b2465691367ba6805098efc
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/cifsd-team/$(PKG_NAME)/archive/$(PKG_VERSION)/
+PKG_HASH:=29f85de8b39608d28ec406c8b557264e004f5dce9b307a37f8324508cdea6217
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
 PKG_LICENSE:=GPL-2.0-or-later
