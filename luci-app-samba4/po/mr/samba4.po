@@ -1,24 +1,26 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"PO-Revision-Date: 2019-11-25 13:56+0000\n"
-"Last-Translator: Mattias Münster <mattiasmun@gmail.com>\n"
-"Language-Team: Swedish <https://hosted.weblate.org/projects/openwrt/"
-"luciapplicationssamba4/sv/>\n"
-"Language: sv\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-22 15:23+0100\n"
+"PO-Revision-Date: 2019-12-28 03:16+0000\n"
+"Last-Translator: Prachi Joshi <josprachi@yahoo.com>\n"
+"Language-Team: Marathi <https://hosted.weblate.org/projects/openwrt/"
+"luciapplicationssamba4/mr/>\n"
+"Language: mr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.10-dev\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 3.10\n"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:97
 msgid "Allow guests"
-msgstr "Tillåt gäster"
+msgstr "अतिथींना परवानगी द्या"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:94
 msgid "Allowed users"
-msgstr "Tillåtna användare"
+msgstr "अनुमत वापरकर्ते"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:128
 msgid "Apple Time-machine share"
@@ -26,19 +28,19 @@ msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:81
 msgid "Browse-able"
-msgstr ""
+msgstr "ब्राउझ-सक्षम"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:113
 msgid "Create mask"
-msgstr "Skapa mask"
+msgstr "मुखवटा तयार करा"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:38
 msgid "Description"
-msgstr "Beskrivning"
+msgstr "वर्णन"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:119
 msgid "Directory mask"
-msgstr "Mask för mapp"
+msgstr "निर्देशिका मास्क"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:51
 msgid "Disable Active Directory Domain Controller"
@@ -54,12 +56,12 @@ msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:30
 msgid "Edit Template"
-msgstr "Redigera mall"
+msgstr "टेम्पलेट संपादित करा"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:58
 msgid "Edit the template that is used for generating the samba configuration."
 msgstr ""
-"Redigera mallen som används för att generera konfigurationen för samba."
+"सांबा कॉन्फिगरेशन व्युत्पन्न करण्यासाठी वापरला जाणारा टेम्पलेट संपादित करा."
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:44
 msgid "Enable macOS compatible shares"
@@ -81,7 +83,7 @@ msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:29
 msgid "General Settings"
-msgstr "Generella inställningar"
+msgstr "सामान्य सेटिंग्ज"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:103
 msgid "Guests only"
@@ -93,7 +95,7 @@ msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:32
 msgid "Interface"
-msgstr "Gränssnitt"
+msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:33
 msgid "Listen only on the given interface or, if unspecified, on lan"
@@ -101,12 +103,12 @@ msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:75
 msgid "Name"
-msgstr "Namn"
+msgstr "नाव"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:21
 #: applications/luci-app-samba4/luasrc/controller/samba4.lua:10
 msgid "Network Shares"
-msgstr "Nätverksdelningar"
+msgstr "नेटवर्क शेअर्स"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:42
 msgid ""
@@ -116,21 +118,23 @@ msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:76
 msgid "Path"
-msgstr "Genväg"
+msgstr "पथ"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:71
 msgid ""
 "Please add directories to share. Each directory refers to a folder on a "
 "mounted device."
 msgstr ""
+"कृपया सामायिक करण्यासाठी निर्देशिका जोडा. प्रत्येक निर्देशिका माउंट केलेल्या "
+"डिव्हाइसवरील फोल्डरचा संदर्भ देते."
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:86
 msgid "Read-only"
-msgstr "Endast läsbar"
+msgstr "केवळ-वाचनीय"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:70
 msgid "Shared Directories"
-msgstr "Delade mappar"
+msgstr "सामायिक निर्देशिका"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:59
 msgid ""
@@ -139,6 +143,9 @@ msgid ""
 "('|') should not be changed. They get their values from the 'General "
 "Settings' tab."
 msgstr ""
+"ही '/etc/samba/smb.conf.template' फाईलची सामग्री आहे जिथून तुमची सांबा "
+"कॉन्फिगरेशन व्युत्पन्न केली जाईल. पाईप चिन्हाद्वारे बंद केलेली मूल्ये ('|') "
+"बदलू नयेत. त्यांना त्यांची मूल्ये 'सामान्य सेटिंग्ज' टॅबमधून मिळतात."
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:130
 msgid "Time-machine size in GB"
@@ -150,21 +157,21 @@ msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:35
 msgid "Workgroup"
-msgstr "Arbetsgrupp"
+msgstr "कार्यसमूह"
 
 #~ msgid ""
 #~ "Allow system users to reach their home directories via network shares"
 #~ msgstr ""
-#~ "Tillåt systemanvändare att nå deras hem-mappar via nätverksdelningar"
+#~ "Allow system users to reach their home directories via network shares"
 
 #~ msgid "Hostname"
-#~ msgstr "Värdnamn"
+#~ msgstr "Hostname"
 
 #~ msgid "Share home-directories"
-#~ msgstr "Dela hem-mappar"
+#~ msgstr "Share home-directories"
 
 #~ msgid "Mask for new directories"
-#~ msgstr "Mask för nya mappar"
+#~ msgstr "Mask for new directories"
 
 #~ msgid "Mask for new files"
-#~ msgstr "Mask för nya filer"
+#~ msgstr "Mask for new files"

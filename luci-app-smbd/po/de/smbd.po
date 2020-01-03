@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2019-11-07 08:28+0000\n"
-"Last-Translator: Kiste <christian.buschau+weblate@mailbox.org>\n"
+"PO-Revision-Date: 2019-11-25 13:58+0000\n"
+"Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/openwrt/"
 "luciapplicationscifsd/de/>\n"
 "Language: de\n"
@@ -65,11 +65,10 @@ msgid "Interface"
 msgstr "Schnittstelle"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:34
-#, fuzzy
 msgid "Listen only on the given interface or, if unspecified, on lan"
 msgstr ""
-"Nur an die gegebene Schnittstelle binden, wenn nicht spezifiziert an lan "
-"binden"
+"Nur auf die angegebene Schnittstelle reagieren oder, wenn nicht "
+"spezifiziert, auf LAN"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:60
 msgid "Name"

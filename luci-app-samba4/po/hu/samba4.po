@@ -1,33 +1,34 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"PO-Revision-Date: 2012-04-06 10:56+0200\n"
-"Last-Translator: juhosg <juhosg@openwrt.org>\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2019-12-16 23:23+0000\n"
+"Last-Translator: Balázs Úr <balazs@urbalazs.hu>\n"
+"Language-Team: Hungarian <https://hosted.weblate.org/projects/openwrt/"
+"luciapplicationssamba4/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.10-dev\n"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:96
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:97
 msgid "Allow guests"
-msgstr "Vendég hozzáférés"
+msgstr "Vendégek engedélyezése"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:93
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:94
 msgid "Allowed users"
 msgstr "Engedélyezett felhasználók"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:124
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:128
 msgid "Apple Time-machine share"
 msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:81
 msgid "Browse-able"
-msgstr ""
+msgstr "Tallózható"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:111
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:113
 msgid "Create mask"
 msgstr "Létrehozási maszk"
 
@@ -35,9 +36,9 @@ msgstr "Létrehozási maszk"
 msgid "Description"
 msgstr "Leírás"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:116
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:119
 msgid "Directory mask"
-msgstr "Könyvtár maszk"
+msgstr "Könyvtármaszk"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:51
 msgid "Disable Active Directory Domain Controller"
@@ -71,9 +72,9 @@ msgid ""
 "to all shares."
 msgstr ""
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:91
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:92
 msgid "Force Root"
-msgstr ""
+msgstr "Rendszergazda kényszerítése"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:41
 msgid "Force synchronous I/O"
@@ -83,21 +84,22 @@ msgstr ""
 msgid "General Settings"
 msgstr "Általános beállítások"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:101
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:103
 msgid "Guests only"
 msgstr ""
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:106
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:108
 msgid "Inherit owner"
-msgstr ""
+msgstr "Tulajdonos öröklése"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:32
 msgid "Interface"
-msgstr ""
+msgstr "Csatoló"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:33
 msgid "Listen only on the given interface or, if unspecified, on lan"
 msgstr ""
+"Figyelés csak a megadott csatolón, vagy a helyi hálózaton, ha nincs megadva"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:75
 msgid "Name"
@@ -116,13 +118,15 @@ msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:76
 msgid "Path"
-msgstr "Elérési út"
+msgstr "Útvonal"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:71
 msgid ""
 "Please add directories to share. Each directory refers to a folder on a "
 "mounted device."
 msgstr ""
+"Adja hozzá a megosztandó könyvtárakat. Minden egyes könyvtár egy csatolt "
+"eszközön lévő mappára hivatkozik."
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:86
 msgid "Read-only"
@@ -144,11 +148,11 @@ msgstr ""
 "közé zárt értékek módosítása nem szükséges, az értéküket az általános "
 "beállítások fülről kapják."
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:126
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:130
 msgid "Time-machine size in GB"
 msgstr ""
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:121
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:125
 msgid "Vfs objects"
 msgstr ""
 

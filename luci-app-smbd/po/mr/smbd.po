@@ -1,102 +1,99 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2019-12-16 23:26+0000\n"
-"Last-Translator: Balázs Úr <balazs@urbalazs.hu>\n"
-"Language-Team: Hungarian <https://hosted.weblate.org/projects/openwrt/"
-"luciapplicationscifsd/hu/>\n"
-"Language: hu\n"
+"PO-Revision-Date: 2019-12-28 03:17+0000\n"
+"Last-Translator: Prachi Joshi <josprachi@yahoo.com>\n"
+"Language-Team: Marathi <https://hosted.weblate.org/projects/openwrt/"
+"luciapplicationscifsd/mr/>\n"
+"Language: mr\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.10-dev\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 3.10\n"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:82
 msgid "Allow guests"
-msgstr "Vendégek engedélyezése"
+msgstr "अतिथींना परवानगी द्या"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:79
 msgid "Allowed users"
-msgstr "Engedélyezett felhasználók"
+msgstr "अनुमत वापरकर्ते"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:66
 msgid "Browse-able"
-msgstr "Tallózható"
+msgstr "ब्राउझ-सक्षम"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:98
 msgid "Create mask"
-msgstr "Létrehozási maszk"
+msgstr "मुखवटा तयार करा"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:39
 msgid "Description"
-msgstr "Leírás"
+msgstr "वर्णन"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:104
 msgid "Directory mask"
-msgstr "Könyvtármaszk"
+msgstr "निर्देशिका मास्क"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:31
 msgid "Edit Template"
-msgstr "Sablon szerkesztése"
+msgstr "टेम्पलेट संपादित करा"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:43
 msgid "Edit the template that is used for generating the smbd configuration."
 msgstr ""
-"A sablon szerkesztése, amely a smbd beállítások előállításához lesz "
-"használva."
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:77
 msgid "Force Root"
-msgstr "Rendszergazda kényszerítése"
+msgstr ""
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:30
 msgid "General Settings"
-msgstr "Általános beállítások"
+msgstr "सामान्य सेटिंग्ज"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:93
 msgid "Hide dot files"
-msgstr "Rejtett fájlok elrejtése"
+msgstr ""
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:88
 msgid "Inherit owner"
-msgstr "Tulajdonos öröklése"
+msgstr ""
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:33
 msgid "Interface"
-msgstr "Csatoló"
+msgstr ""
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:34
 msgid "Listen only on the given interface or, if unspecified, on lan"
 msgstr ""
-"Figyelés csak a megadott csatolón, vagy a helyi hálózaton, ha nincs megadva"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:60
 msgid "Name"
-msgstr "Név"
+msgstr "नाव"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:19
 #: applications/luci-app-smbd/luasrc/controller/smbd.lua:10
 msgid "Network Shares"
-msgstr "Hálózati megosztások"
+msgstr "नेटवर्क शेअर्स"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:61
 msgid "Path"
-msgstr "Útvonal"
+msgstr "पथ"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:56
 msgid ""
 "Please add directories to share. Each directory refers to a folder on a "
 "mounted device."
 msgstr ""
-"Adja hozzá a megosztandó könyvtárakat. Minden egyes könyvtár egy csatolt "
-"eszközön lévő mappára hivatkozik."
+"कृपया सामायिक करण्यासाठी निर्देशिका जोडा. प्रत्येक निर्देशिका माउंट केलेल्या डिव्हाइसवरील "
+"फोल्डरचा संदर्भ देते."
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:71
 msgid "Read-only"
-msgstr "Csak olvasható"
+msgstr "केवळ-वाचनीय"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:55
 msgid "Shared Directories"
-msgstr "Megosztott könyvtárak"
+msgstr "सामायिक निर्देशिका"
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:44
 msgid ""
@@ -105,11 +102,7 @@ msgid ""
 "('|') should not be changed. They get their values from the 'General "
 "Settings' tab."
 msgstr ""
-"Ez az „/etc/smbd/smb.conf.template” fájl tartalma, amelyből a smbd "
-"beállítások előállításra kerülnek. A csőszimbólumok („|”) között lévő "
-"értékeket nem szabad megváltoztatni. Azok az „Általános beállítások” lapról "
-"kapják az értékeiket."
 
 #: applications/luci-app-smbd/htdocs/luci-static/resources/view/smbd.js:36
 msgid "Workgroup"
-msgstr "Munkacsoport"
+msgstr "कार्यसमूह"

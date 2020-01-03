@@ -1,29 +1,30 @@
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: LuCI: samba\n"
 "POT-Creation-Date: 2009-05-19 19:36+0200\n"
-"PO-Revision-Date: 2018-01-14 11:43+0300\n"
-"Language-Team: http://cyber-place.ru\n"
-"MIME-Version: 1.0\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
-"Last-Translator: Vladimir aka sunny <picfun@ya.ru>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"PO-Revision-Date: 2019-12-26 18:21+0000\n"
+"Last-Translator: Alex Ky <esthomolupus@gmail.com>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/openwrt/"
+"luciapplicationssamba4/ru/>\n"
 "Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 3.10\n"
 "Project-Info: Это технический перевод, не дословный. Главное-удобный русский "
 "интерфейс, все проверялось в графическом режиме, совместим с другими apps\n"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:96
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:97
 msgid "Allow guests"
 msgstr "Разрешить гостевой вход"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:93
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:94
 msgid "Allowed users"
 msgstr "Разрешенные пользователи"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:124
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:128
 msgid "Apple Time-machine share"
 msgstr ""
 
@@ -31,7 +32,7 @@ msgstr ""
 msgid "Browse-able"
 msgstr ""
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:111
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:113
 msgid "Create mask"
 msgstr "Создать маску"
 
@@ -39,7 +40,7 @@ msgstr "Создать маску"
 msgid "Description"
 msgstr "Описание"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:116
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:119
 msgid "Directory mask"
 msgstr "Маска папок"
 
@@ -73,7 +74,7 @@ msgid ""
 "to all shares."
 msgstr ""
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:91
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:92
 msgid "Force Root"
 msgstr ""
 
@@ -85,17 +86,17 @@ msgstr ""
 msgid "General Settings"
 msgstr "Основные настройки"
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:101
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:103
 msgid "Guests only"
 msgstr ""
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:106
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:108
 msgid "Inherit owner"
 msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:32
 msgid "Interface"
-msgstr ""
+msgstr "Интерфейс"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:33
 msgid "Listen only on the given interface or, if unspecified, on lan"
@@ -148,11 +149,11 @@ msgstr ""
 "('|'), не должны быть изменены.<br />Они будут автоматически заменены на "
 "значения со страницы 'Основные настройки'."
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:126
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:130
 msgid "Time-machine size in GB"
 msgstr ""
 
-#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:121
+#: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:125
 msgid "Vfs objects"
 msgstr ""
 
