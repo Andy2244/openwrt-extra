@@ -2,10 +2,10 @@
 
 ### Description
 
-This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.11.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [**Smbd**](https://github.com/cifsd-team/smbd) servers.
+This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.11.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [**Ksmbd**](https://github.com/cifsd-team/ksmbd) servers.
 
-#### Smbd
-The 'smbd-server' package is a tiny (200kb) samba4 alternative, if all you want is a smb2/3 compatible fileserver.
+#### Ksmbd
+The 'ksmbd-server' package is a tiny (200kb) samba4 alternative, if all you want is a smb2/3 compatible fileserver.
 
 #### Download/ipks
 Ready build ipk's for *Snapshots* based firmware, can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/).
@@ -30,12 +30,12 @@ FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
 FEED_1_PACKAGES="samba4-server luci-app-samba4 wsdd2"
 ```
 
-*Smbd*
+*Ksmbd*
 ```
 FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
-FEED_1_PACKAGES="smbd-server luci-app-smbd wsdd2"
+FEED_1_PACKAGES="ksmbd-server luci-app-ksmbd wsdd2"
 ```
-*NOTE: Consist of a 'smbd.ko' kernel module and the 'usmbd' userspace binary.*
+*NOTE: Consist of a 'ksmbd.ko' kernel module and the 'usmbd' userspace binary.*
 
 *Softether5*
 ```
