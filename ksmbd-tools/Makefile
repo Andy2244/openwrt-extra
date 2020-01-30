@@ -76,7 +76,7 @@ endef
 define Package/ksmbd-avahi-service
   $(call Package/ksmbd-tools/Default)
   TITLE+= (Avahi service)
-  DEPENDS+=+avahi-daemon
+  DEPENDS:= +avahi-daemon
 endef
 
 define Package/ksmbd-avahi-service/description
