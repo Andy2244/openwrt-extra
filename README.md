@@ -2,7 +2,7 @@
 
 ### Description
 
-This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.11.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [**Ksmbd**](https://github.com/cifsd-team/ksmbd) servers.
+This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.12.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [**Ksmbd**](https://github.com/cifsd-team/ksmbd) servers.
 
 #### Ksmbd
 The 'ksmbd-server' package is a tiny (200kb) samba4 alternative, if all you want is a smb2/3 compatible fileserver.
