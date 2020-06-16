@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
 PKG_VERSION:=4.12.3
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= \
@@ -22,9 +22,10 @@ PKG_CPE_ID:=cpe:/a:samba:samba
 
 # samba4=(asn1_compile,compile_et) rpcsvc-proto=(rpcgen)
 HOST_BUILD_DEPENDS:=python3/host rpcsvc-proto/host perl/host perl-parse-yapp/host
-PKG_BUILD_DEPENDS:=samba4/host libtasn1/host
+PKG_BUILD_DEPENDS:=samba4/host libtasn1/host SAMBA4_WAF_CROSS_EXECUTE:qemu-userspace/host
 
 PKG_CONFIG_DEPENDS:= \
+	CONFIG_SAMBA4_WAF_CROSS_EXECUTE \
 	CONFIG_SAMBA4_SERVER_NETBIOS \
 	CONFIG_SAMBA4_SERVER_AVAHI \
 	CONFIG_SAMBA4_SERVER_VFS \
@@ -42,6 +43,7 @@ include $(INCLUDE_DIR)/version.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-host.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include $(TOPDIR)/feeds/packages/lang/perl/perlver.mk
+include ./waf_qemu.mk
 
 define Package/samba4/Default
   SECTION:=net
@@ -67,6 +69,14 @@ define Package/samba4-libs
 	+SAMBA4_SERVER_VFSX:libaio \
 	+SAMBA4_SERVER_AVAHI:libavahi-client \
 	+SAMBA4_SERVER_AD_DC:python3-cryptodome +SAMBA4_SERVER_AD_DC:libopenldap +SAMBA4_SERVER_AD_DC:jansson +SAMBA4_SERVER_AD_DC:libarchive +SAMBA4_SERVER_AD_DC:acl +SAMBA4_SERVER_AD_DC:attr
+endef
+
+define Package/samba4-libs/config
+	config SAMBA4_WAF_CROSS_EXECUTE
+		bool "Use Waf cross-execute, instead of cross-answer files."
+		default n
+		help
+		  Uses qemu (userspace emulation) to probe for waf cross-compile answers, instead of predefined cross-answer files per architecture.
 endef
 
 define Package/samba4-server
@@ -166,7 +176,6 @@ HOST_CONFIGURE_ARGS:=configure $(HOST_CONFIGURE_ARGS)
 CONFIGURE_ARGS += \
 		--hostcc="$(HOSTCC)" \
 		--cross-compile \
-		--cross-answers=cross-answers.txt \
 		--disable-cups \
 		--disable-iprint \
 		--disable-cephfs \
@@ -211,6 +220,15 @@ HOST_CONFIGURE_ARGS += \
 		--without-gettext \
 		--without-regedit \
 		--without-gpgme
+
+ifeq ($(CONFIG_SAMBA4_WAF_CROSS_EXECUTE),y)
+	CONFIGURE_ARGS += \
+		--cross-answers="cross-answers-$(CROSS-ANSWER-OUT).txt" \
+		--cross-execute="$(STAGING_DIR_HOSTPKG)/bin/qemu-$(QEMU_ARCH) $(QEMU_CPU) -L $(STAGING_DIR_ROOT)"
+else
+	CONFIGURE_ARGS += \
+		--cross-answers=cross-answers.txt
+endif		
 
 HOST_CONFIGURE_ARGS += --disable-avahi --without-quotas --without-acl-support --without-winbind \
 	--without-ad-dc --without-json --without-libarchive --disable-python --nopyc --nopyo \
@@ -316,7 +334,7 @@ HOST_CONFIGURE_VARS+= \
 	PATH="$(STAGING_DIR_HOSTPKG)/usr/bin:$(PATH)"
 CONFIGURE_VARS += \
 	PATH="$(PATH):$(STAGING_DIR_HOSTPKG)/usr/bin"
- 
+
 # we dont need GnuTLS/Yapp for the host helpers
 define Host/Prepare
 	$(call Host/Prepare/Default)
@@ -347,6 +365,16 @@ ifeq ($(CONFIG_SAMBA4_SERVER_AD_DC),)
 endif
 endef
 
+ifeq ($(CONFIG_SAMBA4_WAF_CROSS_EXECUTE),y)
+define Build/Configure
+	$(RM) $(PKG_BUILD_DIR)/cross-answers-$(CROSS-ANSWER-OUT).txt
+	$(call Build/Configure/Default)
+	# @echo '-------------------------------- WAF Answers ------------------------------------'
+	# cat $(PKG_BUILD_DIR)/cross-answers-$(CROSS-ANSWER-OUT).txt
+	# @echo '---------------------------------------------------------------------------------'
+	# exit 1
+endef
+else
 define Build/Configure
 	$(CP) ./waf-cross-answers/$(ARCH).txt $(PKG_BUILD_DIR)/cross-answers.txt
 	echo 'Checking uname sysname type: "$(VERSION_DIST)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
@@ -354,15 +382,10 @@ define Build/Configure
 	echo 'Checking uname release type: "$(LINUX_VERSION)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
 	echo 'Checking uname version type: "$(VERSION_DIST) Linux-$(LINUX_VERSION) $(shell date +%Y-%m-%d)"' >> $(PKG_BUILD_DIR)/cross-answers.txt
 	# NOTE: special answers for freeBSD/CircleCI
-	echo 'Checking whether POSIX capabilities are available: OK' >> $(PKG_BUILD_DIR)/cross-answers.txt
 	echo 'checking for clnt_create(): OK' >> $(PKG_BUILD_DIR)/cross-answers.txt
-	# HACK: need to update WAF/qemu values (set to NO for now)
-	echo 'Checking value of GNUTLS_CIPHER_AES_128_CFB8: NO' >> $(PKG_BUILD_DIR)/cross-answers.txt
-	echo 'Checking value of GNUTLS_MAC_AES_CMAC_128: NO' >> $(PKG_BUILD_DIR)/cross-answers.txt
-	echo 'Checking whether fcntl supports flags to send direct I/O availability signals: NO' >> $(PKG_BUILD_DIR)/cross-answers.txt
-	echo 'Checking whether fcntl supports setting/geting hints: NO' >> $(PKG_BUILD_DIR)/cross-answers.txt
 	$(call Build/Configure/Default)
 endef
+endif
 
 # Build via "waf install", avoid the make wrapper. (Samba logic is 'waf install' = build + install)
 define Build/Compile
@@ -382,6 +405,11 @@ define Package/samba4-libs/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
 	# rpath-install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/samba $(1)/usr/lib/
+ifeq ($(CONFIG_SAMBA4_WAF_CROSS_EXECUTE),y)
+	# copy used waf answers as reference
+	$(INSTALL_DIR) $(1)/etc/samba
+	$(CP) $(PKG_BUILD_DIR)/cross-answers-$(CROSS-ANSWER-OUT).txt $(1)/etc/samba
+endif	
 endef
 
 define Package/samba4-client/install
