@@ -2,10 +2,7 @@
 
 ### Description
 
-This is an [OpenWrt](https://openwrt.org/) package feed containing [**Samba 4.12.x**](https://www.samba.org/), [**SoftetherVPN 5.x (dev/git)**](https://github.com/SoftEtherVPN/SoftEtherVPN) and [**Ksmbd**](https://github.com/cifsd-team/ksmbd) servers.
-
-#### Ksmbd
-The 'ksmbd-server' package is a tiny (200kb) samba4 alternative, if all you want is a smb2/3 compatible fileserver.
+This is the dev/experimental [OpenWrt](https://openwrt.org/) package feed containing unmerged [**Samba 4.12.x**](https://www.samba.org/) changes/modifications.
 
 #### Download/ipks
 Ready build ipk's for *Snapshots* based firmware, can be downloaded from here: [snapshots/packages](https://downloads.openwrt.org/snapshots/packages/).
@@ -30,18 +27,6 @@ FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
 FEED_1_PACKAGES="samba4-server luci-app-samba4 wsdd2"
 ```
 
-*Ksmbd*
-```
-FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
-FEED_1_PACKAGES="ksmbd-server luci-app-ksmbd wsdd2"
-```
-*NOTE: Consist of a 'ksmbd.ko' kernel module and the 'usmbd' userspace binary.*
-
-*Softether5*
-```
-FEED_1="src-git extra https://github.com/Andy2244/openwrt-extra.git"
-FEED_1_PACKAGES="softethervpn5-server"
-```
 #### Advanced (already setup OpenWrt sdk)
 To use these packages, add the following line to your ```feeds.conf``` or ```feeds.conf.default``` in the OpenWrt buildroot:
 
