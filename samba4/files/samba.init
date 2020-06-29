@@ -166,6 +166,12 @@ smb_add_share() {
 				[ -n "$timemachine_maxsize" ] && printf "\tfruit:time machine max size = %sG\n" "${timemachine_maxsize}"
 			fi
 		fi
+		
+		# always enable io_uring if we can
+#		if [ "$DISABLE_ASYNC_IO" -ne 1 ] && [ -e /usr/lib/samba/vfs/io_uring.so ]; then
+			# make sure its last in list
+#			vfs_objects="$vfs_objects io_uring"
+#		fi
 
 		[ -n "$vfs_objects" ] && printf "\tvfs objects = %s\n" "$vfs_objects"
 	} >> /var/etc/smb.conf
