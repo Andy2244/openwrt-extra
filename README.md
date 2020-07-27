@@ -53,6 +53,7 @@ If you cant see your share in the Windows 10 explorer, make sure the ```wsdd2```
 **On Windows 10** check those services: 
 * Start the ```Function Discovery Provider Host``` and ```Function Discovery Resource Publication``` services, and then set them to Automatic (Delayed Start).
 * When you open Explorer Network, enable network discovery when you are prompted.
+* BUG: It seems, if you only use WSD discovery (SSDP/LLTD disabled) for other Win10 clients, you may need to manually restart the ```Function Discovery Resource Publication``` services after each Win10 reboot.
 
 **On Linux/macOS** make sure the ```avahi-dbus-daemon``` package is installed and enabled.
 
