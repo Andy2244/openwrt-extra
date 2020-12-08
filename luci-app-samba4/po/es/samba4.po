@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-06-10 03:41+0200\n"
-"PO-Revision-Date: 2020-05-02 15:55+0000\n"
-"Last-Translator: Franco Castillo <castillofrancodamian@gmail.com>\n"
+"PO-Revision-Date: 2020-08-07 03:34+0000\n"
+"Last-Translator: Álvaro Fernández Rojas <noltari@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/openwrt/"
 "luciapplicationssamba4/es/>\n"
 "Language: es\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.1-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:105
 msgid "Allow guests"
@@ -76,7 +76,7 @@ msgstr "Editar la plantilla usada para generar la configuración de samba."
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:42
 msgid "Enable extra Tuning"
-msgstr ""
+msgstr "Activar ajuste adicional"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:49
 msgid "Enable macOS compatible shares"
@@ -88,6 +88,10 @@ msgid ""
 "speeds and better operation via WiFi. Not recommend if multiple clients "
 "write to the same files, at the same time!"
 msgstr ""
+"Activa algunos parámetros de ajuste impulsados por la comunidad, que pueden "
+"mejorar las velocidades de escritura y una mejor operación a través de Wi-"
+"Fi. ¡No se recomienda si varios clientes escriben en los mismos archivos, al "
+"mismo tiempo!"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:50
 msgid ""
@@ -160,7 +164,7 @@ msgstr ""
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:94
 msgid "Read-only"
-msgstr "Sólo lectura"
+msgstr "Solo lectura"
 
 #: applications/luci-app-samba4/htdocs/luci-static/resources/view/samba4.js:78
 msgid "Shared Directories"
